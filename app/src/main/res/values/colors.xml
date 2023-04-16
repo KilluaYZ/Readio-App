@@ -22,5 +22,11 @@
     <color name="selected_1_dark">#9FD57D</color>
     <color name="selected_2">#D9E9CE</color>
     <color name="selected_2_dark">#3E4B37</color>
+    <color name="pale_green">#E1EFD7</color>
     <color name="title">#474747</color>
+    <color name="grey">#535353</color>
+    <color name="dark_grey">#1C1C1C</color>
+    <color name="brown">#410E0B</color>
+    <color name="secondary_container">#D9E7CB</color>
+    <color name="pale_grey">#AEAFAC</color>
 </resources>

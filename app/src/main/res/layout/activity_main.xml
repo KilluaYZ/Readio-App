@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:elevation="5dp"
         app:cardCornerRadius="15dp"
+        android:layout_marginTop="-10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -46,7 +47,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/container_high"
-
+        app:itemIconTint="@color/color_selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

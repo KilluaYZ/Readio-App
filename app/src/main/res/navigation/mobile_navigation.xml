@@ -9,21 +9,21 @@
         android:id="@+id/navigation_commend"
         android:name="cn.ruc.readio.ui.commend.commendFragment"
         android:label=""
-        tools:layout="@layout/fragment_commend"/>
+        tools:layout="@layout/fragment_commend" />
     <fragment
         android:id="@+id/navigation_shelf"
         android:name="cn.ruc.readio.ui.shelf.shelfFragment"
         android:label=""
-        tools:layout="@layout/fragment_shelf"/>
+        tools:layout="@layout/fragment_shelf" />
     <fragment
         android:id="@+id/navigation_works"
         android:name="cn.ruc.readio.ui.works.worksFragment"
         android:label=""
-        tools:layout="@layout/fragment_works"/>
+        tools:layout="@layout/fragment_works" />
     <fragment
         android:id="@+id/navigation_userpage"
         android:name="cn.ruc.readio.ui.userpage.userPageFragment"
         android:label=""
-        tools:layout="@layout/fragment_userpage"/>
+        tools:layout="@layout/fragment_userpage" />
 
 </navigation>

@@ -74,19 +74,6 @@
                         android:fontFamily="@font/mplus_regular"
                         android:textColor="@color/grey" />
                 </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/change_password_username"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="42dp"
-                    android:layout_weight="1"
-                    android:background="@color/surface"
-                    android:maxWidth="5dp"
-                    android:maxHeight="5dp"
-                    android:scaleType="fitEnd"
-                    android:backgroundTint="@color/container_lowest"
-                    android:src="@drawable/arrow_forward_64" />
             </LinearLayout>
 
             <LinearLayout

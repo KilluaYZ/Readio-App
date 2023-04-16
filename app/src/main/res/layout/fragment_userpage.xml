@@ -9,11 +9,12 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/info_card_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/container_lowest"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/info_card_2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="10dp"
@@ -25,7 +26,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -163,6 +165,240 @@
                     android:textColor="@color/pale_grey"
                     android:textStyle="bold"
                     android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/info_card_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/container_lowest"
+        app:layout_constraintTop_toBottomOf="@id/info_card_1"
+        app:layout_constraintBottom_toBottomOf="@id/info_card_3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="6dp"
+        android:elevation="0dp"
+        android:background="@color/container_lowest">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 我的"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/yuanti"
+                android:textStyle="bold"
+                android:textColor="@color/selected_2_dark"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/my_likes"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/like_heart" />
+
+                    <LinearLayout
+                        android:id="@+id/my_likes_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="我的点赞"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/my_collections_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/star_yellow_128"/>
+                    <LinearLayout
+                        android:id="@+id/my_collections_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="我的收藏"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/my_settings_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/setting_yellow_128"/>
+                    <LinearLayout
+                        android:id="@+id/my_settings_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="我的设置"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/info_card_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/container_lowest"
+        app:layout_constraintTop_toBottomOf="@id/info_card_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="6dp"
+        android:elevation="0dp"
+        android:background="@color/container_lowest">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 创作者中心"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/yuanti"
+                android:textStyle="bold"
+                android:textColor="@color/selected_2_dark"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/new_work_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/pencil" />
+
+                    <LinearLayout
+                        android:id="@+id/new_work_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="新作品"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/work_manage_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/blue_box"/>
+                    <LinearLayout
+                        android:id="@+id/work_manage_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="作品管理"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/data_center_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/container_lowest"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/graph"/>
+                    <LinearLayout
+                        android:id="@+id/data_center_linear_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="数据中心"
+                            android:gravity="center"
+                            android:textColor="@color/pale_grey"
+                            android:fontFamily="@font/yuanti"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

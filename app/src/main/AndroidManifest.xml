@@ -12,10 +12,27 @@
         android:theme="@style/Theme.ReadIO"
         tools:targetApi="31">
         <activity
+            android:name=".userPageActivity.dataCenterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.worksManageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.newWorksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.mySettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.myLikesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.myCollectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -9,7 +9,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class HttpUtil {
-    private static String BASE_URL = "http://[2401:ec00:13:b9c:191e:1dd9:565f:60b3]:5000";
+    private static String BASE_URL = "http://killuayz.top:5000";
 
     //get方法向服务器请求，address是api地址 /auth/app/login
     //callback是个回调函数

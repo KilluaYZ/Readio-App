@@ -45,7 +45,6 @@ public class userPageFragment extends Fragment {
                     break;
                 default:
             }
-
         }
     };
 
@@ -80,9 +79,6 @@ public class userPageFragment extends Fragment {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
-
-
         return root;
     }
 
@@ -98,7 +94,7 @@ public class userPageFragment extends Fragment {
         jsonObject.put("passWord","123456");
 
         HttpUtil.postRequestJson("/auth/app/login", jsonObject.toString(), new Callback() {
-            @Override
+                @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
                 Toast.makeText(getContext(),"登录失败！请检查网络连接",Toast.LENGTH_LONG).show();

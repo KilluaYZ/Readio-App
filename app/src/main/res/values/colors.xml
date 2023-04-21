@@ -24,4 +24,5 @@
     <color name="brown">#410E0B</color>
     <color name="secondary_container">#D9E7CB</color>
     <color name="pale_grey">#AEAFAC</color>
+    <color name="paler_grey">#F6F6F6</color>
 </resources>

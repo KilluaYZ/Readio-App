@@ -7,6 +7,8 @@
     android:padding="5dp"
     tools:context=".ui.userpage.userPageFragment">
 
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/info_card_1"
         android:layout_width="match_parent"
@@ -27,6 +29,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="5dp">
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -353,6 +357,9 @@
                             android:gravity="center"
                             android:textColor="@color/pale_grey"
                             android:fontFamily="@font/yuanti" />
+
+
+
                     </LinearLayout>
                 </LinearLayout>
 

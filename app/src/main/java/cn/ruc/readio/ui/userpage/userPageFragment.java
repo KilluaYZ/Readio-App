@@ -1,5 +1,6 @@
 package cn.ruc.readio.ui.userpage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +21,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import cn.ruc.readio.MainActivity;
+import cn.ruc.readio.R;
+import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
+import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,6 +35,8 @@ public class userPageFragment extends Fragment {
 
     private FragmentUserpageBinding binding;
     private String token = "";
+
+    public ImageButton new_work_button;
 
 
     private Handler handler = new Handler(){
@@ -50,23 +59,18 @@ public class userPageFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentUserpageBinding.inflate(inflater, container, false);
+
         View root = binding.getRoot();
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    if(token.isEmpty()){
-//                        login();
-//                    }
-//                    getProfile();
-//                } catch (JSONException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }).start();
+        binding.newWorkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(this.toString(),"点击了 新建作品");
+                Intent intent = new Intent(getContext(), newWorksActivity.class);
+                startActivity(intent);
+            }
+        });
 
         try {
             if(token.isEmpty()){
@@ -79,6 +83,8 @@ public class userPageFragment extends Fragment {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
+
         return root;
     }
 
@@ -148,4 +154,5 @@ public class userPageFragment extends Fragment {
             }
         });
     }
+
 }

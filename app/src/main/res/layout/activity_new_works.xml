@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userPageActivity.newWorksActivity">
+    android:orientation="vertical"
+    tools:context=".userPageActivity.newWorksActivity"
+    android:background="@color/white">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/serialName"
+        android:paddingTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/black"
+        android:hint="请输入系列名"
+        android:textColorHint="@color/pale_grey"
+        android:fontFamily="@font/yuanti"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@null"/>
+    <ListView
+        android:id="@+id/serialNameList"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+   <ImageView
+       android:layout_width="match_parent"
+       android:layout_height="2dp"
+       android:src="#81837E"
+       android:layout_marginLeft="15dp"
+       android:layout_marginRight="15dp"/>
+
+    <EditText
+        android:id="@+id/pieceName"
+        android:paddingTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/black"
+        android:hint="请输入章节名"
+        android:textColorHint="@color/pale_grey"
+        android:fontFamily="@font/yuanti"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@null" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="#81837E"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
+
+    <ImageButton
+        android:id="@+id/confirmNew_button"
+        android:layout_margin="10dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitEnd"
+        android:background="@color/white"
+        android:src="@drawable/pink_right_arrow"
+        android:layout_gravity="right"/>
+
+</LinearLayout>

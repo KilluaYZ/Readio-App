@@ -17,6 +17,7 @@
     tools:context=".userPageActivity.newWorksActivity"
     android:background="@color/another_white">
     <LinearLayout
+        android:id="@+id/NewWork_titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue"
@@ -60,6 +61,7 @@
     <ListView
         android:id="@+id/serialNameList"
         android:layout_width="300dp"
+        android:divider="#00000000"
         android:layout_height="wrap_content"/>
 
    <ImageView
@@ -68,7 +70,6 @@
        android:src="#81837E"
        android:layout_marginLeft="15dp"
        android:layout_marginRight="15dp"/>
-
     <EditText
         android:id="@+id/pieceName"
         android:paddingTop="15dp"
@@ -99,6 +100,5 @@
         android:background="@color/another_white"
         android:src="@drawable/rocket_startup_icon"
         android:layout_gravity="right"/>
-
 </LinearLayout>
 </androidx.cardview.widget.CardView>

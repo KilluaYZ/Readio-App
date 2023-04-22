@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toolbar;
 
@@ -39,36 +40,8 @@ public class newWorksActivity extends Activity {
         list.add("恶煞");
         list.add("viko通讯录");
         list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
-        list.add("年下不叫哥，心思有点多");
 
+        LinearLayout newWork_titleBar = findViewById(R.id.NewWork_titleBar);
         EditText SerialName = findViewById(R.id.serialName);
         ListView SerialNameList = findViewById(R.id.serialNameList);
         serialNameAdapter adapter = new serialNameAdapter(this, list, new serialNameAdapter.onItemViewClickListener(){
@@ -103,7 +76,16 @@ public class newWorksActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                SerialNameList.setVisibility(TextUtils.isEmpty(s.toString()) ? View.VISIBLE:View.GONE);
+//                SerialNameList.setVisibility(TextUtils.isEmpty(s.toString()) ? View.VISIBLE:View.GONE);
+                SerialNameList.setVisibility(View.GONE);
+            }
+        });
+
+        newWork_titleBar.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                SerialNameList.setVisibility(View.GONE);
+                return false;
             }
         });
     }

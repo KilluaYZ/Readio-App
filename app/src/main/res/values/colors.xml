@@ -19,10 +19,12 @@
     <color name="selected_2_dark">#3E4B37</color>
     <color name="pale_green">#E1EFD7</color>
     <color name="title">#474747</color>
-    <color name="grey">#535353</color>
+    <color name="grey">#5F5F5F</color>
     <color name="dark_grey">#1C1C1C</color>
     <color name="brown">#410E0B</color>
     <color name="secondary_container">#D9E7CB</color>
     <color name="pale_grey">#AEAFAC</color>
     <color name="paler_grey">#F6F6F6</color>
+    <color name="another_white">#EEEDF2</color>
+    <color name="blue">#D378B5C6</color>
 </resources>

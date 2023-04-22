@@ -1,8 +1,11 @@
 package cn.ruc.readio.userPageActivity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +27,13 @@ import java.util.List;
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.serialNameAdapter;
 
-public class newWorksActivity extends AppCompatActivity {
+public class newWorksActivity extends Activity {
     private int touch_num = 0;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_works);
-
-
 
         final List<String> list = new ArrayList<>();
         list.add("恶煞");

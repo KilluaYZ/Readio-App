@@ -8,9 +8,10 @@
         android:id="@+id/item_nameTv"
         android:layout_width="match_parent"
         android:gravity="left"
+        android:fontFamily="@font/miao"
         android:textSize="15sp"
-        android:padding="10dp"
-        android:textColor="@color/black"
+        android:padding="15dp"
+        android:textColor="@color/title"
         android:layout_height="wrap_content"
         />
 </LinearLayout>

@@ -1,28 +1,25 @@
 package cn.ruc.readio.ui.commend;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 
-public class DataBean {
+public class Recommendation {
 
     //private final Bitmap img;
     private final String quote;
     private final String source;
 
-
     @NonNull
-    //public Bitmap getimg() {return img;}
-    public String getAutor() {
+    //public Bitmap getImg() {return img;}
+    public String getQuote() {
         return quote;
     }
     public String getSource() {
         return source;
     }
 
-    public DataBean(String msg, String source) {
+    public Recommendation(String quote, String source) {
         //this.img=img;
-        this.quote = msg;
+        this.quote = quote;
         this.source = source;
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 import cn.ruc.readio.R;
 public class commendFragment extends Fragment {
-
     private RecyclerView recycler_view;
     private Context context;
     private View view;

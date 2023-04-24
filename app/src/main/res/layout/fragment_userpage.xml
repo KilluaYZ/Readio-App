@@ -7,8 +7,6 @@
     android:padding="5dp"
     tools:context=".ui.userpage.userPageFragment">
 
-
-
     <androidx.cardview.widget.CardView
         android:id="@+id/info_card_1"
         android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,8 +24,8 @@ import java.io.IOException;
 
 import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
-import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
+import cn.ruc.readio.userPageActivity.LoginActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
@@ -63,6 +64,15 @@ public class userPageFragment extends Fragment {
 
         View root = binding.getRoot();
 
+        ImageButton touxiang = binding.mySettingsButton;
+        touxiang.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
         binding.newWorkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,5 +164,4 @@ public class userPageFragment extends Fragment {
             }
         });
     }
-
 }

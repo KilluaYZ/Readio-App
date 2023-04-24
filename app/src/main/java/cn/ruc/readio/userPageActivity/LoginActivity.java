@@ -1,10 +1,13 @@
 package cn.ruc.readio.userPageActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import cn.ruc.readio.MainActivity;
 import eightbitlab.com.blurview.BlurView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -13,11 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import cn.ruc.readio.R;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,14 @@ public class LoginActivity extends Activity {
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BlurView blurView = (BlurView) findViewById(R.id.blurView);
             blurView.setupWith(rootView, new RenderScriptBlur(this))
             .setBlurRadius(6F);
+
+        ImageView login_to_userpage_button = (ImageView) findViewById(R.id.login_to_userpage);
+        login_to_userpage_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 //点击后返回userpage
+            }
+        });
 
     }
 

@@ -20,6 +20,7 @@
             android:padding="3dp">
 
             <ImageView
+                android:id="@+id/login_to_userpage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_arrow_back_ios_new_24"

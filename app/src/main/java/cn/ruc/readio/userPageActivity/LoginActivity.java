@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
         Drawable windowBackground = decorView.getBackground();
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BlurView blurView = (BlurView) findViewById(R.id.blurView);
             blurView.setupWith(rootView, new RenderScriptBlur(this))
-            .setBlurRadius(12F);
+            .setBlurRadius(6F);
 
     }
 

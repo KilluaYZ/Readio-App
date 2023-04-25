@@ -21,11 +21,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.userPageActivity.LoginActivity;
+import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
@@ -94,6 +97,13 @@ public class userPageFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
+        binding.iconImage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), changeAvatorActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
@@ -134,11 +144,11 @@ public class userPageFragment extends Fragment {
     }
 
     private void getProfile(){
-        HttpUtil.getRequestWithToken("/auth/app/profile", token, new Callback() {
+        HttpUtil.getRequestWithToken("/auth/app/profile", token, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
-                Toast.makeText(getContext(),"获取信息失败！请检查网络连接",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "获取信息失败！请检查网络连接", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
 
@@ -153,11 +163,11 @@ public class userPageFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            binding.userID.setText("ID:"+userId);
+                            binding.userID.setText("ID:" + userId);
                             binding.userName.setText(userName);
                         }
                     });
-                    Log.d(this.toString(),"拿到profile数据");
+                    Log.d(this.toString(), "拿到profile数据");
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

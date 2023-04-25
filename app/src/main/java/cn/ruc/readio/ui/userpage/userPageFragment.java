@@ -119,7 +119,7 @@ public class userPageFragment extends Fragment {
         jsonObject.put("phoneNumber","18314266702");
         jsonObject.put("passWord","123456");
 
-        HttpUtil.postRequestJson("/auth/app/login", jsonObject.toString(), new Callback() {
+        HttpUtil.postRequestJson("/app/auth/login", jsonObject.toString(), new Callback() {
                 @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
@@ -132,7 +132,7 @@ public class userPageFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject responseJsonObject = new JSONObject(response.body().string());
-                    token = responseJsonObject.getString("token");
+                    token = responseJsonObject.getJSONObject("data").getString("token");
                     Log.d(this.toString(), "获取到登录数据");
                     Log.d(this.toString(),"token = "+token);
                     getProfile();
@@ -144,7 +144,7 @@ public class userPageFragment extends Fragment {
     }
 
     private void getProfile(){
-        HttpUtil.getRequestWithToken("/auth/app/profile", token, new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithToken("/app/auth/profile", token, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
@@ -155,7 +155,7 @@ public class userPageFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("data");
+                    JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
                     String userId = String.valueOf(responseJsonObject.getInt("userId"));
                     String userName = responseJsonObject.getString("userName");
 //                    handler.obtainMessage(1,userId);

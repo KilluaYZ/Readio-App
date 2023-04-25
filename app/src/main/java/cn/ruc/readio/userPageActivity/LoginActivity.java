@@ -20,6 +20,7 @@ import android.widget.ImageView;
 
 import cn.ruc.readio.R;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import kotlin.jvm.internal.Intrinsics;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,13 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             .setBlurRadius(6F);
 
         ImageView login_to_userpage_button = (ImageView) findViewById(R.id.login_to_userpage);
-        login_to_userpage_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                 //点击后返回userpage
-            }
-        });
-
+        login_to_userpage_button.setOnClickListener(v -> finish());
     }
 
     private void fullScreen(Activity activity) {

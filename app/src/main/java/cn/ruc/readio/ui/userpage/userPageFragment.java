@@ -94,7 +94,7 @@ public class userPageFragment extends Fragment {
             }
 
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            Toast.makeText(getContext(), "访问服务器错误", Toast.LENGTH_LONG).show();
         }
 
         binding.iconImage.setOnClickListener(new View.OnClickListener(){

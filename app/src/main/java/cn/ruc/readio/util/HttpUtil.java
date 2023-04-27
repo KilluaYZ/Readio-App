@@ -15,14 +15,13 @@ import okhttp3.RequestBody;
 import okhttp3.HttpUrl;
 
 public class HttpUtil {
-    private static String BASE_URL = "[2401:ec00:13:2e8e:14e0:5583:a4b:eb6d]"; //http://killuayz.top:5000  http://127.0.0.1:5000
+    private static String BASE_URL = "killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
     private static String BASE_SCHEME = "http";
     private static int BASE_PORT = 5000;
     //get方法向服务器请求，address是api地址 /auth/app/login
     //callback是个回调函数
     public static void getRequest(String address, ArrayList<Pair<String,String>> queryParameter, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
-
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
                 .port(BASE_PORT)

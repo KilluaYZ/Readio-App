@@ -33,7 +33,7 @@
                 android:layout_weight="1.5"
                 android:backgroundTint="#0000"
                 android:scaleType="fitCenter"
-                android:src="@drawable/return_icon"
+                android:src="@drawable/arrow_forward_64"
                 tools:ignore="NestedWeights"
                 android:contentDescription="@string/go_back" />
 

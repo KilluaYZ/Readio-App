@@ -19,6 +19,9 @@ public class Works {
         this.user = user;
     }
 
+    public Works(){
+
+    }
     public String getSerialTitle(){
         return serialTitle;
     }

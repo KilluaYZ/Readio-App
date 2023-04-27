@@ -237,7 +237,6 @@ public class changeAvatorActivity extends AppCompatActivity {
         }
     }
 
-
     private void  mtoast(String msg){
         runOnUiThread(new Runnable() {
             @Override

@@ -4,6 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userPageActivity.worksManageActivity">
+    tools:context=".userPageActivity.worksManageActivity"
+    android:padding="10dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/manageTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/exitManagementButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/best_back"
+            android:layout_gravity="left"/>
+        <TextView
+            android:layout_marginLeft="-25dp"
+            android:id="@+id/workManagenText"
+            app:layout_constraintLeft_toRightOf="@+id/exitManagementButton"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="作品管理"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/yuanti"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

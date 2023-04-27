@@ -30,6 +30,7 @@ import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.userPageActivity.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
+import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -68,6 +69,8 @@ public class userPageFragment extends Fragment {
         View root = binding.getRoot();
 
         ImageButton touxiang = binding.mySettingsButton;
+
+        ImageButton manage_button = binding.workManageButton;
         touxiang.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -81,6 +84,14 @@ public class userPageFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(this.toString(),"点击了 新建作品");
                 Intent intent = new Intent(getContext(), newWorksActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        manage_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), worksManageActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/recyclerview_item"
+    android:id="@+id/commend_card_item"
     android:padding="30dp"
-        >
+
+    android:layout_gravity="center"
+    android:layout_centerInParent="true">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:orientation="vertical"
 
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_margin="40dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
         android:layout_gravity="center"
 
         android:clickable="true"
@@ -25,8 +31,7 @@
         app:cardUseCompatPadding="true"
         app:cardBackgroundColor="@color/container_lowest"
         app:cardCornerRadius="20dp"
-        app:cardElevation="5dp"
-        app:contentPadding="10dp">
+        app:cardElevation="5dp">
 
         <LinearLayout
             android:id="@+id/card_content"
@@ -38,28 +43,39 @@
 
             <ImageView
                 android:id="@+id/picture"
-                android:layout_width="277dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
                 android:gravity="center"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/picture_of_book"
+                app:cardBackgroundColor="@color/container_lowest"
                 android:src="@drawable/warship_natural_selection" />
 
             <TextView
                 android:id="@+id/quote"
-                android:layout_width="279dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="@string/quote"
-                android:textSize="22sp" />
+
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"/>
 
             <LinearLayout
-                android:id="@+id/quote_content"
+                android:id="@+id/source_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:layout_weight="0.5">
+                android:layout_weight="0.5"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
 
                 <TextView
                     android:id="@+id/source"
@@ -68,10 +84,11 @@
                     android:layout_weight="0.5"
                     android:gravity="end"
                     android:text="@string/source"
-                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMaxTextSize="15sp"
                     app:autoSizeMinTextSize="10sp"
                     app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
+                    app:autoSizeTextType="uniform"
+                    tools:ignore="NestedWeights" />
             </LinearLayout>
         </LinearLayout>
 

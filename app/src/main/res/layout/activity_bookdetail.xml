@@ -4,62 +4,162 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="30dp"
+    android:background="@color/container"
     tools:context=".commendActivity.bookDetailActivity">
     <LinearLayout
+        android:id="@+id/detail_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="4"
-        android:gravity="center">
-
+        android:gravity="center"
+        android:background="@color/blue"
+        tools:ignore="ExtraText">
+        <!--标题-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:layout_weight="2.5"
-            android:gravity="center">
+            android:layout_weight="0.4"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="#00FFFFFF"
+            tools:ignore="MissingConstraints">
 
-            <ImageView
-                android:id="@+id/picture"
+            <ImageButton
+                android:id="@+id/return_commend"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:contentDescription="@string/picture_of_book"
-                android:src="@drawable/warship_natural_selection"
-                tools:ignore="NestedWeights" />
-            <LinearLayout
+                android:layout_weight="1.5"
+                android:backgroundTint="#0000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/return_icon"
+                tools:ignore="NestedWeights"
+                android:contentDescription="@string/go_back" />
+
+            <TextView
+                android:id="@+id/blank"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/quote"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:text="@string/quote" />
-
-                <TextView
-                    android:id="@+id/source"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:text="@string/source" />
-            </LinearLayout>
+                android:layout_weight="9"
+                android:layout_gravity="start" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/return_commend"
-            android:layout_width="wrap_content"
+        <!--中间部分-->
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/go_back"
-            android:textColor="@color/container_dark"
-            android:textSize="20sp"
-            android:backgroundTint="@color/selected_1" />
+            android:layout_weight="5"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
+            <LinearLayout
+                android:id="@+id/fixed_part"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal"
+                android:backgroundTint="#0000">
+
+                <ImageView
+                    android:id="@+id/picture"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:contentDescription="@string/picture_of_book"
+                    android:src="@drawable/book_three_body"
+                    tools:ignore="NestedWeights"
+                    android:layout_margin="10dp"
+                    android:layout_marginBottom="20dp"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="3"
+                    android:layout_margin="10dp">
+                    <TextView
+                        android:id="@+id/book_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.3"
+                        android:text="@string/book_name"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_margin="5dp"
+                        android:layout_marginTop="10dp"
+                        tools:ignore="NestedWeights" />
+                    <TextView
+                        android:id="@+id/author"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/author"
+                        android:textSize="14sp"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="10dp"/>
+                    <TextView
+                        android:id="@+id/book_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:text="@string/tag"
+                        android:textSize="12sp"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="10dp"/>
+                    <TextView
+                        android:id="@+id/book_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:text="@string/state"
+                        android:textSize="12sp"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="20dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include
+                layout="@layout/middle_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <!--底部-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="0.65"
+            android:background="@color/surface"
+            tools:ignore="MissingConstraints">
+
+            <Button
+                android:id="@+id/read"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/read"
+                android:textColor="@color/container_low"
+                android:layout_margin="12dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/selected_1_dark"
+                style="?android:attr/buttonBarButtonStyle"
+                tools:ignore="NestedWeights" />
+
+            <Button
+                android:id="@+id/add_bookmark"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/add_bookmark"
+                android:textColor="@color/container_low"
+                android:layout_margin="12dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="6dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:backgroundTint="@color/selected_1_dark"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

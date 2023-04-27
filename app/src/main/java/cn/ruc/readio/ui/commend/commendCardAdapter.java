@@ -19,11 +19,11 @@ import cn.ruc.readio.R;
 import cn.ruc.readio.commendActivity.bookDetailActivity;
 
 
-public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapter.myHolder> {
+public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.myHolder> {
     private final List<Recommendation> lists;
     private final Context context;
 
-    public recyclerViewAdapter(List<Recommendation> lists, Context context) {
+    public commendCardAdapter(List<Recommendation> lists, Context context) {
         this.lists = lists;
         this.context = context;
     }
@@ -45,20 +45,22 @@ public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapte
     @NonNull
     @Override
     public myHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new myHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false));
+        return new myHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.commend_card_item, parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull myHolder holder, @SuppressLint("RecyclerView") int position) {
         Log.d("TAG", "onBindViewHolder: "+lists.get(position).getQuote());
+        String dash="——";
         ((myHolder)holder).tv1.setText(lists.get(position).getQuote());
-        ((myHolder)holder).tv2.setText(lists.get(position).getSource());
+        ((myHolder)holder).tv2.setText(dash+lists.get(position).getSource());
 
         ((myHolder)holder).jumpView.setOnClickListener(view -> {
             Intent intent=new Intent();
             intent.setClass(context, bookDetailActivity.class);
-            intent.putExtra("Quote",lists.get(position).getQuote());
-            intent.putExtra("Source",lists.get(position).getSource());
+            intent.putExtra("BookName",lists.get(position).getBookName());
+            intent.putExtra("Author",lists.get(position).getAuthor());
             context.startActivity(intent);
         });
     }

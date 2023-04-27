@@ -17,11 +17,9 @@ import java.util.List;
 import cn.ruc.readio.R;
 public class commendFragment extends Fragment {
     private RecyclerView recycler_view;
-    private Context context;
     private View view;
     private List<Recommendation> lists;
 
-    private recyclerViewAdapter myadapter;
     public commendFragment() {
         // Required empty public constructor
     }
@@ -35,15 +33,15 @@ public class commendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_commend, container, false);
-        context = view.getContext();
+        Context context = view.getContext();
 
         initView();
         initData();
         LinearLayoutManager m=new LinearLayoutManager(context);
         m.setOrientation(LinearLayoutManager.HORIZONTAL);
         recycler_view.setLayoutManager(m);
-        myadapter =new recyclerViewAdapter(lists,context);
-        recycler_view.setAdapter(myadapter);
+        commendCardAdapter myAdapter = new commendCardAdapter(lists, context);
+        recycler_view.setAdapter(myAdapter);
 
         return view;
     }
@@ -55,18 +53,20 @@ public class commendFragment extends Fragment {
     }*/
 
     private void initData() {
+
         lists=new ArrayList<>();
-        lists.add(new Recommendation("章北海：自然选择！前进四！","——刘慈欣《三体》"));
-        lists.add(new Recommendation("黑，真他妈的黑啊","——刘慈欣《三体》"));
-        lists.add(new Recommendation("card3","不知道写点啥"));
-        lists.add(new Recommendation("card4","随便看看吧"));
+        lists.add(new Recommendation("章北海：自然选择！前进四！","刘慈欣","《三体》"));
+        lists.add(new Recommendation("黑，真他妈的黑啊","刘慈欣","《三体》"));
+        lists.add(new Recommendation("card3","不知道写点啥","《xx》"));
+        lists.add(new Recommendation("card4","随便看看吧","《yy》"));
     }
 
     private void initView() {
         TextView tv1,tv2;
-        recycler_view= (RecyclerView) view.findViewById(R.id.recycler_view);
+        recycler_view= (RecyclerView) view.findViewById(R.id.commend_card);
         tv1= (TextView) view.findViewById(R.id.quote);
         tv2= (TextView) view.findViewById(R.id.source);
+
 
     }
 }

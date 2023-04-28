@@ -148,7 +148,8 @@ public class userPageFragment extends Fragment {
                     Log.d(this.toString(),"token = "+token);
                     getProfile();
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    mtoast("解析登录信息失败");
                 }
             }
         });
@@ -180,8 +181,18 @@ public class userPageFragment extends Fragment {
                     });
                     Log.d(this.toString(), "拿到profile数据");
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    mtoast("解析profile信息失败");
                 }
+            }
+        });
+    }
+
+    private void  mtoast(String msg){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
             }
         });
     }

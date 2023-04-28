@@ -83,7 +83,7 @@ public class changeAvatorActivity extends AppCompatActivity {
                 Toast.makeText(changeAvatorActivity.this,"正在从服务器获取:"+res,Toast.LENGTH_LONG).show();
                 ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
                 queryParam.add(Pair.create("fileId", resourceIdArrayList.get(position)));
-                HttpUtil.getRequest("/file/downloadBinary", queryParam, new Callback() {
+                HttpUtil.getRequest("/file/getFileBinaryById", queryParam, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         mtoast("从服务器获取图片失败，请检查网络连接");
@@ -91,22 +91,19 @@ public class changeAvatorActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response.body().string()).getJSONObject("data");
-                            String base64Image = jsonObject.getString("fileContent");
-                            Bitmap pic = BitmapBase64.base64ToBitmap(base64Image);
-//                            byte[] decode = Base64.decode(base64Image, Base64.DEFAULT);
-//                            Bitmap pic = BitmapFactory.decodeByteArray(decode, 0, decode.length);
+
+                        if(response.code() == 200){
+                            byte[] picBytes = response.body().bytes();
+                            Bitmap pic = BitmapFactory.decodeByteArray(picBytes,0,picBytes.length);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     avatorImageView.setImageBitmap(pic);
                                 }
                             });
-                        } catch (JSONException e) {
-//                            throw new RuntimeException(e);
-                            e.printStackTrace();
-                            mtoast("解析服务器图片失败");
+
+                        }else{
+                            mtoast("获取图片失败");
                         }
 
                     }
@@ -189,21 +186,25 @@ public class changeAvatorActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    JSONArray responseJsonArray = new JSONObject(response.body().string()).getJSONArray("data");
+                    if(response.code() == 200){
+                        JSONArray responseJsonArray = new JSONObject(response.body().string()).getJSONArray("data");
 
-                    for(int i = 0;i < responseJsonArray.length();++i){
-                        String name = responseJsonArray.getJSONObject(i).getString("fileName");
-                        resourceArrayList.add(name);
-                        resourceIdArrayList.add(responseJsonArray.getJSONObject(i).getString("fileId"));
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //获取server数据
-                            ArrayAdapter<String> adapter =  (ArrayAdapter<String>) spinner.getAdapter();
-                            adapter.notifyDataSetChanged();
+                        for(int i = 0;i < responseJsonArray.length();++i){
+                            String name = responseJsonArray.getJSONObject(i).getString("fileName");
+                            resourceArrayList.add(name);
+                            resourceIdArrayList.add(responseJsonArray.getJSONObject(i).getString("fileId"));
                         }
-                    });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //获取server数据
+                                ArrayAdapter<String> adapter =  (ArrayAdapter<String>) spinner.getAdapter();
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }else{
+                        mtoast("获取失败");
+                    }
 
                 } catch (JSONException e) {
 //                            throw new RuntimeException(e);

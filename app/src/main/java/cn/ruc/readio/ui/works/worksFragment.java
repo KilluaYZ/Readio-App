@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,18 +41,6 @@ public class worksFragment extends Fragment {
 
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-//        for(int i = 0; i < 15; ++i){
-//            works.add(new Works("hellohelhellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello",15, "呆头鹅的幸福生活","遇到小青蛙遇到小青蛙遇到小青蛙遇到小青蛙遇到小青蛙",user));
-//        }
-//        works.add(new Works("hellohellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellolohello",15, "呆头鹅的幸福生活","遇到小青蛙遇到小青蛙",user));
-//        works.add(new Works("hellohellolohello",15, "呆头鹅的幸福生活呆头鹅的幸福生活","遇到小青蛙",user));
-//        works.add(new Works("hellohellolohello",15, "呆头鹅的幸福生活","遇到小青蛙",user));
-//        for(int i = 0;i < 10;++i){
-//            works.add(new Works("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello",15, "呆头鹅的幸福生活","遇到小青蛙",user));
-//        }
-
-
         refreshData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         RecyclerView recyclerView = binding.worksColumn;

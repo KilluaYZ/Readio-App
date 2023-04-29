@@ -4,6 +4,7 @@ import java.util.Date;
 import cn.ruc.readio.ui.userpage.User;
 
 public class Works {
+    private int workID;
     private String serialTitle;
     private String pieceTitle;
     private String content;
@@ -35,10 +36,15 @@ public class Works {
         return likesNum;
     }
 
+    public int getWorkID(){ return workID;}
+
     public String getWorkUser(){
         return user.getUserName();
     }
 
+    public void setWorkID(int id){
+        this.workID = id;
+    }
     public void setSerialTitle(String serialTitle) {
         this.serialTitle = serialTitle;
     }

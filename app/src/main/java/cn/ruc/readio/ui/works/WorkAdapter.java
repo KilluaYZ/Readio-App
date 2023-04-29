@@ -1,18 +1,24 @@
 package cn.ruc.readio.ui.works;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
+import cn.ruc.readio.worksActivity.readWorksActivity;
 
 public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
     private List<Works> WorksList;
@@ -39,6 +45,16 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.work_item,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.workContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = viewHolder.getAdapterPosition();
+                Toast.makeText(view.getContext(), "点击了："+ WorksList.get(position), Toast.LENGTH_SHORT).show();
+                // 实际上点进每一个item都要传输作品的id
+                Intent intent = new Intent(view.getContext(), readWorksActivity.class);
+                startActivity(view.getContext(), intent,null);
+            }
+        });
         return viewHolder;
     }
 
@@ -49,7 +65,6 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
         holder.workContent.setText(works.getContent());
         holder.workUser.setText(works.getWorkUser());
         holder.likesNum.setText(String.valueOf(works.getLikesNum()));
-
     }
     @Override
     public int getItemCount() {

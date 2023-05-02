@@ -112,9 +112,12 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
         }
         else{holder.likesNum.setText(String.valueOf(works.getLikesNum()));}   //基于实际情况，点赞过万的情况就不写了
         if(works.getTag() == null){
-            holder.workTag.setText("");
-            holder.workTag.setVisibility(View.GONE);}
-        else{holder.workTag.setText("#"+works.getTag().getContent());}
+//            holder.workTag.setText("暂无Tag");
+            holder.workTag.setVisibility(View.GONE);
+            }
+        else{
+            holder.workTag.setVisibility(View.VISIBLE);
+            holder.workTag.setText("#"+works.getTag().getContent());}
         Log.d("workadapter", "userAvator is null? = "+String.valueOf(works.getUser().getAvator()));
         holder.userAva.setImageBitmap(works.getUser().getAvator());
     }

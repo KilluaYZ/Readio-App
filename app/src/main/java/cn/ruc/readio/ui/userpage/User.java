@@ -7,6 +7,7 @@ public class User {
     private String eMail;
     private String phoneNumber;
     private Bitmap avator;
+    private String avaID;
 
     public User(String userName,String eMail, String phoneNumber){
         this.userName = userName;
@@ -29,6 +30,7 @@ public class User {
     public Bitmap getAvator() {
         return avator;
     }
+    public String getAvaID(){return avaID;}
 
     public void setAvator(Bitmap avator) {
         this.avator = avator;
@@ -45,4 +47,5 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    public void setAvaID(String id){this.avaID = id;}
 }

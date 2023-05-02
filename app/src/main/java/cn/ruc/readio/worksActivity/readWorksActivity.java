@@ -5,32 +5,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.User;
+import cn.ruc.readio.util.HttpUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class readWorksActivity extends AppCompatActivity {
-
+    ImageView ava = null;
     int like_clicked_times = 0;
     int collect_clicked_times = 0;
     public List<PieceComments> comment_list = new ArrayList<>();
@@ -38,7 +44,11 @@ public class readWorksActivity extends AppCompatActivity {
     private BottomSheetBehavior bottomSheetBehavior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        String workId;
+        Intent intent = getIntent();
+        workId = intent.getStringExtra("extra_data");
         setContentView(R.layout.activity_read_works);
         TextView follow_button = (TextView) findViewById(R.id.followAuthorButton);
         EditText writeComment_button = (EditText) findViewById(R.id.writeComment);
@@ -46,6 +56,61 @@ public class readWorksActivity extends AppCompatActivity {
         ImageView like_button = (ImageView) findViewById(R.id.likePieceButton);
         ImageView collect_button = (ImageView) findViewById(R.id.collectPieceButton);
         ImageView read_comment_button = (ImageView) findViewById(R.id.commentZoneButton);
+        TextView read_content = (TextView) findViewById(R.id.readWorkContentText);
+        TextView read_title = (TextView) findViewById(R.id.workTitleText);
+        TextView readSerialName = (TextView) findViewById(R.id.readSerialText);
+        TextView userName = (TextView) findViewById(R.id.readUserNameText);
+        ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
+        ava = (ImageView) findViewById(R.id.authorAvator);
+
+            ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+            queryParam.add(new Pair<>("piecesId",workId));
+            Log.d("piecesId",workId);
+            HttpUtil.getRequestAsyn("/works/getPiecesDetail", queryParam, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mtoast("请求异常，加载不出来");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        if (response.code() == 200){
+                            String s = response.body().string();
+                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        read_content.setText("\n"+data.getString("content"));
+                                        read_title.setText("\n"+data.getString("title"));
+                                        readSerialName.setText("合集："+data.getString("seriesName")+" ");
+                                        userName.setText((data.getJSONObject("user").getString("userName")));
+                                        String avaId = data.getJSONObject("user").getString(("avator"));
+                                        HttpUtil.getAvaAsyn(avaId,ava,readWorksActivity.this);
+//                                        ava.setImageBitmap(HttpUtil.getAvaSyn(avaId));
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }else{
+                            mtoast("请求出错");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+         exitRead_button.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 finish();
+             }
+         });
         /*
         判断用户是否已关注太太，如果已关注，follow_button要setGone
          */
@@ -70,6 +135,7 @@ public class readWorksActivity extends AppCompatActivity {
                     发送评论给数据库
                      */
                     Toast.makeText(readWorksActivity.this, "已发送~", Toast.LENGTH_SHORT).show();
+                    writeComment_button.setText("");
                     /*
                     刷新评论区页面？
                      */
@@ -162,6 +228,15 @@ public class readWorksActivity extends AppCompatActivity {
         int heightPixels = displayMetrics.heightPixels;
         //设置弹窗高度为屏幕高度的3/4
         return heightPixels - heightPixels / 4;
+    }
+
+    private void mtoast(String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(readWorksActivity.this,msg,Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

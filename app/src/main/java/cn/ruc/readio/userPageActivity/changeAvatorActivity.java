@@ -3,28 +3,21 @@ package cn.ruc.readio.userPageActivity;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -34,8 +27,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import cn.ruc.readio.R;
 
@@ -83,7 +74,7 @@ public class changeAvatorActivity extends AppCompatActivity {
                 Toast.makeText(changeAvatorActivity.this,"正在从服务器获取:"+res,Toast.LENGTH_LONG).show();
                 ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
                 queryParam.add(Pair.create("fileId", resourceIdArrayList.get(position)));
-                HttpUtil.getRequest("/file/getFileBinaryById", queryParam, new Callback() {
+                HttpUtil.getRequestAsyn("/file/getFileBinaryById", queryParam, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         mtoast("从服务器获取图片失败，请检查网络连接");
@@ -148,7 +139,7 @@ public class changeAvatorActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                HttpUtil.postRequestJson("/file/uploadBinary", postBody.toString(), new Callback() {
+                HttpUtil.postRequestJsonAsyn("/file/uploadBinary", postBody.toString(), new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         mtoast("上传失败，请检查网络连接");
@@ -172,7 +163,7 @@ public class changeAvatorActivity extends AppCompatActivity {
 
 
     private void refreshSpinnerData(){
-        HttpUtil.getRequest("/file/getResInfo", new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestAsyn("/file/getResInfo", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {

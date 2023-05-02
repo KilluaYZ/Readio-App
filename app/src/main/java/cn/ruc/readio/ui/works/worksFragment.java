@@ -1,17 +1,17 @@
 package cn.ruc.readio.ui.works;
 
-import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -21,7 +21,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentWorksBinding;
@@ -57,7 +56,7 @@ public class worksFragment extends Fragment {
     }
 
     public void refreshData(){
-        HttpUtil.getRequest("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestAsyn("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mtoast("请求异常，加载不出来");
@@ -75,12 +74,42 @@ public class worksFragment extends Fragment {
                         work.setPieceTitle(datai.getString("title"));
                         work.setContent(datai.getString("content"));
                         work.setLikesNum(datai.getInt("likes"));
+                        work.setWorkID(datai.getInt("piecesId"));
                         User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
-                        work.setUser(user);
+                        user.setAvaID(useri.getString("avator"));
+                        tags tagi = new tags();
                         if(datai.has("tag")){
-                        String tagi = datai.getJSONObject("tag").getString("content");}
+                            String tagConent = datai.getJSONObject("tag").getString("content");
+                            int tagID = datai.getJSONObject("tag").getInt("tagId");
+                            int tagLinkedTimes = datai.getJSONObject("tag").getInt("linkedTimes");
+                            tagi.setContent(tagConent);
+                            tagi.setLinkedTimes(tagLinkedTimes);
+                            tagi.setTagId(tagID);
+                            work.setTag(tagi);
+                        }
+                        work.setUser(user);
                         works.add(work);
+
                     }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i = 0;i < works.size(); ++i){
+                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
+                                works.get(i).getUser().setAvator(pic);
+                                Log.d("workadpter","需要更新");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                    }
+                                });
+                            }
+
+                        }
+                    }).run();
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

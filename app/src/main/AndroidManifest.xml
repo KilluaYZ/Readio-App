@@ -15,17 +15,6 @@
         android:theme="@style/Theme.ReadIO"
         tools:targetApi="31">
         <activity
-            android:name=".worksActivity.readWorksActivity"
-            android:exported="false" />
-        <activity
-            android:name=".userPageActivity.addTagActivity"
-            android:exported="false"
-            android:theme="@style/myDialog" />
-        <activity
-            android:name=".userPageActivity.exitEditActivity"
-            android:exported="false"
-            android:theme="@style/myDialog" />
-        <activity
             android:name=".userPageActivity.changeAvatorActivity"
             android:exported="false" />
         <activity

@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.databinding.FragmentCommendBinding;
+import cn.ruc.readio.databinding.FragmentShelfBinding;
+
 public class commendFragment extends Fragment {
     private RecyclerView recycler_view;
     private View view;
@@ -32,11 +35,13 @@ public class commendFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         view = inflater.inflate(R.layout.fragment_commend, container, false);
         Context context = view.getContext();
 
         initView();
         initData();
+
         LinearLayoutManager m=new LinearLayoutManager(context);
         m.setOrientation(LinearLayoutManager.HORIZONTAL);
         recycler_view.setLayoutManager(m);
@@ -66,7 +71,5 @@ public class commendFragment extends Fragment {
         recycler_view= (RecyclerView) view.findViewById(R.id.commend_card);
         tv1= (TextView) view.findViewById(R.id.quote);
         tv2= (TextView) view.findViewById(R.id.source);
-
-
     }
 }

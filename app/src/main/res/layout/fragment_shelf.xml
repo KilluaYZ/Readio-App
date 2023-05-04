@@ -12,22 +12,10 @@
             android:id="@+id/book_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numColumns="4">
-            <LinearLayout
-                android:orientation="vertical" android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gridview_item_iv1"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="40sp"
-                    android:gravity="center"
-                    android:textColor="#FF0000"
-                    android:id="@+id/gridview_item_tv1"/>
-            </LinearLayout>
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp">
+
         </GridView>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

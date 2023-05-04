@@ -86,7 +86,7 @@ public class BitmapBase64 {
      * @return
      */
     public static Bitmap base64ToBitmap(String base64Data) {
-        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+        byte[] bytes = Base64.decode(base64Data, Base64.URL_SAFE);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
@@ -107,13 +107,18 @@ public class BitmapBase64 {
         return Base64.encodeToString(imageByte, Base64.DEFAULT);
     }
 
-    private static Bitmap base642Bitmap(String base64String) {
+    public static Bitmap base642Bitmap(String base64String) {
         if (null == base64String) throw new NullPointerException();
-        byte[] decode = Base64.decode(base64String.split(",")[1], Base64.DEFAULT);
+        String[] base64StringList = base64String.split(",");
+        byte[] decode = null;
+        if (base64StringList.length > 1){
+            decode = Base64.decode(base64StringList[1], Base64.DEFAULT);
+        }else{
+            decode = Base64.decode(base64StringList[0], Base64.DEFAULT);
+        }
         Bitmap mBitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
         return mBitmap;
     }
-
 }
 
 

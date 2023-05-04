@@ -1,6 +1,7 @@
 package cn.ruc.readio.ui.userpage;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,14 +22,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
-import cn.ruc.readio.MainActivity;
-import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.userPageActivity.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
+import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -68,6 +66,8 @@ public class userPageFragment extends Fragment {
         View root = binding.getRoot();
 
         ImageButton touxiang = binding.mySettingsButton;
+
+        ImageButton manage_button = binding.workManageButton;
         touxiang.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -85,6 +85,14 @@ public class userPageFragment extends Fragment {
             }
         });
 
+        manage_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), worksManageActivity.class);
+                startActivity(intent);
+            }
+        });
+
         try {
             if(token.isEmpty()){
                 login();
@@ -97,7 +105,7 @@ public class userPageFragment extends Fragment {
             Toast.makeText(getContext(), "访问服务器错误", Toast.LENGTH_LONG).show();
         }
 
-        binding.iconImage.setOnClickListener(new View.OnClickListener(){
+        binding.myAvator.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), changeAvatorActivity.class);
@@ -119,7 +127,7 @@ public class userPageFragment extends Fragment {
         jsonObject.put("phoneNumber","18314266702");
         jsonObject.put("passWord","123456");
 
-        HttpUtil.postRequestJson("/app/auth/login", jsonObject.toString(), new Callback() {
+        HttpUtil.postRequestJsonAsyn("/app/auth/login", jsonObject.toString(), new Callback() {
                 @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
@@ -137,14 +145,15 @@ public class userPageFragment extends Fragment {
                     Log.d(this.toString(),"token = "+token);
                     getProfile();
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    mtoast("解析登录信息失败");
                 }
             }
         });
     }
 
     private void getProfile(){
-        HttpUtil.getRequestWithToken("/app/auth/profile", token, new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn("/app/auth/profile", token, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
@@ -160,17 +169,30 @@ public class userPageFragment extends Fragment {
                     String userName = responseJsonObject.getString("userName");
 //                    handler.obtainMessage(1,userId);
 //                    handler.obtainMessage(2,userName);
+//                    Bitmap my_avamap = HttpUtil.getAvaSyn(responseJsonObject.getString("avator"));
+                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             binding.userID.setText("ID:" + userId);
                             binding.userName.setText(userName);
+//                            binding.myAvator.setImageBitmap(my_avamap);
                         }
                     });
                     Log.d(this.toString(), "拿到profile数据");
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    mtoast("解析profile信息失败");
                 }
+            }
+        });
+    }
+
+    private void  mtoast(String msg){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
             }
         });
     }

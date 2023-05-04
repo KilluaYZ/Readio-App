@@ -15,9 +15,6 @@
         android:theme="@style/Theme.ReadIO"
         tools:targetApi="31">
         <activity
-            android:name=".WorkEditActivity"
-            android:exported="false" />
-        <activity
             android:name=".userPageActivity.changeAvatorActivity"
             android:exported="false" />
         <activity

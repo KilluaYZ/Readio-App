@@ -1,23 +1,34 @@
 package cn.ruc.readio.ui.works;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentWorksBinding;
 import cn.ruc.readio.ui.userpage.User;
+import cn.ruc.readio.util.HttpUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class worksFragment extends Fragment {
 
@@ -29,16 +40,7 @@ public class worksFragment extends Fragment {
 
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        for(int i = 0;i < 10;++i){
-            works.add(new Works("hellohelhellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello",15, "呆头鹅的幸福生活","遇到小青蛙遇到小青蛙遇到小青蛙遇到小青蛙遇到小青蛙",user));
-        }
-        works.add(new Works("hellohellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellohellohelellolohello",15, "呆头鹅的幸福生活","遇到小青蛙遇到小青蛙",user));
-        works.add(new Works("hellohellolohello",15, "呆头鹅的幸福生活呆头鹅的幸福生活","遇到小青蛙",user));
-        works.add(new Works("hellohellolohello",15, "呆头鹅的幸福生活","遇到小青蛙",user));
-        for(int i = 0;i < 10;++i){
-            works.add(new Works("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello",15, "呆头鹅的幸福生活","遇到小青蛙",user));
-        }
+        refreshData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         RecyclerView recyclerView = binding.worksColumn;
         recyclerView.setLayoutManager(layoutManager);
@@ -51,5 +53,83 @@ public class worksFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void refreshData(){
+        HttpUtil.getRequestAsyn("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mtoast("请求异常，加载不出来");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    for(int i = 0; i < data.length(); i++){
+                        JSONObject datai = data.getJSONObject(i);
+                        JSONObject useri = datai.getJSONObject("user");
+                        Works work = new Works();
+                        work.setPieceTitle(datai.getString("title"));
+                        work.setContent(datai.getString("content"));
+                        work.setLikesNum(datai.getInt("likes"));
+                        work.setWorkID(datai.getInt("piecesId"));
+                        User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
+                        user.setAvaID(useri.getString("avator"));
+                        tags tagi = new tags();
+                        if(datai.has("tag")){
+                            String tagConent = datai.getJSONObject("tag").getString("content");
+                            int tagID = datai.getJSONObject("tag").getInt("tagId");
+                            int tagLinkedTimes = datai.getJSONObject("tag").getInt("linkedTimes");
+                            tagi.setContent(tagConent);
+                            tagi.setLinkedTimes(tagLinkedTimes);
+                            tagi.setTagId(tagID);
+                            work.setTag(tagi);
+                        }
+                        work.setUser(user);
+                        works.add(work);
+
+                    }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i = 0;i < works.size(); ++i){
+                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
+                                works.get(i).getUser().setAvator(pic);
+                                Log.d("workadpter","需要更新");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                    }
+                                });
+                            }
+
+                        }
+                    }).run();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void  mtoast(String msg){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -15,13 +15,13 @@ import java.util.List;
 import cn.ruc.readio.R;
 
 public class bookAdapter extends BaseAdapter {
-    private final LayoutInflater bookInflater;
 
-    private final List<BookItem> bookList = new ArrayList<>();
+    private final List<BookItem> bookList;
+    private final Context context;
     public bookAdapter(Context context, List<BookItem> list)
     {
-        bookInflater = LayoutInflater.from(context);
-        bookList.addAll(list);
+        this.context=context;
+        this.bookList=list;
     }
 
     public int getCount()
@@ -48,16 +48,39 @@ public class bookAdapter extends BaseAdapter {
     @SuppressLint({"ViewHolder", "InflateParams"})
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        convertView = bookInflater.inflate(R.layout.book_item,null);
+        /*convertView = bookInflater.inflate(R.layout.book_item,null);
         TextView book_title = (TextView)convertView.findViewById(R.id.book_title);
         ImageView iv =   (ImageView)convertView.findViewById(R.id.book_cover);
         BookItem value = (BookItem) bookList.get(position);
         if(null != value)
         {
             book_title.setText(value.getTitle());
-            iv.setImageBitmap(value.getCover());
+            //iv.setImageBitmap(value.getCover());
+            iv.setImageResource(value.getPic());
+        }
+        return convertView;*/
+
+        ViewHolder holder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_item, null);
+            holder = new ViewHolder();
+            holder.text = (TextView) convertView.findViewById(R.id.book_title);
+            holder.cover = (ImageView) convertView.findViewById(R.id.book_cover);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        BookItem books = bookList.get(position);
+        if (books != null) {
+            holder.text.setText(books.getTitle());
+            holder.cover.setImageResource(books.getPic());
         }
         return convertView;
     }
 
+    class ViewHolder {
+        TextView text;
+        ImageView cover;
+    }
 }
+

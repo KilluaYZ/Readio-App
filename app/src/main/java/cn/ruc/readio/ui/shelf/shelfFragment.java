@@ -37,23 +37,38 @@ import okhttp3.Response;
 
 public class shelfFragment extends Fragment {
 
-    private FragmentShelfBinding binding;
+    //private FragmentShelfBinding binding;
     private GridView grid_view;
- 
-    private List<BookItem> lists =new ArrayList<>();;
+
+    private View view;
+
+    private List<BookItem> lists;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentShelfBinding.inflate(inflater, container, false);
+        /*binding = FragmentShelfBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         //refreshData();
-        getData();
+        lists=getData();
         grid_view = binding.bookGridview;
 
         bookAdapter myAdapter = new bookAdapter(getContext(),lists);
         grid_view.setAdapter(myAdapter);
-        return root;
+        return root;*/
+
+        setHasOptionsMenu(true);
+        view = inflater.inflate(R.layout.fragment_shelf, container, false);
+        Context context = view.getContext();
+
+        grid_view= view.findViewById(R.id.book_gridview);
+        lists=getData();
+
+        bookAdapter myAdapter = new bookAdapter(getContext(),lists);
+        grid_view.setAdapter(myAdapter);
+
+        return view;
+
     }
     private List<BookItem> getData()
     {
@@ -74,12 +89,12 @@ public class shelfFragment extends Fragment {
 
     /*public void refreshData(){
         HttpUtil.getRequestAsyn("/app/books/list", new ArrayList<>(), new Callback() {
-           
+
             public void onFailure(Call call, IOException e) {
                 mtoast("请求异常，加载不出来");
             }
 
-            
+
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
@@ -90,7 +105,7 @@ public class shelfFragment extends Fragment {
                         BookItem book = new BookItem();
                         book.setTitle(booki.getString("bookName"));
                         book.setCoverID(booki.getString("bookID"));
-                        
+
                         lists.add(book);
 
                     }

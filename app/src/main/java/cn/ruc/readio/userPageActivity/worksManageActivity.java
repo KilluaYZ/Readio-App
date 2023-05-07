@@ -1,6 +1,9 @@
 package cn.ruc.readio.userPageActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,7 @@ import org.w3c.dom.Text;
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.databinding.ActivityWorksManageBinding;
+import cn.ruc.readio.worksManageFragment.publishedManageFragment;
 
 public class worksManageActivity extends AppCompatActivity {
 
@@ -56,5 +60,12 @@ public class worksManageActivity extends AppCompatActivity {
                 }
 
         });
+    }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.workManageBar,fragment);
+        transaction.commit();
     }
 }

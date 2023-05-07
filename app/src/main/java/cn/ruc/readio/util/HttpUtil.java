@@ -21,7 +21,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 
 public class HttpUtil {
-    private static String BASE_URL = "killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
+    private static String BASE_URL = "test.killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
     private static String BASE_SCHEME = "http";
     private static int BASE_PORT = 5000;
     //get方法向服务器请求，address是api地址 /auth/app/login

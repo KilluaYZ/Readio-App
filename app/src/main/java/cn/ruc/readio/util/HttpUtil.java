@@ -88,6 +88,27 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    public static Response getRequestWithTokenSyn(String address, String token, ArrayList<Pair<String,String>> queryParameter, Callback callback) throws IOException {
+        Log.d("HttpUtil","正在访问 "+BASE_URL + address);
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        queryParameter.forEach((item) -> {
+            url.addQueryParameter(item.first,item.second);
+        });
+
+        Request request = new Request.Builder()
+                .url(url.build())
+                .get()
+                .addHeader("Authorization", token)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return okHttpClient.newCall(request).execute();
+    }
+
     //普通的post方法
     public static void postRequestAsyn(String address, RequestBody requestBody, Callback callback){
 
@@ -106,6 +127,24 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    //普通的post方法
+    public static Response postRequestSyn(String address, RequestBody requestBody) throws IOException {
+
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        Log.d("HttpUtil","postRequest正在访问 "+url.build().toString());
+        Request request = new Request.Builder()
+                .url(url.build())
+                .post(requestBody)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return okHttpClient.newCall(request).execute();
+    }
+
     //带令牌的post方法
     public static void postRequestWithTokenAsyn(String address, String token, RequestBody requestBody, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
@@ -122,6 +161,24 @@ public class HttpUtil {
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
+    }
+
+    //带令牌的post方法
+    public static Response postRequestWithTokenSyn(String address, String token, RequestBody requestBody) throws IOException {
+        Log.d("HttpUtil","正在访问 "+BASE_URL + address);
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        Request request = new Request.Builder()
+                .url(url.build())
+                .post(requestBody)
+                .addHeader("Authorization", token)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return okHttpClient.newCall(request).execute();
     }
 
     //普通的post方法，向服务器传json字符串
@@ -144,6 +201,26 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    //普通的post方法，向服务器传json字符串
+    public static Response postRequestJsonSyn(String address, String jsonString) throws IOException {
+//        Log.d("HttpUtil","正在访问 "+BASE_URL + address + "\n body = "+jsonString);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        Log.d("HttpUtil","postRequestJson正在访问 "+url.build().toString() + "\n body = "+jsonString);
+        Request request = new Request.Builder()
+                .url(url.build())
+                .post(requestBody)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return okHttpClient.newCall(request).execute();
+    }
+
     //带令牌的post方法，向服务器传json字符串
     public static void postRequestWithTokenJsonAsyn(String address, String token, String jsonString, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
@@ -162,6 +239,25 @@ public class HttpUtil {
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
+    }
+
+    public static Response postRequestWithTokenJsonSyn(String address, String token, String jsonString, Callback callback) throws IOException {
+        Log.d("HttpUtil","正在访问 "+BASE_URL + address);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        Request request = new Request.Builder()
+                .url(url.build())
+                .post(requestBody)
+                .addHeader("Authorization", token)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return okHttpClient.newCall(request).execute();
     }
 
 

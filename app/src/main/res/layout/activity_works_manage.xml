@@ -29,7 +29,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="-25dp"
-            android:fontFamily="@font/yuanti"
             android:text="作品管理"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -59,20 +58,20 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="已发布"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:textColor="@color/blue"/>
+            android:fontFamily="@font/miao"
+            android:textSize="18sp"
+            android:textColor="#D41B85EF"/>
 
         <TextView
             android:id="@+id/draftManageButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/miao"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="草稿箱"
-            android:textSize="16dp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             android:textColor="#D8555554"/>
     </LinearLayout>
 
@@ -87,6 +86,7 @@
         android:src="#8AAEAFAC"
         app:layout_constraintTop_toBottomOf="@+id/fragmentChangeBar" />
     <ScrollView
+        android:scrollbars="none"
         android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"

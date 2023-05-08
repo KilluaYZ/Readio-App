@@ -48,7 +48,7 @@ public class worksManageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     Log.d("color","halo");
-                    publishedZone_button.setTextColor(0xD378B5C6);
+                    publishedZone_button.setTextColor(0xD41B85EF);
                     draftZone_button.setTextColor(0xD8555554);
                 }
         });
@@ -56,7 +56,7 @@ public class worksManageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     publishedZone_button.setTextColor(0xD8555554);
-                    draftZone_button.setTextColor(0xD378B5C6);
+                    draftZone_button.setTextColor(0xD41B85EF);
                 }
 
         });

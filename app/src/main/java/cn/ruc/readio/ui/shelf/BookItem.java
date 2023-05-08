@@ -1,32 +1,36 @@
 package cn.ruc.readio.ui.shelf;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 
 public class BookItem {
-    private String title;
-
+    private String BookName;
+    private String Author;
     private int pic;
 
     @NonNull
-    public String getTitle() {
-        return title;
+    public String getBookName() {
+        return BookName;
+    }
+    public String getAuthor() {
+        return Author;
     }
     public int getPic() {
         return pic;
     }
 
-    public BookItem(String title,int coverID) {
+    public BookItem(String BookName, String Author, int coverID) {
         //this.img=img;
-        this.title = title;
+        this.BookName = BookName;
+        this.Author=Author;
         this.pic=coverID;
     }
 
-    public void setTitle(String title){
-        this.title=title;
+    public void setBookName(String BookName){
+        this.BookName = BookName;
     }
-
+    public void setAuthor(String Author){
+        this.BookName = Author;
+    }
     public void setPic(int id){this.pic = id;}
 }
 

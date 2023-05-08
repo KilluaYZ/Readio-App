@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import cn.ruc.readio.R;
-import cn.ruc.readio.commendActivity.bookDetailActivity;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
 
 
 public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.myHolder> {
@@ -53,10 +53,10 @@ public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.
     public void onBindViewHolder(@NonNull myHolder holder, @SuppressLint("RecyclerView") int position) {
         Log.d("TAG", "onBindViewHolder: "+lists.get(position).getQuote());
         String dash="——";
-        ((myHolder)holder).tv1.setText(lists.get(position).getQuote());
-        ((myHolder)holder).tv2.setText(dash+lists.get(position).getSource());
+        (holder).tv1.setText(lists.get(position).getQuote());
+        (holder).tv2.setText(dash+lists.get(position).getSource());
 
-        ((myHolder)holder).jumpView.setOnClickListener(view -> {
+        (holder).jumpView.setOnClickListener(view -> {
             Intent intent=new Intent();
             intent.setClass(context, bookDetailActivity.class);
             intent.putExtra("BookName",lists.get(position).getBookName());

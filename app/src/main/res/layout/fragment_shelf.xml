@@ -14,7 +14,8 @@
         android:orientation="vertical"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/my_shelf">
+        app:layout_constraintBottom_toTopOf="@id/my_shelf"
+        android:layout_marginTop="5dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/searchColumn"
             android:layout_width="match_parent"

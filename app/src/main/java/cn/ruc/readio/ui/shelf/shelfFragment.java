@@ -1,39 +1,22 @@
 package cn.ruc.readio.ui.shelf;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.security.auth.callback.Callback;
-
 import cn.ruc.readio.R;
-import cn.ruc.readio.databinding.FragmentShelfBinding;
-import cn.ruc.readio.databinding.FragmentWorksBinding;
-import cn.ruc.readio.ui.commend.Recommendation;
-import cn.ruc.readio.ui.commend.commendCardAdapter;
-import cn.ruc.readio.util.HttpUtil;
-import okhttp3.Response;
+import cn.ruc.readio.bookReadActivity.readBookActivity;
 
 public class shelfFragment extends Fragment {
 
@@ -73,16 +56,16 @@ public class shelfFragment extends Fragment {
     private List<BookItem> getData()
     {
         List<BookItem> data = new ArrayList<>();
-        data.add(new BookItem("三体",R.drawable.bookcover1));
-        data.add(new BookItem("挪威的森林",R.drawable.bookcover2));
-        data.add(new BookItem("活着",R.drawable.bookcover3));
-        data.add(new BookItem("红楼梦",R.drawable.bookcover4));
-        data.add(new BookItem("百年孤独",R.drawable.bookcover5));
-        data.add(new BookItem("哈姆雷特",R.drawable.bookcover6));
-        data.add(new BookItem("月亮与六便士",R.drawable.bookcover7));
-        data.add(new BookItem("复活",R.drawable.bookcover8));
-        data.add(new BookItem("平凡的世界",R.drawable.bookcover9));
-        data.add(new BookItem("局外人",R.drawable.bookcover10));
+        data.add(new BookItem("三体","刘慈欣",R.drawable.bookcover1));
+        data.add(new BookItem("挪威的森林","村上春树", R.drawable.bookcover2));
+        data.add(new BookItem("活着","余华",R.drawable.bookcover3));
+        data.add(new BookItem("红楼梦","曹雪芹",R.drawable.bookcover4));
+        data.add(new BookItem("百年孤独","马尔克斯",R.drawable.bookcover5));
+        data.add(new BookItem("哈姆雷特","莎士比亚",R.drawable.bookcover6));
+        data.add(new BookItem("月亮与六便士","毛姆",R.drawable.bookcover7));
+        data.add(new BookItem("复活","马尔克斯",R.drawable.bookcover8));
+        data.add(new BookItem("平凡的世界","路遥",R.drawable.bookcover9));
+        data.add(new BookItem("局外人","加缪",R.drawable.bookcover10));
         return data;
     }
 

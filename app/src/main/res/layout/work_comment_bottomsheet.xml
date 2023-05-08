@@ -20,7 +20,6 @@
             android:textColor="#D2000000"
             android:textStyle="bold"
             android:fontFamily="@font/yuanti"/>
-        />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

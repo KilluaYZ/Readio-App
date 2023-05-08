@@ -15,6 +15,9 @@ public class Works {
     private int likesNum;
     private tags tag;
     private int mylike;
+    private int collectsNum;
+    private int commentsNum;
+    private String publishedTime;
 
     public Works(String content, int LikesNum, String serialTitle, String pieceTitle, User user) {
         this.content = content;
@@ -51,6 +54,9 @@ public class Works {
     public User getUser() {return user;}
 
     public int getMylike(){return mylike;}
+    public String getPublishedTime(){return publishedTime;}
+    public int getCollectsNum(){return collectsNum;}
+    public int getCommentsNum(){return commentsNum;}
     public void setWorkID(int id){
         this.workID = id;
     }
@@ -80,6 +86,9 @@ public class Works {
     public void setTag(tags tag){
         this.tag = tag;
     }
+    public void setPublishedTime(String publishedTime){ this.publishedTime = publishedTime; }
+    public void setCollectsNum(int collectsNum){this.collectsNum = collectsNum;}
+    public void setCommentsNum(int commentsNum){this.commentsNum = commentsNum;}
     public void changeMyLike(){
         if (mylike==0){
             mylike = 1;

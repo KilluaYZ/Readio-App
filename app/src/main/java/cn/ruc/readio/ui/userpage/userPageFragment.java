@@ -22,7 +22,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.userPageActivity.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;

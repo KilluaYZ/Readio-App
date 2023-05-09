@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -46,7 +47,11 @@ import okhttp3.Response;
 
 public class newWorksActivity extends Activity {
     static public newWorksActivity new_workActivity;
-    final List<String> list = new ArrayList<>();
+    final List<Pair<String,String>> list = new ArrayList<>();
+    final List<String> NameList = new ArrayList<>();
+    private String seriesId = "";
+    private String seriesName = "";
+    private String workName = "";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +59,16 @@ public class newWorksActivity extends Activity {
         setContentView(R.layout.activity_new_works);
         new_workActivity = this;
         ImageButton goEditButton = (ImageButton)  findViewById(R.id.confirmNew_button);
+        getSeriesTitle();
 //        list.add("恶煞");
 //        list.add("viko通讯录");
 //        list.add("年下不叫哥，心思有点多");
 
         LinearLayout newWork_titleBar = findViewById(R.id.NewWork_titleBar);
         EditText SerialName = findViewById(R.id.serialName);
+        EditText WorkName = findViewById(R.id.pieceName);
         ListView SerialNameList = findViewById(R.id.serialNameList);
-        serialNameAdapter adapter = new serialNameAdapter(this, list, new serialNameAdapter.onItemViewClickListener(){
+        serialNameAdapter adapter = new serialNameAdapter(this, NameList, new serialNameAdapter.onItemViewClickListener(){
             @Override
             public void onItemViewClick(String name) {
                 SerialName.setText(name);
@@ -116,48 +123,56 @@ public class newWorksActivity extends Activity {
                 }
                 else {
                 Intent intent = new Intent(newWorksActivity.this,editWorkActivity.class);
+
+                intent.putExtra("seriesName",SerialName.getText());
+                intent.putExtra("workName",WorkName.getText());
+                if(NameList.contains(SerialName.getText())){
+                    for(int i = 0; i < NameList.size(); i++){
+                        if(list.get(i).first.equals(NameList.get(i))){
+                            intent.putExtra("seriesId",list.get(i).second);
+                        }
+                    }
+                }else{
+                    intent.putExtra("seriesId","");
+                }
+
+
                 startActivity(intent);
                 }
             }
         });
     }
-//    public void getSeriesTitle(){
-//        HttpUtil.getRequestWithTokenAsyn("/works/getUserPiecesList","05b1c3dd3d048c587cf0b483814227b24c0c97ad",new ArrayList<>(),new Callback(){
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                mtoast("请求异常");
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                try{
-//                    JSONObject jsonObject = new JSONObject(response.body().string());
-//                    JSONArray data = jsonObject.getJSONArray("data");
-//                    for(int i = 0; i < data.length(); i++){
-//                        JSONObject datai = data.getJSONObject(i);
-//                        Works work = new Works();
-//                        work.setPieceTitle(datai.getString("title"));
-//                        work.setContent(datai.getString("content"));
-//                        work.setLikesNum(datai.getInt("likes"));
-//                        Log.d("data__", datai.getString("title"));
-//                        work.setCollectsNum(datai.getInt("collect"));
-//                        work.setCommentsNum(datai.getInt("comment"));
-//                        work.setSerialTitle("系列名："+datai.getJSONObject("series").getString("seriesName"));
-//                        work.setPublishedTime("发布时间："+datai.getString("updateTime").substring(0,10));
-//                        works.add(work);
-//                    }
-//                    getActivity().runOnUiThread(new Runnable() {
+    public void getSeriesTitle(){
+        HttpUtil.getRequestWithTokenAsyn("/works/getUserSeriesList","05b1c3dd3d048c587cf0b483814227b24c0c97ad",new ArrayList<>(),new Callback(){
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mtoast("请求异常");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    for(int i = 0; i < data.length(); i++){
+                        JSONObject datai = data.getJSONObject(i);
+                        String namei = datai.getString("seriesName");
+                        String Idi = datai.getString("seriesId");
+                        list.add(Pair.create(namei,Idi));
+                        NameList.add(namei);
+                    }
+//                    newWorksActivity.this.runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
 //                            binding.draftManageBar.getAdapter().notifyDataSetChanged();
 //                        }
 //                    });
-//                }catch (JSONException e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     private void  mtoast(String msg){
         this.runOnUiThread(new Runnable() {
             @Override

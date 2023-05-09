@@ -87,7 +87,7 @@ public class readWorksActivity extends AppCompatActivity {
                                     try {
                                         read_content.setText("\n"+data.getString("content"));
                                         read_title.setText("\n"+data.getString("title"));
-//                                        readSerialName.setText("合集："+data.getString("seriesName")+" ");
+                                        readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
                                         userName.setText((data.getJSONObject("user").getString("userName")));
                                         String avaId = data.getJSONObject("user").getString(("avator"));
                                         HttpUtil.getAvaAsyn(avaId,binding.authorAvator,readWorksActivity.this);

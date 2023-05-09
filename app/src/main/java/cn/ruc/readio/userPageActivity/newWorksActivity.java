@@ -25,18 +25,28 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.databinding.ActivityNewWorksBinding;
+import cn.ruc.readio.ui.works.Works;
 import cn.ruc.readio.util.HttpUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.serialNameAdapter;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class newWorksActivity extends Activity {
     static public newWorksActivity new_workActivity;
+    final List<String> list = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +54,9 @@ public class newWorksActivity extends Activity {
         setContentView(R.layout.activity_new_works);
         new_workActivity = this;
         ImageButton goEditButton = (ImageButton)  findViewById(R.id.confirmNew_button);
-        final List<String> list = new ArrayList<>();
-        list.add("恶煞");
-        list.add("viko通讯录");
-        list.add("年下不叫哥，心思有点多");
+//        list.add("恶煞");
+//        list.add("viko通讯录");
+//        list.add("年下不叫哥，心思有点多");
 
         LinearLayout newWork_titleBar = findViewById(R.id.NewWork_titleBar);
         EditText SerialName = findViewById(R.id.serialName);
@@ -109,6 +118,51 @@ public class newWorksActivity extends Activity {
                 Intent intent = new Intent(newWorksActivity.this,editWorkActivity.class);
                 startActivity(intent);
                 }
+            }
+        });
+    }
+//    public void getSeriesTitle(){
+//        HttpUtil.getRequestWithTokenAsyn("/works/getUserPiecesList","05b1c3dd3d048c587cf0b483814227b24c0c97ad",new ArrayList<>(),new Callback(){
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                mtoast("请求异常");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try{
+//                    JSONObject jsonObject = new JSONObject(response.body().string());
+//                    JSONArray data = jsonObject.getJSONArray("data");
+//                    for(int i = 0; i < data.length(); i++){
+//                        JSONObject datai = data.getJSONObject(i);
+//                        Works work = new Works();
+//                        work.setPieceTitle(datai.getString("title"));
+//                        work.setContent(datai.getString("content"));
+//                        work.setLikesNum(datai.getInt("likes"));
+//                        Log.d("data__", datai.getString("title"));
+//                        work.setCollectsNum(datai.getInt("collect"));
+//                        work.setCommentsNum(datai.getInt("comment"));
+//                        work.setSerialTitle("系列名："+datai.getJSONObject("series").getString("seriesName"));
+//                        work.setPublishedTime("发布时间："+datai.getString("updateTime").substring(0,10));
+//                        works.add(work);
+//                    }
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            binding.draftManageBar.getAdapter().notifyDataSetChanged();
+//                        }
+//                    });
+//                }catch (JSONException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
+    private void  mtoast(String msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(newWorksActivity.this,msg,Toast.LENGTH_LONG).show();
             }
         });
     }

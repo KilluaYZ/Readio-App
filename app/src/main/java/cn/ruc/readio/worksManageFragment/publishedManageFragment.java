@@ -67,8 +67,8 @@ public class publishedManageFragment extends Fragment {
                         Log.d("data__", datai.getString("title"));
                         work.setCollectsNum(datai.getInt("collect"));
                         work.setCommentsNum(datai.getInt("comment"));
-                        work.setSerialTitle("系列名："+datai.getJSONObject("series").getString("seriesName"));
-                        work.setPublishedTime("发布时间："+datai.getString("updateTime").substring(0,10));
+                        work.setSerialTitle(datai.getJSONObject("series").getString("seriesName"));
+                        work.setPublishedTime(datai.getString("updateTime").substring(0,10));
                         works.add(work);
                     }
                     getActivity().runOnUiThread(new Runnable() {

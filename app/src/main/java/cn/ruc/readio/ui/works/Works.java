@@ -19,9 +19,8 @@ public class Works {
     private int commentsNum;
     private String publishedTime;
 
-    public Works(String content, int LikesNum, String serialTitle, String pieceTitle, User user) {
+    public Works(String content, String serialTitle, String pieceTitle, User user) {
         this.content = content;
-        this.likesNum = LikesNum;
         this.pieceTitle = pieceTitle;
         this.serialTitle = serialTitle;
         this.user = user;

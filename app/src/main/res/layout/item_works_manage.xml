@@ -169,7 +169,7 @@
         <TextView
             android:layout_marginLeft="28dp"
             android:layout_marginRight="28dp"
-                android:id="@+id/deleteWorkButton"
+                android:id="@+id/editWorkButton"
                 android:padding="3dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -184,7 +184,7 @@
         <TextView
             android:layout_marginLeft="28dp"
             android:layout_marginRight="28dp"
-            android:id="@+id/editWorkButton"
+            android:id="@+id/withdrawWorkButton"
             android:padding="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -200,7 +200,7 @@
         <TextView
             android:layout_marginLeft="28dp"
             android:layout_marginRight="28dp"
-            android:id="@+id/withdrawWorkButton"
+            android:id="@+id/deleteWorkButton"
             android:padding="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

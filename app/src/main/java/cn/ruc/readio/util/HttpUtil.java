@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -264,27 +265,31 @@ public class HttpUtil {
     public static void getAvaAsyn(String avaId, ImageView view, FragmentActivity avtivity){
         ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
         queryParam.add(Pair.create("fileId", avaId));
+        Log.d("avatorload","进入函数");
         HttpUtil.getRequestAsyn("/file/getFileBinaryById", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Toast.makeText(view.getContext(), "加载失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
                 if(response.code() == 200){
+                    Log.d("avatorload","hello");
                     byte[] picBytes = response.body().bytes();
                     Bitmap pic = BitmapFactory.decodeByteArray(picBytes,0,picBytes.length);
                     avtivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("avatorload","即将设置");
                             view.setImageBitmap(pic);
+                            Log.d("avatorload","设置完毕");
                         }
                     });
 
                 }else{
-
+                    Log.d("avatorload","出问题啦");
                 }
 
             }

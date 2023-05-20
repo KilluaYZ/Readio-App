@@ -2,6 +2,7 @@ package cn.ruc.readio.ui.shelf;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import androidx.cardview.widget.CardView;
+
 import java.util.List;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
+import cn.ruc.readio.bookReadActivity.readBookActivity;
 
 public class bookAdapter extends BaseAdapter {
 
@@ -48,32 +52,31 @@ public class bookAdapter extends BaseAdapter {
     @SuppressLint({"ViewHolder", "InflateParams"})
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        /*convertView = bookInflater.inflate(R.layout.book_item,null);
-        TextView book_title = (TextView)convertView.findViewById(R.id.book_title);
-        ImageView iv =   (ImageView)convertView.findViewById(R.id.book_cover);
-        BookItem value = (BookItem) bookList.get(position);
-        if(null != value)
-        {
-            book_title.setText(value.getTitle());
-            //iv.setImageBitmap(value.getCover());
-            iv.setImageResource(value.getPic());
-        }
-        return convertView;*/
-
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_item, null);
             holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.book_title);
-            holder.cover = (ImageView) convertView.findViewById(R.id.book_cover);
+            holder.text = convertView.findViewById(R.id.book_title);
+            holder.cover = convertView.findViewById(R.id.book_cover);
+            holder.jumpview= convertView.findViewById(R.id.book_item);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         BookItem books = bookList.get(position);
         if (books != null) {
-            holder.text.setText(books.getTitle());
+            holder.text.setText(books.getBookName());
             holder.cover.setImageResource(books.getPic());
+
+            /*设置跳转阅读界面*/
+            holder.jumpview.setOnClickListener(view -> {
+                Intent read_intent=new Intent();
+                read_intent.setClass(context, readBookActivity.class);
+                read_intent.putExtra("BookName",bookList.get(position).getBookName());
+                read_intent.putExtra("Author",bookList.get(position).getAuthor());
+                context.startActivity(read_intent);
+            });
+
         }
         return convertView;
     }
@@ -81,6 +84,8 @@ public class bookAdapter extends BaseAdapter {
     class ViewHolder {
         TextView text;
         ImageView cover;
+
+        CardView jumpview;
     }
 }
 

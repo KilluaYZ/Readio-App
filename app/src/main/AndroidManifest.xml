@@ -15,7 +15,19 @@
         android:theme="@style/Theme.ReadIO"
         tools:targetApi="31">
         <activity
-    	    android:name=".worksActivity.readWorksActivity"
+            android:name=".bookReadActivity.allCommentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bookReadActivity.commentDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bookReadActivity.readBookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bookReadActivity.bookDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".worksActivity.readWorksActivity"
             android:exported="false" />
         <activity
             android:name=".userPageActivity.addTagActivity"
@@ -53,9 +65,7 @@
         <activity
             android:name=".userPageActivity.myCollectionActivity"
             android:exported="false" />
-        <activity
-            android:name=".commendActivity.bookDetailActivity"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

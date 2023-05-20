@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import cn.ruc.readio.databinding.ActivityReadWorksBinding;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
@@ -42,14 +43,16 @@ public class readWorksActivity extends AppCompatActivity {
     public List<PieceComments> comment_list = new ArrayList<>();
     private mBottomSheetDialog bottomSheetDialog;
     private BottomSheetBehavior bottomSheetBehavior;
+    private ActivityReadWorksBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        binding = ActivityReadWorksBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         String workId;
         Intent intent = getIntent();
         workId = intent.getStringExtra("extra_data");
-        setContentView(R.layout.activity_read_works);
         TextView follow_button = (TextView) findViewById(R.id.followAuthorButton);
         EditText writeComment_button = (EditText) findViewById(R.id.writeComment);
         ImageView sendComment_button = (ImageView) findViewById(R.id.sendPieceCommentButton);
@@ -61,7 +64,6 @@ public class readWorksActivity extends AppCompatActivity {
         TextView readSerialName = (TextView) findViewById(R.id.readSerialText);
         TextView userName = (TextView) findViewById(R.id.readUserNameText);
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
-        ava = (ImageView) findViewById(R.id.authorAvator);
 
             ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
             queryParam.add(new Pair<>("piecesId",workId));
@@ -85,10 +87,10 @@ public class readWorksActivity extends AppCompatActivity {
                                     try {
                                         read_content.setText("\n"+data.getString("content"));
                                         read_title.setText("\n"+data.getString("title"));
-                                        readSerialName.setText("合集："+data.getString("seriesName")+" ");
+                                        readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
                                         userName.setText((data.getJSONObject("user").getString("userName")));
                                         String avaId = data.getJSONObject("user").getString(("avator"));
-                                        HttpUtil.getAvaAsyn(avaId,ava,readWorksActivity.this);
+                                        HttpUtil.getAvaAsyn(avaId,binding.authorAvator,readWorksActivity.this);
 //                                        ava.setImageBitmap(HttpUtil.getAvaSyn(avaId));
 
                                     } catch (JSONException e) {

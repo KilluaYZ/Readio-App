@@ -8,15 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
-
+import java.util.Objects;
 import cn.ruc.readio.R;
-import cn.ruc.readio.commendActivity.bookDetailActivity;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
 
 
 public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.myHolder> {
@@ -31,9 +29,9 @@ public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.
 
     static class myHolder extends RecyclerView.ViewHolder{
 
-        TextView tv1;
-        TextView tv2;
+        TextView tv1,tv2;
         CardView jumpView;
+
         public myHolder(View itemView) {
             super(itemView);
             tv1=itemView.findViewById(R.id.quote);
@@ -52,11 +50,19 @@ public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.
     @Override
     public void onBindViewHolder(@NonNull myHolder holder, @SuppressLint("RecyclerView") int position) {
         Log.d("TAG", "onBindViewHolder: "+lists.get(position).getQuote());
-        String dash="——";
-        ((myHolder)holder).tv1.setText(lists.get(position).getQuote());
-        ((myHolder)holder).tv2.setText(dash+lists.get(position).getSource());
-
-        ((myHolder)holder).jumpView.setOnClickListener(view -> {
+        /*设置名言*/
+        (holder).tv1.setText(lists.get(position).getQuote());
+        /*设置出处*/
+        if(!Objects.equals(lists.get(position).getSource(), "null")){
+            String dash="——";
+            (holder).tv2.setText(dash+lists.get(position).getSource());
+        }
+        else {
+            String text=" ";
+            (holder).tv2.setText(text);
+        }
+        /*设置卡片跳转*/
+        (holder).jumpView.setOnClickListener(view -> {
             Intent intent=new Intent();
             intent.setClass(context, bookDetailActivity.class);
             intent.putExtra("BookName",lists.get(position).getBookName());

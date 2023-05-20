@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import cn.ruc.readio.R;
 import androidx.annotation.NonNull;
 
@@ -25,7 +27,6 @@ import java.util.List;
 
 public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.ViewHolder>{
     private List<Works> WorksList;
-
     public worksManageAdapter(Context context, List<Works> WorksList){
         this.WorksList = WorksList;
     }
@@ -38,13 +39,13 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
         private TextView commentsNum;
         private TextView seriesName;
         private TextView publishedTime;
-        private TextView workTag;
+        private TextView withdrawButton;
 
         public ViewHolder(View view){
             super(view);
             workTitle = view.findViewById(R.id.manageWorkTitle);
 //            workContent = view.findViewById(R.id.manageWorkContent);
-            workTag = view.findViewById(R.id.workTag);
+            withdrawButton = view.findViewById(R.id.withdrawWorkButton);
             seriesName = view.findViewById(R.id.manageSeriesTitle);
             likesNum = view.findViewById(R.id.manageLikeNumText);
             collectsNum = view.findViewById(R.id.manageCollectNumText);
@@ -59,6 +60,12 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_works_manage,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.withdrawButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(parent.getContext(), "作品已撤回草稿箱", Toast.LENGTH_SHORT).show();
+            }
+        });
         return viewHolder;
     }
 
@@ -68,8 +75,8 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
         Works works = WorksList.get(position);
         holder.workTitle.setText(works.getPieceTitle());
 //        holder.workContent.setText(works.getContent());
-        holder.seriesName.setText(works.getSerialTitle());
-        holder.publishedTime.setText(works.getPublishedTime());
+        holder.seriesName.setText("系列名：" +works.getSerialTitle());
+        holder.publishedTime.setText("发布时间：" + works.getPublishedTime());
         holder.likesNum.setText(toString().valueOf(works.getLikesNum()));
         holder.collectsNum.setText(toString().valueOf(works.getCollectsNum()));
         holder.collectsNum.setText(toString().valueOf(works.getCollectsNum()));

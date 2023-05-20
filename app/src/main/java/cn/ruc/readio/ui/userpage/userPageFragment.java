@@ -1,7 +1,6 @@
 package cn.ruc.readio.ui.userpage;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +20,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
-import cn.ruc.readio.userPageActivity.LoginActivity;
+import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
@@ -32,10 +31,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+
 public class userPageFragment extends Fragment {
 
     private FragmentUserpageBinding binding;
-    private String token = "";
 
     public ImageButton new_work_button;
 
@@ -92,17 +91,6 @@ public class userPageFragment extends Fragment {
             }
         });
 
-        try {
-            if(token.isEmpty()){
-                login();
-            }else{
-                Log.d(this.toString(),"token = "+token);
-                getProfile();
-            }
-
-        } catch (JSONException e) {
-            Toast.makeText(getContext(), "访问服务器错误", Toast.LENGTH_LONG).show();
-        }
 
         binding.myAvator.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -116,43 +104,23 @@ public class userPageFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(binding.userID.getText().length() > 0){
+
+        }else{
+            getProfile();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
-    private void login() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("phoneNumber","18314266702");
-        jsonObject.put("passWord","123456");
-
-        HttpUtil.postRequestJsonAsyn("/app/auth/login", jsonObject.toString(), new Callback() {
-                @Override
-            public void onFailure(Call call, IOException e) {
-                Looper.prepare();
-                Toast.makeText(getContext(),"登录失败！请检查网络连接",Toast.LENGTH_LONG).show();
-                Looper.loop();
-                Log.e(this.toString(), "登录数据获取失败");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    JSONObject responseJsonObject = new JSONObject(response.body().string());
-                    token = responseJsonObject.getJSONObject("data").getString("token");
-                    Log.d(this.toString(), "获取到登录数据");
-                    Log.d(this.toString(),"token = "+token);
-                    getProfile();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    mtoast("解析登录信息失败");
-                }
-            }
-        });
-    }
-
     private void getProfile(){
-        HttpUtil.getRequestWithTokenAsyn("/app/auth/profile", token, new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/app/auth/profile", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();

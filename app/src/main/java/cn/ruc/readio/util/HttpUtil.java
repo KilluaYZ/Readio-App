@@ -1,5 +1,6 @@
 package cn.ruc.readio.util;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -67,7 +68,7 @@ public class HttpUtil {
     }
 
     //带令牌的get方法
-    public static void getRequestWithTokenAsyn(String address, String token, ArrayList<Pair<String,String>> queryParameter, Callback callback){
+    public static void getRequestWithTokenAsyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
@@ -79,16 +80,18 @@ public class HttpUtil {
             url.addQueryParameter(item.first,item.second);
         });
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .get()
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    public static Response getRequestWithTokenSyn(String address, String token, ArrayList<Pair<String,String>> queryParameter, Callback callback) throws IOException {
+    public static Response getRequestWithTokenSyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter, Callback callback) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
@@ -100,10 +103,12 @@ public class HttpUtil {
             url.addQueryParameter(item.first,item.second);
         });
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .get()
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         return okHttpClient.newCall(request).execute();
@@ -146,7 +151,7 @@ public class HttpUtil {
     }
 
     //带令牌的post方法
-    public static void postRequestWithTokenAsyn(String address, String token, RequestBody requestBody, Callback callback){
+    public static void postRequestWithTokenAsyn(Activity activity, String  address, RequestBody requestBody, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
@@ -154,17 +159,19 @@ public class HttpUtil {
                 .scheme(BASE_SCHEME)
                 .addPathSegment(address);
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .post(requestBody)
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
     }
 
     //带令牌的post方法
-    public static Response postRequestWithTokenSyn(String address, String token, RequestBody requestBody) throws IOException {
+    public static Response postRequestWithTokenSyn(Activity activity, String address, RequestBody requestBody) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
@@ -172,10 +179,12 @@ public class HttpUtil {
                 .scheme(BASE_SCHEME)
                 .addPathSegment(address);
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .post(requestBody)
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         return okHttpClient.newCall(request).execute();
@@ -222,7 +231,7 @@ public class HttpUtil {
     }
 
     //带令牌的post方法，向服务器传json字符串
-    public static void postRequestWithTokenJsonAsyn(String address, String token, String jsonString, Callback callback){
+    public static void postRequestWithTokenJsonAsyn(Activity activity, String address, String jsonString, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
 
@@ -232,16 +241,18 @@ public class HttpUtil {
                 .scheme(BASE_SCHEME)
                 .addPathSegment(address);
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .post(requestBody)
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    public static Response postRequestWithTokenJsonSyn(String address, String token, String jsonString, Callback callback) throws IOException {
+    public static Response postRequestWithTokenJsonSyn(Activity activity, String address, String jsonString, Callback callback) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
 
@@ -251,10 +262,12 @@ public class HttpUtil {
                 .scheme(BASE_SCHEME)
                 .addPathSegment(address);
 
+        Auth.Token token = new Auth.Token(activity);
+
         Request request = new Request.Builder()
                 .url(url.build())
                 .post(requestBody)
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", token.getToken())
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();
         return okHttpClient.newCall(request).execute();

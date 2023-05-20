@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_marginLeft="3dp"
                     android:layout_marginRight="3dp"
-                    android:id="@+id/textView"
+                    android:id="@+id/login_activity_topbar_change_view"
                     android:padding="3dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"

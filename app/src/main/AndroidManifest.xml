@@ -29,7 +29,7 @@
             android:name=".userPageActivity.changeAvatorActivity"
             android:exported="false" />
         <activity
-            android:name=".userPageActivity.LoginActivity"
+            android:name=".ui.userpage.login.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".userPageActivity.editWorkActivity"

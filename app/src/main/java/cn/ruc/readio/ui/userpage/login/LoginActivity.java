@@ -1,8 +1,12 @@
-package cn.ruc.readio.userPageActivity;
+package cn.ruc.readio.ui.userpage.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import cn.ruc.readio.MainActivity;
+import cn.ruc.readio.util.Auth;
+import cn.ruc.readio.util.Tools;
 import eightbitlab.com.blurview.BlurView;
 
 import android.annotation.SuppressLint;
@@ -16,18 +20,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.json.JSONException;
 
 import cn.ruc.readio.R;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import kotlin.jvm.internal.Intrinsics;
 
 public class LoginActivity extends AppCompatActivity {
+//    private ActivityLoginBinding binding;
 
+    private boolean isLogin = true;
+    private FragmentTransaction transaction;
+    private FragmentManager manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+//        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+//        setContentView(binding.getRoot());
         View decorView = getWindow().getDecorView();
         ViewGroup rootView = (ViewGroup) decorView.findViewById(R.id.login_activity_view);
         fullScreen(this);
@@ -38,7 +55,62 @@ public class LoginActivity extends AppCompatActivity {
 
         ImageView login_to_userpage_button = (ImageView) findViewById(R.id.login_to_userpage);
         login_to_userpage_button.setOnClickListener(v -> finish());
+
+
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        transaction.add(R.id.login_register_form_layout, new LoginFormFragment());
+        transaction.commit();
+
+        TextView changeView = (TextView) findViewById(R.id.login_activity_topbar_change_view);
+        changeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeLayout();
+            }
+        });
+
     }
+
+    public void changeLayout(){
+        if(isLogin){
+            loadLoginForm();
+        }else {
+            loadRegisterForm();
+        }
+        isLogin = !isLogin;
+    }
+
+    private void loadLoginForm(){
+        transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(
+                R.animator.slide_right_in,
+                R.animator.slide_left_out,
+                R.animator.slide_left_in,
+                R.animator.slide_right_out
+        );
+        transaction.replace(R.id.login_register_form_layout, new LoginFormFragment());
+        TextView updateView = (TextView) findViewById(R.id.login_activity_topbar_change_view);
+        updateView.setText("register");
+        transaction.commit();
+    }
+
+    private void loadRegisterForm(){
+        transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(
+                R.animator.slide_right_in,
+                R.animator.slide_left_out,
+                R.animator.slide_left_in,
+                R.animator.slide_right_out
+        );
+        transaction.replace(R.id.login_register_form_layout, new RegisterFormFragment());
+
+        TextView updateView = (TextView) findViewById(R.id.login_activity_topbar_change_view);
+        updateView.setText("login");
+        transaction.commit();
+    }
+
+
 
     private void fullScreen(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

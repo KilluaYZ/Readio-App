@@ -45,6 +45,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="start"
                     android:layout_weight="2"
+                    android:src="@drawable/unlogged2"
                      />
 
                 <LinearLayout
@@ -62,7 +63,7 @@
                         android:fontFamily="@font/kalam_regular"
                         android:textColor="@color/selected_2_dark"
                         android:textStyle="bold"
-                        android:text=""
+                        android:text="点击登录"
                         android:textSize="15sp" />
 
                     <TextView
@@ -71,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="ID:1234567"
+                        android:text=""
                         android:fontFamily="@font/mplus_regular"
                         android:textColor="@color/grey" />
                 </LinearLayout>

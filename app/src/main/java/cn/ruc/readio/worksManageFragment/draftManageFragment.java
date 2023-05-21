@@ -47,7 +47,7 @@ public class draftManageFragment extends Fragment {
     }
 
     public void refreshData(){
-        HttpUtil.getRequestWithTokenAsyn("/works/getUserPiecesList","05b1c3dd3d048c587cf0b483814227b24c0c97ad",new ArrayList<>(),new Callback(){
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getUserPiecesList",new ArrayList<>(),new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
                 mtoast("请求异常");

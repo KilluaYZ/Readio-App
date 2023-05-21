@@ -57,7 +57,7 @@ public class Auth {
                                     Toast.makeText(activity, "未登录，正在跳转登录页面！", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            Thread.sleep(3000);
+                            Thread.sleep(500);
                             Intent intent = new Intent(activity, LoginActivity.class);
                             activity.startActivity(intent);
                         }
@@ -129,15 +129,14 @@ public class Auth {
                     }
 
                 }else if(responseCode == 400){
-                    Log.d("hahaha", "进入400分支");
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String msg = jsonObject.getString("msg");
+                        Tools.my_toast(activity, msg);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                            Toast.makeText(activity, "登录失败", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
                 }
             }
         });
@@ -159,7 +158,14 @@ public class Auth {
                     //成功拿到数据
                     activity.changeLayout();
                 }else{
-                    Tools.my_toast(activity, "注册失败");
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String msg = jsonObject.getString("msg");
+                        Tools.my_toast(activity, msg);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
         });

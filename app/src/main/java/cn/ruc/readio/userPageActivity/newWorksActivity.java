@@ -143,7 +143,7 @@ public class newWorksActivity extends Activity {
         });
     }
     public void getSeriesTitle(){
-        HttpUtil.getRequestWithTokenAsyn("/works/getUserSeriesList","05b1c3dd3d048c587cf0b483814227b24c0c97ad",new ArrayList<>(),new Callback(){
+        HttpUtil.getRequestWithTokenAsyn(this,"/works/getUserSeriesList",new ArrayList<>(),new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
                 mtoast("请求异常");

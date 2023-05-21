@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -53,9 +54,6 @@ public class LoginActivity extends AppCompatActivity {
             blurView.setupWith(rootView, new RenderScriptBlur(this))
             .setBlurRadius(6F);
 
-        ImageView login_to_userpage_button = (ImageView) findViewById(R.id.login_to_userpage);
-        login_to_userpage_button.setOnClickListener(v -> finish());
-
 
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
@@ -73,10 +71,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void changeLayout(){
+        Log.d("isLogin", toString().valueOf(isLogin));
         if(isLogin){
-            loadLoginForm();
-        }else {
             loadRegisterForm();
+        }else {
+            loadLoginForm();
         }
         isLogin = !isLogin;
     }

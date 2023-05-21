@@ -104,7 +104,7 @@ public class editWorkActivity extends AppCompatActivity {
         jsonObject.put("seriesName", seriesName);
         String json = jsonObject.toString();
 
-        HttpUtil.postRequestWithTokenJsonAsyn("/works/addPieces", token, json, new Callback() {
+        HttpUtil.postRequestWithTokenJsonAsyn(this,"/works/addPieces",  json, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Toast.makeText(editWorkActivity.this, "发布失败，请重试", Toast.LENGTH_SHORT).show();

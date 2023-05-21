@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -90,11 +92,16 @@ public class readWorksActivity extends AppCompatActivity {
                                         readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
                                         userName.setText((data.getJSONObject("user").getString("userName")));
                                         String avaId = data.getJSONObject("user").getString(("avator"));
-                                        HttpUtil.getAvaAsyn(avaId,binding.authorAvator,readWorksActivity.this);
+//                                        HttpUtil.getAvaAsyn(avaId,binding.authorAvator,readWorksActivity.this);
 //                                        ava.setImageBitmap(HttpUtil.getAvaSyn(avaId));
+                                        Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
                                     }
                                 }
                             });

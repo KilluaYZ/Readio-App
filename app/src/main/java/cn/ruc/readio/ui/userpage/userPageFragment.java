@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
@@ -27,6 +28,7 @@ import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -137,7 +139,8 @@ public class userPageFragment extends Fragment {
 //                    handler.obtainMessage(1,userId);
 //                    handler.obtainMessage(2,userName);
 //                    Bitmap my_avamap = HttpUtil.getAvaSyn(responseJsonObject.getString("avator"));
-                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
+//                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
+                    Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -147,7 +150,7 @@ public class userPageFragment extends Fragment {
                         }
                     });
                     Log.d(this.toString(), "拿到profile数据");
-                } catch (JSONException e) {
+                } catch (JSONException | ParseException e) {
                     e.printStackTrace();
                     mtoast("解析profile信息失败");
                 }

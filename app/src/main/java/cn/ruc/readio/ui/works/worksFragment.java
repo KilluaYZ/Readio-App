@@ -20,12 +20,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentWorksBinding;
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -96,7 +98,15 @@ public class worksFragment extends Fragment {
                         @Override
                         public void run() {
                             for(int i = 0;i < works.size(); ++i){
-                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
+//                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
+                                Bitmap pic = null;
+                                try {
+                                    pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                } catch (JSONException | ParseException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 works.get(i).getUser().setAvator(pic);
                                 Log.d("workadpter","需要更新");
                                 getActivity().runOnUiThread(new Runnable() {

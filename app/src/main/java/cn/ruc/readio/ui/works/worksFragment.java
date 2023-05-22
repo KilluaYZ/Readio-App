@@ -113,7 +113,9 @@ public class worksFragment extends Fragment {
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                            if(binding != null) {
+                                                binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                            }
                                         }
                                     });
                                 }
@@ -126,9 +128,11 @@ public class worksFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
-                                if(recyclerView != null) {
-                                    recyclerView.getAdapter().notifyDataSetChanged();
+                                if(getActivity() != null) {
+                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
+                                    if (recyclerView != null) {
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    }
                                 }
                             }
                         });

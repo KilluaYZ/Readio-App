@@ -123,8 +123,12 @@ public class commendFragment extends Fragment {
                             @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void run() {
-                                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
-                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                if(getActivity() != null) {
+                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
+                                    if (recyclerView != null) {
+                                        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                    }
+                                }
                             }
                         });
                     }

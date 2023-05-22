@@ -1,6 +1,7 @@
 package cn.ruc.readio.userPageActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.datastore.preferences.core.Preferences;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -50,7 +51,7 @@ public class addTagActivity extends Activity {
         LinearLayout addTagTitleBar = (LinearLayout) findViewById(R.id.addTag_titleBar);
         ImageButton addTag = (ImageButton) findViewById(R.id.confirmTagButton);
         EditText myTag = (EditText) findViewById(R.id.tagName);
-        tagAdapter adapter = new tagAdapter(this, list, new tagAdapter.onItemViewClickListener(){
+        tagAdapter adapter = new tagAdapter(this, NameList, new tagAdapter.onItemViewClickListener(){
             @Override
             public void onItemViewClick(String name) {
                 tagName.setText(name);
@@ -106,12 +107,13 @@ public class addTagActivity extends Activity {
                     /*
                     上传至服务器，跟新数据库
                      */
-                    Intent intent = new Intent(addTagActivity.this,editWorkActivity.class);
-                    intent.putExtra("tagName",myTag.getText());
-                    if(NameList.contains(myTag.getText())){
+                    Intent intent = new Intent();
+                    String tagName = String.valueOf(myTag.getText());
+                    intent.putExtra("tagName",tagName);
+                    if(NameList.contains(tagName)){
                         for(int i = 0; i < NameList.size(); i++)
                         {
-                            if(Taglist.get(i).first.equals(myTag))
+                            if(Taglist.get(i).first.equals(tagName))
                             {
                                 intent.putExtra("tagId",Taglist.get(i).second);
                             }
@@ -120,18 +122,23 @@ public class addTagActivity extends Activity {
                     else{
                         intent.putExtra("tagId","");
                     }
-                    startActivity(intent);
-                    Toast.makeText(addTagActivity.this, "成功更新tag", Toast.LENGTH_SHORT).show();
+                    intent.putExtra("origin","addTag");
+                    setResult(3, intent);
                     finish();
+                    Toast.makeText(addTagActivity.this, "成功更新tag", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     public void getTagName(){
-        HttpUtil.getRequestWithTokenAsyn(this,"/works/tag/get",new ArrayList<>(),new Callback(){
+        ArrayList<Pair<String , String>> queryParam =  new ArrayList<>();
+        queryParam.add(Pair.create("pageSize","7"));
+        queryParam.add(Pair.create("pageNum","1"));
+        queryParam.add(Pair.create("sortMode","Hot"));
+        HttpUtil.getRequestWithTokenAsyn(this,"/works/tag/get", queryParam,new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Tools.my_toast(addTagActivity.this,"请求失败");
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
+import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.HttpUtil;
@@ -65,14 +66,14 @@ public class userPageFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        ImageButton touxiang = binding.mySettingsButton;
+        ImageButton settingsButton = binding.mySettingsButton;
 
         ImageButton manage_button = binding.workManageButton;
-        touxiang.setOnClickListener(new View.OnClickListener(){
+        settingsButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), LoginActivity.class);
+                Intent intent = new Intent(getContext(), mySettingsActivity.class);
                 startActivity(intent);
             }
         });

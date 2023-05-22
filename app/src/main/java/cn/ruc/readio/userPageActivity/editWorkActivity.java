@@ -1,5 +1,6 @@
 package cn.ruc.readio.userPageActivity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,14 +113,15 @@ public class editWorkActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(editWorkActivity.this,addTagActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
+
     }
     public void publishPiece(String workName, String content, String seriesId, String seriesName, int status) throws JSONException {
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pieceTitle", workName);
+        jsonObject.put("piecesTitle", workName);
         jsonObject.put("content", content);
         jsonObject.put("seriesId", seriesId);
         jsonObject.put("seriesName", seriesName);
@@ -137,19 +140,18 @@ public class editWorkActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = getIntent();
-        String tagName = intent.getStringExtra("tagName");
-        String tagId = intent.getStringExtra("tagId");
-        if(tagList.contains(tagName))
-        {
-        }
-        else{
-        tagList.add(tagName);
-        tagIdList.add(tagId);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == 3) {
+            String tagName = data.getStringExtra("tagName");
+            String tagId = data.getStringExtra("tagId");
+            Log.d("hello", tagName);
+            if (tagList.contains(tagName)) {
+            } else {
+                tagList.add(tagName);
+                tagIdList.add(tagId);
+            }
         }
     }
 }

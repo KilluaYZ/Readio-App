@@ -1,6 +1,7 @@
 package cn.ruc.readio.ui.commend;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentCommendBinding;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -116,14 +118,16 @@ public class commendFragment extends Fragment {
                         }
                     }).run();*/
 
-                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void run() {
-                            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
-                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-                        }
-                    });
+                    if(getActivity() != null){
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void run() {
+                                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
+                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            }
+                        });
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -132,12 +136,16 @@ public class commendFragment extends Fragment {
     }
 
     private void  mtoast(String msg){
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
-            }
-        });
+        if(getActivity() != null){
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else{
+        }
     }
 
 }

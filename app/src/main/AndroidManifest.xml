@@ -45,6 +45,7 @@
             android:exported="false" />
         <activity
             android:name=".userPageActivity.editWorkActivity"
+            android:launchMode="singleTask"
             android:exported="false" />
         <activity
             android:name=".userPageActivity.dataCenterActivity"

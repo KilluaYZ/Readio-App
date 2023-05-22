@@ -128,7 +128,7 @@ public class newWorksActivity extends Activity {
                 intent.putExtra("workName",WorkName.getText());
                 if(NameList.contains(SerialName.getText())){
                     for(int i = 0; i < NameList.size(); i++){
-                        if(list.get(i).first.equals(NameList.get(i))){
+                        if(list.get(i).first.equals(SerialName.getText())){
                             intent.putExtra("seriesId",list.get(i).second);
                         }
                     }

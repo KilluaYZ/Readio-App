@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cn.ruc.readio.databinding.ActivityReadWorksBinding;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -67,9 +69,10 @@ public class readWorksActivity extends AppCompatActivity {
         TextView userName = (TextView) findViewById(R.id.readUserNameText);
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
 
-            ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
-            queryParam.add(new Pair<>("piecesId",workId));
-            Log.d("piecesId",workId);
+        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+        queryParam.add(new Pair<>("piecesId",workId));
+        Log.d("piecesId",workId);
+        Activity thisActivity = this;
             HttpUtil.getRequestAsyn("/works/getPiecesDetail", queryParam, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -96,12 +99,9 @@ public class readWorksActivity extends AppCompatActivity {
 //                                        ava.setImageBitmap(HttpUtil.getAvaSyn(avaId));
                                         Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
 
-                                    } catch (JSONException e) {
+                                    } catch (JSONException | IOException | ParseException e) {
                                         e.printStackTrace();
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    } catch (ParseException e) {
-                                        throw new RuntimeException(e);
+                                        Tools.my_toast(thisActivity, "获取章节失败");
                                     }
                                 }
                             });

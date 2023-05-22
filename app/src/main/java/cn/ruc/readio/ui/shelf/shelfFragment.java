@@ -1,46 +1,67 @@
 package cn.ruc.readio.ui.shelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.telecom.Call;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
 import cn.ruc.readio.bookReadActivity.readBookActivity;
+import cn.ruc.readio.databinding.FragmentShelfBinding;
+import cn.ruc.readio.util.HttpUtil;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class shelfFragment extends Fragment {
 
-    //private FragmentShelfBinding binding;
+    private FragmentShelfBinding binding;
     private GridView grid_view;
-
-    private View view;
 
     private List<BookItem> lists;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        /*binding = FragmentShelfBinding.inflate(inflater, container, false);
+        binding = FragmentShelfBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        lists = new ArrayList<>();
         //refreshData();
         lists=getData();
         grid_view = binding.bookGridview;
 
         bookAdapter myAdapter = new bookAdapter(getContext(),lists);
         grid_view.setAdapter(myAdapter);
-        return root;*/
 
-        setHasOptionsMenu(true);
+        return root;
+
+        /*setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_shelf, container, false);
         Context context = view.getContext();
 
@@ -50,50 +71,51 @@ public class shelfFragment extends Fragment {
         bookAdapter myAdapter = new bookAdapter(getContext(),lists);
         grid_view.setAdapter(myAdapter);
 
-        return view;
+        return view;*/
 
     }
     private List<BookItem> getData()
     {
         List<BookItem> data = new ArrayList<>();
-        data.add(new BookItem("三体","刘慈欣",R.drawable.bookcover1));
-        data.add(new BookItem("挪威的森林","村上春树", R.drawable.bookcover2));
-        data.add(new BookItem("活着","余华",R.drawable.bookcover3));
-        data.add(new BookItem("红楼梦","曹雪芹",R.drawable.bookcover4));
-        data.add(new BookItem("百年孤独","马尔克斯",R.drawable.bookcover5));
-        data.add(new BookItem("哈姆雷特","莎士比亚",R.drawable.bookcover6));
-        data.add(new BookItem("月亮与六便士","毛姆",R.drawable.bookcover7));
-        data.add(new BookItem("复活","马尔克斯",R.drawable.bookcover8));
-        data.add(new BookItem("平凡的世界","路遥",R.drawable.bookcover9));
-        data.add(new BookItem("局外人","加缪",R.drawable.bookcover10));
+        data.add(new BookItem("三体","刘慈欣"));
+        data.add(new BookItem("挪威的森林","村上春树"));
+        data.add(new BookItem("活着","余华"));
+        data.add(new BookItem("红楼梦","曹雪芹"));
+        data.add(new BookItem("百年孤独","马尔克斯"));
+        data.add(new BookItem("哈姆雷特","莎士比亚"));
+        data.add(new BookItem("月亮与六便士","毛姆"));
+        data.add(new BookItem("复活","马尔克斯"));
+        data.add(new BookItem("平凡的世界","路遥"));
+        data.add(new BookItem("局外人","加缪"));
         return data;
     }
 
 
-    /*public void refreshData(){
-        HttpUtil.getRequestAsyn("/app/books/list", new ArrayList<>(), new Callback() {
+    public void refreshData(){
+        String token="05b1c3dd3d048c587cf0b483814227b24c0c97ad";
+        Activity activity = null;
+        ArrayList<Pair<String,String>> queryParaameter = null;
+        HttpUtil.getRequestWithTokenAsyn(activity,"/app/books/list",queryParaameter, new Callback() {
 
-            public void onFailure(Call call, IOException e) {
+            //Request.Builder request = new Request.Builder().addHeader("Authorization",token);
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                 mtoast("请求异常，加载不出来");
             }
-
-
-            public void onResponse(Call call, Response response) throws IOException {
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
-                    JSONArray data = jsonObject.getJSONArray("data");
-                    for(int i = 0; i < data.length(); i++){
-                        JSONObject datai = data.getJSONObject(i);
-                        JSONObject booki = datai.getJSONObject("data");
-                        BookItem book = new BookItem();
-                        book.setTitle(booki.getString("bookName"));
-                        book.setCoverID(booki.getString("bookID"));
-
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray mybook_list = data.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject mybook = mybook_list.getJSONObject(i);
+                        BookItem book = new BookItem(mybook.getString("bookName"), mybook.getString("authorID"));
                         lists.add(book);
-
                     }
 
-                    new Thread(new Runnable() {
+                    /*获取封面*/
+                    /*new Thread(new Runnable() {
                         @Override
                         public void run() {
                             for(int i = 0;i < lists.size(); ++i){
@@ -109,31 +131,24 @@ public class shelfFragment extends Fragment {
                             }
 
                         }
-                    }).run();
+                    }).run();*/
 
-                    getActivity().runOnUiThread(new Runnable() {
+                    /*getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
-                            recyclerView.getAdapter().notifyDataSetChanged();
+                            GridView gridView = getActivity().findViewById(R.id.book_gridview);
+                            //gridView.getAdapter().getItem().
                         }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    });*/
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
-    }*/
+    }
 
-    /*private void  mtoast(String msg){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
-            }
-        });
-    }*/
 
+    private void  mtoast(String msg){
+        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show());
+    }
 }

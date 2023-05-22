@@ -1,13 +1,20 @@
 package cn.ruc.readio.ui.commend;
 
+import static android.content.Context.WINDOW_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,11 +70,24 @@ public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.
         }
         /*设置卡片跳转*/
         (holder).jumpView.setOnClickListener(view -> {
-            Intent intent=new Intent();
-            intent.setClass(context, bookDetailActivity.class);
-            intent.putExtra("BookName",lists.get(position).getBookName());
-            intent.putExtra("Author",lists.get(position).getAuthor());
-            context.startActivity(intent);
+
+            if(lists.get(position).getBookId()!=0){
+                Intent intent=new Intent();
+                intent.setClass(context, bookDetailActivity.class);
+                intent.putExtra("BookName",lists.get(position).getBookName());
+                intent.putExtra("Author",lists.get(position).getAuthor());
+                intent.putExtra("BookID",lists.get(position).getBookId());
+                context.startActivity(intent);
+            }
+            else{
+                //Toast.makeText(context,"这个好句没有对应的书籍哦~",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent();
+                intent.setClass(context, bookDetailActivity.class);
+                intent.putExtra("BookName",lists.get(position).getBookName());
+                intent.putExtra("Author",lists.get(position).getAuthor());
+                intent.putExtra("BookID",3);
+                context.startActivity(intent);
+            }
         });
     }
 

@@ -1,11 +1,13 @@
 package cn.ruc.readio.ui.shelf;
 
+import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 
 public class BookItem {
     private String BookName;
-    private String Author;
-    private int pic;
+    private final String Author;
+    private Bitmap Cover;
+    private String CoverID;
 
     @NonNull
     public String getBookName() {
@@ -14,15 +16,22 @@ public class BookItem {
     public String getAuthor() {
         return Author;
     }
-    public int getPic() {
-        return pic;
+    public Bitmap getCover() {
+        return Cover;
+    }
+    public String getCoverID() {
+        return CoverID;
     }
 
-    public BookItem(String BookName, String Author, int coverID) {
+    public BookItem(String BookName, String Author, Bitmap coverID) {
         //this.img=img;
         this.BookName = BookName;
         this.Author=Author;
-        this.pic=coverID;
+        this.Cover =coverID;
+    }
+    public BookItem(String BookName,String Author){
+        this.BookName = BookName;
+        this.Author=Author;
     }
 
     public void setBookName(String BookName){
@@ -31,54 +40,7 @@ public class BookItem {
     public void setAuthor(String Author){
         this.BookName = Author;
     }
-    public void setPic(int id){this.pic = id;}
+    public void setCover(Bitmap Cover){this.Cover = Cover;}
+    public void setCoverID(String CoverID){this.CoverID = CoverID;}
 }
 
-/*public class BookItem {
-    private Bitmap cover;
-    private String title;
-    private String coverID;
-
-    private int pic;
-
-    @NonNull
-    public Bitmap getCover() {
-        return cover;
-    }
-    public String getTitle() {
-        return title;
-    }
-    public String getCoverID() {
-        return coverID;
-    }
-    public int getPic() {
-        return pic;
-    }
-
-    public BookItem(Bitmap cover, String title,String coverID) {
-        //this.img=img;
-        this.cover = cover;
-        this.title = title;
-        this.coverID=coverID;
-    }
-
-    public BookItem(String title,int coverID) {
-        //this.img=img;
-        this.title = title;
-        this.pic=coverID;
-    }
-
-
-    public BookItem(){
-        title=" ";
-    }
-
-    public void setCover(Bitmap cover){
-        this.cover=cover;
-    }
-    public void setTitle(String title){
-        this.title=title;
-    }
-
-    public void setCoverID(String id){this.coverID = id;}
-}*/

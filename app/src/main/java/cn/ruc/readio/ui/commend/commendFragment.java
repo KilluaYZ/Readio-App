@@ -3,6 +3,7 @@ package cn.ruc.readio.ui.commend;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import cn.ruc.readio.util.HttpUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
 
 public class commendFragment extends Fragment {
     private RecyclerView recycler_view;
@@ -66,10 +68,10 @@ public class commendFragment extends Fragment {
 
     /*初始化函数，用于test*/
     private void initData() {
-        recommendation_lists.add(new Recommendation("章北海：自然选择！前进四！","刘慈欣","《三体》"));
-        recommendation_lists.add(new Recommendation("黑，真他妈的黑啊","刘慈欣","《三体》"));
-        recommendation_lists.add(new Recommendation("card3","不知道写点啥","《xx》"));
-        recommendation_lists.add(new Recommendation("card4","随便看看吧","《yy》"));
+        recommendation_lists.add(new Recommendation("章北海：自然选择！前进四！","刘慈欣","《三体》",0));
+        recommendation_lists.add(new Recommendation("黑，真他妈的黑啊","刘慈欣","《三体》",0));
+        recommendation_lists.add(new Recommendation("card3","不知道写点啥","《xx》",0));
+        recommendation_lists.add(new Recommendation("card4","随便看看吧","《yy》",0));
     }
 
     public void refreshData(){
@@ -89,7 +91,10 @@ public class commendFragment extends Fragment {
                     /*向recyclerview所需的list中加内容*/
                     for(int i = 0; i < commend_list.length(); i++){
                         JSONObject commend_item = commend_list.getJSONObject(i);
-                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorID"));
+                        String bookID=commend_item.optString("bookId");
+                        int BookID=0;
+                        if(!bookID.equals("null"))  BookID=Integer.valueOf(bookID);
+                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorID"),BookID);
                         recommendation_lists.add(recommendation);
                     }
                     /*随机获取图片（待完善）*/
@@ -116,13 +121,9 @@ public class commendFragment extends Fragment {
                         }
                     }).run();*/
 
-                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void run() {
-                            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
-                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-                        }
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+                        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
+                        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -132,12 +133,7 @@ public class commendFragment extends Fragment {
     }
 
     private void  mtoast(String msg){
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
-            }
-        });
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show());
     }
 
 }

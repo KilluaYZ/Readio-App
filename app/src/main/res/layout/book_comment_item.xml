@@ -30,8 +30,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/comment_user_avator"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/xiaoyang" />
             <LinearLayout
                 android:id="@+id/commentLinearlayout"
@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toEndOf="@+id/comment_user_avator"
-                android:layout_marginLeft="5dp">
+                android:layout_toStartOf="@+id/like_part"
+                android:layout_marginStart="5dp">
                 <TextView
                     android:id="@+id/commentUserText"
                     android:layout_width="match_parent"
@@ -47,11 +48,12 @@
                     android:textSize="13sp"
                     android:text="呆头鹅"/>
                 <TextView
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/commentContentText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="好棒棒哦，呆头鹅好喜欢"/>
+                    android:text="好棒棒哦，呆头鹅好喜欢"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 
@@ -69,16 +71,18 @@
 
 
             <LinearLayout
+                android:id="@+id/like_part"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentEnd="true">
                 <ImageView
                     android:textAlignment="viewEnd"
                     android:id="@+id/likePieceCommentButton"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/likecomment"/>
+                    android:src="@drawable/likecomment"
+                    android:contentDescription="likecomment" />
                 <TextView
                     android:id="@+id/likePieceCommentNum"
                     android:layout_width="wrap_content"

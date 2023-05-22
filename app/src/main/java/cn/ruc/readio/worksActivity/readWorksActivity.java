@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import cn.ruc.readio.databinding.ActivityReadWorksBinding;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.databinding.ActivityReadWorksBinding;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
@@ -98,9 +98,7 @@ public class readWorksActivity extends AppCompatActivity {
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    } catch (ParseException e) {
+                                    } catch (IOException | ParseException e) {
                                         throw new RuntimeException(e);
                                     }
                                 }
@@ -114,78 +112,58 @@ public class readWorksActivity extends AppCompatActivity {
                 }
             });
 
-         exitRead_button.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 finish();
-             }
-         });
+         exitRead_button.setOnClickListener(view -> finish());
         /*
         判断用户是否已关注太太，如果已关注，follow_button要setGone
          */
-        follow_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(readWorksActivity.this, "成功关注太太", Toast.LENGTH_SHORT).show();
+        follow_button.setOnClickListener(view -> {
+            Toast.makeText(readWorksActivity.this, "成功关注太太", Toast.LENGTH_SHORT).show();
+            /*
+            传至服务器，更新数据库
+             */
+            follow_button.setVisibility(view.GONE);
+        });
+
+        sendComment_button.setOnClickListener(view -> {
+            if(TextUtils.isEmpty(writeComment_button.getText())){
+                Toast.makeText(readWorksActivity.this, "还没有编写评论哦", Toast.LENGTH_SHORT).show();
+            }else{
                 /*
-                传至服务器，更新数据库
+                发送评论给数据库
                  */
-                follow_button.setVisibility(view.GONE);
+                Toast.makeText(readWorksActivity.this, "已发送~", Toast.LENGTH_SHORT).show();
+                writeComment_button.setText("");
+                /*
+                刷新评论区页面？
+                 */
             }
         });
 
-        sendComment_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(TextUtils.isEmpty(writeComment_button.getText())){
-                    Toast.makeText(readWorksActivity.this, "还没有编写评论哦", Toast.LENGTH_SHORT).show();
-                }else{
-                    /*
-                    发送评论给数据库
-                     */
-                    Toast.makeText(readWorksActivity.this, "已发送~", Toast.LENGTH_SHORT).show();
-                    writeComment_button.setText("");
-                    /*
-                    刷新评论区页面？
-                     */
-                }
+        like_button.setOnClickListener(view -> {
+            like_clicked_times++;
+            if(like_clicked_times % 2 == 0){
+                like_button.setImageResource(R.drawable.like);}
+            else{
+                like_button.setImageResource(R.drawable.liked);
             }
         });
 
-        like_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                like_clicked_times++;
-                if(like_clicked_times % 2 == 0){
-                    like_button.setImageResource(R.drawable.like);}
-                else{
-                    like_button.setImageResource(R.drawable.liked);
-                }
+        collect_button.setOnClickListener(view -> {
+            collect_clicked_times++;
+            if(collect_clicked_times % 2 == 0){
+                collect_button.setImageResource(R.drawable.collect);}
+            else{
+                collect_button.setImageResource(R.drawable.collected);
             }
         });
 
-        collect_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                collect_clicked_times++;
-                if(collect_clicked_times % 2 == 0){
-                    collect_button.setImageResource(R.drawable.collect);}
-                else{
-                    collect_button.setImageResource(R.drawable.collected);
-                }
+        read_comment_button.setOnClickListener(view -> {
+            for(int i = 0; i < 10; i++ ){
+                User user = new User("呆头鹅","2020201694@ruc.edu.cn","123456");
+            PieceComments commenti = new PieceComments("好棒",12,user);
+            comment_list.add(commenti);
             }
-        });
-
-        read_comment_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i = 0; i < 10; i++ ){
-                    User user = new User("呆头鹅","2020201694@ruc.edu.cn","123456");
-                PieceComments commenti = new PieceComments("好棒",12,user);
-                comment_list.add(commenti);
-                }
-                bottomsheet();
-            }
+            bottomsheet();
         });
     }
 

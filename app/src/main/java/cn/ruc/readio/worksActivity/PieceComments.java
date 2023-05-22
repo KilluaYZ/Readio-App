@@ -30,8 +30,11 @@ public class PieceComments {
         return likesNum;
     }
 
-    public String getUser(){
+    public String getUserName(){
         return user.getUserName();
+    }
+    public User getUser(){
+        return user;
     }
 
     public void setCommentID(int id){

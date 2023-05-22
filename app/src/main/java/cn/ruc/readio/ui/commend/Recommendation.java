@@ -8,6 +8,7 @@ public class Recommendation {
     private final String quote;
     private final String author;
     private final String book_name;
+    private final int book_id;
 
     @NonNull
     public String getQuote() {
@@ -18,6 +19,9 @@ public class Recommendation {
     }
     public String getBookName() {
         return book_name;
+    }
+    public int getBookId() {
+        return book_id;
     }
     public String getSource() {
 
@@ -30,13 +34,15 @@ public class Recommendation {
         else if(Objects.equals(book_name, "null") && Objects.equals(author, "null")){
             return "null";
         }
-        else return author + book_name;
+        else return author +book_name;
     }
 
-    public Recommendation(String quote, String author,String book_name) {
+    public Recommendation(String quote, String author,String book_name,int book_id) {
 
         this.quote = quote;
         this.author = author;
         this.book_name =book_name;
+        this.book_id=book_id;
     }
+
 }

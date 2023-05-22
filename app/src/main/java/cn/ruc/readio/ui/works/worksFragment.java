@@ -61,7 +61,7 @@ public class worksFragment extends Fragment {
         HttpUtil.getRequestAsyn("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mtoast("请求异常，加载不出来");
+                Tools.my_toast(getActivity(),"请求异常，加载不出来");
             }
 
             @Override
@@ -101,32 +101,42 @@ public class worksFragment extends Fragment {
 //                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
                                 Bitmap pic = null;
                                 try {
-                                    pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                } catch (JSONException | ParseException e) {
-                                    throw new RuntimeException(e);
+                                    if(getActivity() != null) {
+                                        pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
+                                    }
+                                    } catch (IOException | JSONException | ParseException e) {
+                                    Tools.my_toast(getActivity(),"图片加载出错啦！");
                                 }
                                 works.get(i).getUser().setAvator(pic);
                                 Log.d("workadpter","需要更新");
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        binding.worksColumn.getAdapter().notifyDataSetChanged();
-                                    }
-                                });
+                                if(getActivity() != null) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(binding != null) {
+                                                binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                                }
                             }
 
                         }
                     }).run();
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                        }
-                    });
+                    if(getActivity() != null)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(getActivity() != null) {
+                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
+                                    if (recyclerView != null) {
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        });
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -134,12 +144,4 @@ public class worksFragment extends Fragment {
         });
     }
 
-    private void  mtoast(String msg){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }

@@ -78,7 +78,7 @@ public class RegisterFormFragment extends Fragment {
                 try {
                     onClickRegisterBtn();
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    Tools.my_toast(getActivity(),"啊哦！出错啦");
                 }
             }
         });

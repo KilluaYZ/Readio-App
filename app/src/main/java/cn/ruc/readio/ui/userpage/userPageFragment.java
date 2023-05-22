@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
+import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.HttpUtil;
@@ -65,14 +66,14 @@ public class userPageFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        ImageButton touxiang = binding.mySettingsButton;
+        ImageButton settingsButton = binding.mySettingsButton;
 
         ImageButton manage_button = binding.workManageButton;
-        touxiang.setOnClickListener(new View.OnClickListener(){
+        settingsButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), LoginActivity.class);
+                Intent intent = new Intent(getContext(), mySettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -122,48 +123,46 @@ public class userPageFragment extends Fragment {
     }
 
     private void getProfile(){
-        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/app/auth/profile", new ArrayList<>(), new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Looper.prepare();
-                Toast.makeText(getContext(), "获取信息失败！请检查网络连接", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            }
+        if(getActivity() != null) {
+            HttpUtil.getRequestWithTokenAsyn(getActivity(), "/app/auth/profile", new ArrayList<>(), new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Looper.prepare();
+                    Toast.makeText(getContext(), "获取信息失败！请检查网络连接", Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
-                    String userId = String.valueOf(responseJsonObject.getInt("userId"));
-                    String userName = responseJsonObject.getString("userName");
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
+                        String userId = String.valueOf(responseJsonObject.getInt("userId"));
+                        String userName = responseJsonObject.getString("userName");
 //                    handler.obtainMessage(1,userId);
 //                    handler.obtainMessage(2,userName);
 //                    Bitmap my_avamap = HttpUtil.getAvaSyn(responseJsonObject.getString("avator"));
 //                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
-                    Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            binding.userID.setText("ID:" + userId);
-                            binding.userName.setText(userName);
+                        if(getActivity() != null && binding.myAvator != null)
+                        {
+                        Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
+                        if(getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.userID.setText("ID:" + userId);
+                                    binding.userName.setText(userName);
 //                            binding.myAvator.setImageBitmap(my_avamap);
+                                }
+                            });
                         }
-                    });
-                    Log.d(this.toString(), "拿到profile数据");
-                } catch (JSONException | ParseException e) {
-                    e.printStackTrace();
-                    mtoast("解析profile信息失败");
+                        Log.d(this.toString(), "拿到profile数据");
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                        Tools.my_toast(getActivity(),"解析profile信息失败");
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
-    private void  mtoast(String msg){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }

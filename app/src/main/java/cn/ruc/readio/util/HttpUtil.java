@@ -26,8 +26,12 @@ public class HttpUtil {
     private static String BASE_URL = "killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
     private static String BASE_SCHEME = "http";
     private static int BASE_PORT = 5000;
-    //get方法向服务器请求，address是api地址 /auth/app/login
-    //callback是个回调函数
+    /*
+    不带Token的异步get请求
+    @param String address 对应的api
+    @param ArrayList<Pair<String,String>> queryParameter 查询参数
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void getRequestAsyn(String address, ArrayList<Pair<String,String>> queryParameter, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -47,7 +51,12 @@ public class HttpUtil {
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newCall(request).enqueue(callback);
     }
-
+    /*
+    不带Token的同步get请求
+    @param String address 对应的api
+    @param ArrayList<Pair<String,String>> queryParameter 查询参数
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
     public static Response getRequestSyn(String address, ArrayList<Pair<String,String>> queryParameter) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -68,7 +77,13 @@ public class HttpUtil {
         return okHttpClient.newCall(request).execute();
     }
 
-    //带令牌的get方法
+    /*
+    带Token的异步get请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param ArrayList<Pair<String,String>> queryParameter 查询参数
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void getRequestWithTokenAsyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -92,7 +107,14 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    public static Response getRequestWithTokenSyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter, Callback callback) throws IOException {
+    /*
+    带Token的同步get请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param ArrayList<Pair<String,String>> queryParameter 查询参数
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
+    public static Response getRequestWithTokenSyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
                 .host(BASE_URL)
@@ -115,7 +137,12 @@ public class HttpUtil {
         return okHttpClient.newCall(request).execute();
     }
 
-    //普通的post方法
+    /*
+    不带Token的异步post请求
+    @param String address 对应的api
+    @param RequestBody requestBody 报文体内容，类型是okhttp3的RequestBody类型
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void postRequestAsyn(String address, RequestBody requestBody, Callback callback){
 
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -133,7 +160,12 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    //普通的post方法
+    /*
+    不带Token的同步post请求
+    @param String address 对应的api
+    @param RequestBody requestBody 报文体内容，类型是okhttp3的RequestBody类型
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
     public static Response postRequestSyn(String address, RequestBody requestBody) throws IOException {
 
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -151,7 +183,13 @@ public class HttpUtil {
         return okHttpClient.newCall(request).execute();
     }
 
-    //带令牌的post方法
+    /*
+    带Token的异步post请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param RequestBody requestBody 报文体内容，类型是okhttp3的RequestBody类型
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void postRequestWithTokenAsyn(Activity activity, String  address, RequestBody requestBody, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -171,7 +209,13 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    //带令牌的post方法
+    /*
+    带Token的同步post请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param RequestBody requestBody 报文体内容，类型是okhttp3的RequestBody类型
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
     public static Response postRequestWithTokenSyn(Activity activity, String address, RequestBody requestBody) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         HttpUrl.Builder url = new HttpUrl.Builder()
@@ -191,7 +235,12 @@ public class HttpUtil {
         return okHttpClient.newCall(request).execute();
     }
 
-    //普通的post方法，向服务器传json字符串
+    /*
+    不带Token的异步post请求
+    @param String address 对应的api
+    @param String jsonString Json字符串，作为报文体内容
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void postRequestJsonAsyn(String address, String jsonString, Callback callback){
 //        Log.d("HttpUtil","正在访问 "+BASE_URL + address + "\n body = "+jsonString);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
@@ -211,7 +260,12 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    //普通的post方法，向服务器传json字符串
+    /*
+    不带Token的同步post请求
+    @param String address 对应的api
+    @param String jsonString Json字符串，作为报文体内容
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
     public static Response postRequestJsonSyn(String address, String jsonString) throws IOException {
 //        Log.d("HttpUtil","正在访问 "+BASE_URL + address + "\n body = "+jsonString);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
@@ -231,7 +285,13 @@ public class HttpUtil {
         return okHttpClient.newCall(request).execute();
     }
 
-    //带令牌的post方法，向服务器传json字符串
+    /*
+    带Token的异步post请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param String jsonString Json字符串，作为报文体内容
+    @param Callback callback 回调函数，即向服务器请求成功或失败后调用的函数
+    * */
     public static void postRequestWithTokenJsonAsyn(Activity activity, String address, String jsonString, Callback callback){
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
@@ -253,6 +313,13 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    /*
+    带Token的同步post请求
+    @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())
+    @param String address 对应的api
+    @param String jsonString Json字符串，作为报文体内容
+    @return Response okhttp3的Response类型，可以获取到服务器返回的状态码，数据等内容
+    * */
     public static Response postRequestWithTokenJsonSyn(Activity activity, String address, String jsonString, Callback callback) throws IOException {
         Log.d("HttpUtil","正在访问 "+BASE_URL + address);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);

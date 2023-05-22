@@ -123,20 +123,21 @@ public class newWorksActivity extends Activity {
                 }
                 else {
                 Intent intent = new Intent(newWorksActivity.this,editWorkActivity.class);
-
-                intent.putExtra("seriesName",SerialName.getText());
-                intent.putExtra("workName",WorkName.getText());
-                if(NameList.contains(SerialName.getText())){
+                String workName = String.valueOf(WorkName.getText());
+                String serialName = String.valueOf(SerialName.getText());
+                intent.putExtra("seriesName",serialName);
+                intent.putExtra("workName",workName);
+                intent.putExtra("origin","newWork");
+                Log.d("workName1",workName);
+                if(NameList.contains(serialName)){
                     for(int i = 0; i < NameList.size(); i++){
-                        if(list.get(i).first.equals(NameList.get(i))){
+                        if(list.get(i).first.equals(serialName)){
                             intent.putExtra("seriesId",list.get(i).second);
                         }
                     }
                 }else{
                     intent.putExtra("seriesId","");
                 }
-
-
                 startActivity(intent);
                 }
             }

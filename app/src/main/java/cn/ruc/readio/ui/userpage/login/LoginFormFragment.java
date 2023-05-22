@@ -15,6 +15,7 @@ import org.json.JSONException;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.util.Auth;
+import cn.ruc.readio.util.Tools;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,7 +80,7 @@ public class LoginFormFragment extends Fragment {
                 try {
                     onClickLoginBtn();
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    Tools.my_toast(getActivity(),"啊哦！出错啦！");
                 }
             }
         });

@@ -26,6 +26,8 @@ import okhttp3.Response;
 public class Tools {
     public static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+
+    //自定义Toast，提高复用性
     public static void my_toast(Activity activity, String text){
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -36,6 +38,12 @@ public class Tools {
     }
 
 
+    /*
+    异步方式获取图片
+    String fileId : 图片文件Id
+    ImageView view : 加载图片的ImageView
+    Activity activity : 加载图片的activity
+    */
     public static void getImageBitmapAsyn(String fileId, ImageView view, Activity activity) throws IOException, ParseException {
         Bitmap pic = getImageBitmapFromLocal(activity, fileId);
         if(pic == null){
@@ -51,6 +59,12 @@ public class Tools {
         }
     }
 
+    /*
+   同步方式获取图片
+   String fileId : 图片文件Id
+   Activity activity : 加载图片的activity
+   return Bitmap
+   */
     public static Bitmap getImageBitmapSyn(Activity activity, String fileId) throws IOException, JSONException, ParseException {
         Bitmap pic = getImageBitmapFromLocal(activity, fileId);
         if(pic == null){

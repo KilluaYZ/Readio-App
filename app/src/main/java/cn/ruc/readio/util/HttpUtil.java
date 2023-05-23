@@ -107,6 +107,29 @@ public class HttpUtil {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    public static void getRequestWithTokenAsyn(Activity activity, String address, ArrayList<Pair<String,String>> queryParameter, Callback callback, int needJump){
+        Log.d("HttpUtil","正在访问 "+BASE_URL + address);
+        HttpUrl.Builder url = new HttpUrl.Builder()
+                .host(BASE_URL)
+                .port(BASE_PORT)
+                .scheme(BASE_SCHEME)
+                .addPathSegment(address);
+
+        queryParameter.forEach((item) -> {
+            url.addQueryParameter(item.first,item.second);
+        });
+
+        Auth.Token token = new Auth.Token(activity, needJump);
+
+        Request request = new Request.Builder()
+                .url(url.build())
+                .get()
+                .addHeader("Authorization", token.getToken())
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+
     /*
     带Token的同步get请求
     @param Activity activity 调用该函数的activity(如果是activity调用就传this，如果是fragment调用就传getActivity())

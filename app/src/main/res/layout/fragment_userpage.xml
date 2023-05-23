@@ -44,9 +44,7 @@
                     android:layout_height="80dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="start"
-                    android:layout_weight="2"
-                    android:src="@drawable/unlogged2"
-                     />
+                    android:layout_weight="2"/>
 
                 <LinearLayout
                     android:layout_width="0dp"

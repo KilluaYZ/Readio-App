@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,12 +24,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
+import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
@@ -63,12 +67,38 @@ public class userPageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserpageBinding.inflate(inflater, container, false);
+        Log.d("dtehaha", "onCreateView");
 
         View root = binding.getRoot();
 
         ImageButton settingsButton = binding.mySettingsButton;
 
         ImageButton manage_button = binding.workManageButton;
+        TextView userName = binding.userName;
+        if(getActivity() != null) {
+            Auth.Token token1 = new Auth.Token(getActivity());
+            if(token1.isEmpty())
+            {
+//                userName.setClickable(true);
+                userName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(),LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+            else{
+//                userName.setClickable(false);
+                userName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+            }
+        }
+
         settingsButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -109,21 +139,32 @@ public class userPageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(binding.userID.getText().length() > 0){
+        Log.d("dtehaha", "onRe");
+        getProfile();
 
-        }else{
-            getProfile();
-        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d("dtehaha", "onDes");
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("dtehaha", "onst");
     }
 
     private void getProfile(){
         if(getActivity() != null) {
+            Auth.Token token = new Auth.Token(getActivity());
+            if(token.isEmpty())
+            {
+                binding.userName.setText("点击登录/注册");
+                binding.myAvator.setImageResource(R.drawable.unlogged);
+            }
             HttpUtil.getRequestWithTokenAsyn(getActivity(), "/app/auth/profile", new ArrayList<>(), new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -144,7 +185,7 @@ public class userPageFragment extends Fragment {
 //                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
                         if(getActivity() != null && binding.myAvator != null)
                         {
-                        Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
+                            Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
                         if(getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -162,6 +203,7 @@ public class userPageFragment extends Fragment {
                     }
                 }
             });
+
         }
     }
 

@@ -122,8 +122,14 @@ public class commendFragment extends Fragment {
                     }).run();*/
 
                     Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+                        if(getActivity() != null)
+                        {
                         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
-                        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            if(recyclerView != null)
+                            {
+                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            }
+                        }
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();

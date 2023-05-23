@@ -12,6 +12,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!--直接生效，状态栏文字颜色变成黑色，非沉浸式-->
         <!-- Customize your theme here. -->
     </style>
 

@@ -50,7 +50,7 @@ public class editWorkActivity extends AppCompatActivity {
         String seriesName = intent.getStringExtra("seriesName");
         String seriesId = intent.getStringExtra("seriesId");
         String workName = intent.getStringExtra("workName");
-
+        Log.d("hello",seriesName);
         TextView publish_button = (TextView) findViewById(R.id.publishButton);
         TextView exitEdit_button = (TextView) findViewById(R.id.editExitButton);
         TextView saveDraft_button = (TextView) findViewById(R.id.saveDraftButton);

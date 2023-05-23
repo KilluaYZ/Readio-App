@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -16,6 +18,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,6 +35,8 @@ public class Auth {
 
         private Activity activity = null;
 
+        int needJump = 1;
+
         public boolean isEmpty(){
             read();
             if(token.length() > 0){
@@ -44,29 +49,33 @@ public class Auth {
             this.activity = activity;
         }
 
+        public Token(Activity activity, int needJump){
+            this.activity = activity;
+            this.needJump = needJump;
+        }
         public String getToken() {
             read();
-            if(token == ""){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(activity, "未登录，正在跳转登录页面！", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            Thread.sleep(500);
-                            Intent intent = new Intent(activity, LoginActivity.class);
-                            activity.startActivity(intent);
-                        }
-                        catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }).run();
-            }
+//            if(token == "" && needJump == 1){
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try{
+//                            activity.runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(activity, "未登录，正在跳转登录页面！", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                            Thread.sleep(500);
+//                            Intent intent = new Intent(activity, LoginActivity.class);
+//                            activity.startActivity(intent);
+//                        }
+//                        catch (InterruptedException e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).run();
+//            }
             return token;
         }
 
@@ -186,17 +195,23 @@ public class Auth {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.code() == 200){
-
+                    Tools.my_toast(activity,"退出登陆成功！");
+                    Auth.Token token = new Auth.Token(activity);
+                    token.clear();
                 }else{
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Toast.makeText(activity, new JSONObject(response.body().string()).getString("msg"), Toast.LENGTH_SHORT);
+                                ((TextView)activity.findViewById(R.id.userName)).setText("点击登录/注册");
+                                ((ImageView)activity.findViewById(R.id.my_avator)).setImageResource(R.drawable.unlogged);
                             } catch (JSONException e) {
-                                throw new RuntimeException(e);
+                                Tools.my_toast(activity,"退出登陆失败");
+                                e.printStackTrace();
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                Tools.my_toast(activity,"退出登陆失败");
+                                e.printStackTrace();
                             }
                         }
                     });

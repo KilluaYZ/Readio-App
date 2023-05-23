@@ -49,12 +49,12 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView
-                android:id="@+id/words"
+                android:id="@+id/likes"
                 android:layout_width="70dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/words"
+                android:text="点赞"
                 android:layout_margin="3dp"
                 app:autoSizeMaxTextSize="22sp"
                 app:autoSizeMinTextSize="10sp"
@@ -64,11 +64,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:text="@string/words"
+                android:text="点赞量"
                 android:layout_margin="3dp"
                 android:textSize="12sp" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/shares"
+                android:layout_width="70dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="分享"
+                android:layout_margin="3dp"
+                app:autoSizeMaxTextSize="22sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:text="分享量"
+                android:layout_margin="3dp"
+                android:textSize="12sp" />
 
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/abstract_part"
@@ -108,15 +134,7 @@
             android:fontFamily="@font/honghei"
             android:text="@string/comment"
             android:textSize="20sp" />
-        <TextView
-            android:id="@+id/more_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:text="查看全部"
-            android:textSize="14sp"
-            android:textColor="@color/blue"/>
+
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -139,5 +157,16 @@
             android:layout_marginLeft="5dp">
 
         </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:id="@+id/more_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:text="查看全部评论"
+            android:textSize="15sp"
+            android:textColor="#D3EA1E1E"/>
     </LinearLayout>
 </LinearLayout>

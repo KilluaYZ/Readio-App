@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/container"
     tools:context=".bookReadActivity.bookDetailActivity">
     <RelativeLayout
@@ -34,15 +35,22 @@
                 android:backgroundTint="#0000"
                 android:scaleType="fitCenter"
                 android:src="@drawable/best_back"
-                tools:ignore="NestedWeights"
                 android:contentDescription="@string/go_back" />
-
             <TextView
                 android:id="@+id/blank"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="9"
                 android:layout_gravity="start" />
+            <ImageButton
+                android:id="@+id/share_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:backgroundTint="#0000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/share"
+                android:contentDescription="shares" />
         </LinearLayout>
 
         <!--中间部分-->
@@ -82,23 +90,40 @@
                     <TextView
                         android:id="@+id/book_name"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
                         android:text="@string/book_name"
-                        android:textSize="22sp"
+                        android:textSize="24sp"
                         android:textColor="@color/black"
                         android:layout_margin="5dp"
                         android:layout_marginTop="10dp"
-                        tools:ignore="NestedWeights" />
+                        android:fontFamily="@font/kaiti"/>
                     <TextView
                         android:id="@+id/author"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/author"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:layout_margin="5dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/jianti"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp">
+                        <TextView
+                            android:id="@+id/words"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/words"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/jianti"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="字"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/jianti"/>
+                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
@@ -116,36 +141,78 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:orientation="horizontal"
-            android:background="@color/surface"
-            tools:ignore="MissingConstraints"
+            android:backgroundTint="#0000"
             android:layout_alignParentBottom="true">
-
-            <Button
-                android:id="@+id/read"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/read"
-                android:textColor="@color/container_low"
-                android:layout_margin="12dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="6dp"
-                android:backgroundTint="@color/selected_1_dark"
-                style="?android:attr/buttonBarButtonStyle"
-                tools:ignore="NestedWeights" />
-
-            <Button
-                android:id="@+id/add_bookmark"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/add_bookmark"
-                android:textColor="@color/container_low"
-                android:layout_margin="12dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginStart="6dp"
-                style="?android:attr/buttonBarButtonStyle"
-                android:backgroundTint="@color/selected_1_dark"/>
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:backgroundTint="#0000">
+                <LinearLayout
+                    android:id="@+id/addlinear"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/add_bookmark"
+                        android:layout_width="50dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/bookmark"
+                        android:contentDescription="加入书架"
+                        android:backgroundTint="#0000"/>
+                    <TextView
+                        android:id="@+id/add_bookmark_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加入书架"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/readlinear"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_toRightOf="@+id/addlinear"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/read"
+                        android:layout_width="50dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/open_book_icon"
+                        android:contentDescription="开始阅读"
+                        android:backgroundTint="#0000"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="开始阅读"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/likelinear"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/like_this_book"
+                        android:layout_width="50dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/thumb_up_1"
+                        android:contentDescription="点赞"
+                        android:backgroundTint="#0000"/>
+                    <TextView
+                        android:id="@+id/like_this_book_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="点赞"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

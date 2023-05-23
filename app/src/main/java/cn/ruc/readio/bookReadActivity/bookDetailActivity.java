@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,10 +50,15 @@ public class bookDetailActivity extends AppCompatActivity{
     private String BookName,Author;
     private int BookID;
     private List<PieceComments> comment_list=new ArrayList<>();
-    private TextView book_name, author, book_abstract,view_count,length;
+    private TextView book_name, author, book_abstract,view_count,length,likes,shares,like_this_book_text,add_shelf_text;
     private RelativeLayout detail_page;
+    private ImageButton like_this_book,read_book,add_shelf;
+    private ImageView book_cover;
     private View view;
     private RecyclerView recycler_view;
+    private int like_book_times=0,add_shelf_times=0,if_like=0,if_add_bookmark=0,if_empty=0;
+    private TextView no_comment;
+
 
     @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
     @Override
@@ -83,8 +89,21 @@ public class bookDetailActivity extends AppCompatActivity{
         ImageButton re_button = findViewById(R.id.return_commend);
         re_button.setOnClickListener(v -> finish());
 
+        /*设置加入书架按钮*/
+        add_shelf.setOnClickListener(view1 -> {
+            add_shelf_times++;
+            if((if_add_bookmark+add_shelf_times)%2==0){
+                add_shelf.setImageResource(R.drawable.bookmark);
+                add_shelf_text.setText("加入书架");
+            }
+            else {
+                add_shelf.setImageResource(R.drawable.bookmarked);
+                add_shelf_text.setText("已加入书架");
+            }
+
+        });
+
         /*设置阅读按钮*/
-        Button read_book=findViewById(R.id.read);
         read_book.setOnClickListener(view -> {
             Intent read_intent=new Intent(bookDetailActivity.this,readBookActivity.class);
             read_intent.putExtra("BookName",BookName);
@@ -93,9 +112,19 @@ public class bookDetailActivity extends AppCompatActivity{
             startActivity(read_intent);
         });
 
-        /*设置加入书架按钮*/
-        Button add_shelf=findViewById(R.id.add_bookmark);
+        /*设置点赞按钮*/
+        like_this_book.setOnClickListener(view1 -> {
+            like_book_times++;
+            if((if_like+like_book_times)%2==0){
+                like_this_book.setImageResource(R.drawable.thumb_up_1);
+                like_this_book_text.setText("点赞");
+            }
+            else {
+                like_this_book.setImageResource(R.drawable.thumb_up_ed);
+                like_this_book_text.setText("已点赞");
+            }
 
+        });
 
         /*设置评论部分*/
         /*添加下划线*/
@@ -104,7 +133,7 @@ public class bookDetailActivity extends AppCompatActivity{
 
         /*添加跳转到所有评论界面链接*/
         tv.setOnClickListener(view -> {
-            if(comment_list==null)
+            if(if_empty==1)
             {
                 Toast.makeText(bookDetailActivity.this,"没有评论啦~",Toast.LENGTH_SHORT).show();
                 /*Intent comment_intent = new Intent(bookDetailActivity.this, allCommentActivity.class);
@@ -134,10 +163,19 @@ public class bookDetailActivity extends AppCompatActivity{
         book_abstract = findViewById(R.id.book_abstract);
         view_count=findViewById(R.id.views);
         length=findViewById(R.id.words);
+        like_this_book=findViewById(R.id.like_this_book);
+        read_book=findViewById(R.id.read);
+        add_shelf=findViewById(R.id.add_bookmark);
+        likes=findViewById(R.id.likes);
+        shares=findViewById(R.id.shares);
+        like_this_book_text=findViewById(R.id.like_this_book_text);
+        add_shelf_text=findViewById(R.id.add_bookmark_text);
+        book_cover=findViewById(R.id.picture);
+        no_comment=findViewById(R.id.no_comment);
 
         book_name.setText(BookName);
         author.setText(Author);
-        book_abstract.setText("这里是书籍简介~");
+        book_abstract.setText("这里是书籍简介~\n但这本书暂时没有~");
     }
     @SuppressLint("ResourceAsColor")
     private void setBackgroundColor() {
@@ -169,24 +207,15 @@ public class bookDetailActivity extends AppCompatActivity{
         comment_list.add(new PieceComments("好棒",12,user));
     }
 
-
     private void initView() {
         recycler_view = findViewById(R.id.book_comment);
     }
-
 
     private void SetComments(){
         view = findViewById(R.id.comments_part);
         Context context = view.getContext();
 
         //initComments();
-        if(comment_list==null)
-        {
-            TextView no_comment=findViewById(R.id.no_comment);
-            no_comment.setText("这本书暂时没有评论哦~\n来当第一位吧！");
-            no_comment.setGravity(Gravity.CENTER);
-        }
-
         LinearLayoutManager m=new LinearLayoutManager(bookDetailActivity.this);
         m.setOrientation(LinearLayoutManager.HORIZONTAL);
         recycler_view = findViewById(R.id.book_comment);
@@ -201,7 +230,6 @@ public class bookDetailActivity extends AppCompatActivity{
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 mtoast("请求异常，加载不出来");
             }
-
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
@@ -210,65 +238,60 @@ public class bookDetailActivity extends AppCompatActivity{
                     JSONObject data = jsonObject.getJSONObject("data");
 
                     /*取出是否加入书架*/
-                    String added=data.getString("added");
+                    String added = data.getString("added");
+                    if (added.equals("true")) {
+                        if_add_bookmark = 1;
+                        add_shelf.setImageResource(R.drawable.bookmarked);
+                        add_shelf_text.setText("已加入书架");
+                    } else {
+                        add_shelf.setImageResource(R.drawable.bookmark);
+                        add_shelf_text.setText("加入书架");
+                    }
+                    /*取出是否点赞*/
+                    String liked = data.getString("liked");
+                    if (liked.equals("true")) {
+                        if_like = 1;
+                        like_this_book.setImageResource(R.drawable.thumb_up_ed);
+                        like_this_book_text.setText("已点赞");
+                    } else {
+                        like_this_book.setImageResource(R.drawable.thumb_up_1);
+                        like_this_book_text.setText("点赞");
+                    }
 
                     /*取出书籍自身信息部分*/
-                    JSONObject book_info=data.getJSONObject("book_info");
+                    JSONObject book_info = data.getJSONObject("book_info");
+
+
                     book_name.setText(book_info.getString("bookName"));
                     length.setText(book_info.getString("length"));
                     view_count.setText(book_info.getString("views"));
-                    String likes=book_info.getString("likes");
-                    String shares=book_info.getString("shares");
-                    book_abstract.setText(book_info.getString("abstract"));
-
-                    /*取出书籍评论*/
-                    /*JSONObject book_comments=data.getJSONObject("comments");
-                    int comment_size=book_comments.getInt("size");
-                    JSONArray comments_list=book_comments.getJSONArray("data");
-                    if(comment_size==0)
-                    {
-                        comment_list=null;
+                    likes.setText(book_info.getString("likes"));
+                    shares.setText(book_info.optString("shares", "0"));
+                    if (!book_info.getString("abstract").equals("null")) {
+                        book_abstract.setText(book_info.getString("abstract"));
                     }
-                    if(comment_size!=0){
-                        for(int i = 0; i < comment_size; i++){
-                            JSONObject comment_item = comments_list.getJSONObject(i);
 
-                            User user = new User("小美","20230522@ruc.edu.cn", "12345678");
-                            //user.setUserName("用户1");
-                            user.setAvaID(String.valueOf(R.drawable.juicy_orange_smile_icon));
-
-                            PieceComments comment = new PieceComments(comment_item.getString("content"),comment_item.getInt("likes"),user);
-                            comment_list.add(comment);
-                        }
-                        *//*new Thread(new Runnable() {
+                    if(!book_info.getString("bitmap").equals("null")) {
+                        final Bitmap[] cover = {null};
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                for(int i = 0;i < comment_list.size(); ++i){
-    //                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
-                                    Bitmap pic = null;
-                                    try {
-                                        pic = Tools.getImageBitmapSyn(bookDetailActivity.this,comment_list.get(i).getUser().getAvaID());
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    } catch (JSONException | ParseException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    comment_list.get(i).getUser().setAvator(pic);
-                                    Log.d("bookcommentadpter","需要更新");
+                                try {
+                                    cover[0] = Tools.getImageBitmapSyn(bookDetailActivity.this, book_info.getString("bitmap"));
+                                } catch (JSONException | IOException | ParseException e) {
+                                    throw new RuntimeException(e);
                                 }
-
                             }
-                        }).run();*//*
+                        }).run();
+                        bookDetailActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                book_cover.setImageBitmap(cover[0]);
+                            }
+                        });
                     }
 
-                    runOnUiThread(new Runnable() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void run() {
-                            RecyclerView recyclerView = (RecyclerView)findViewById(R.id.book_comment);
-                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-                        }
-                    });*/
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -285,6 +308,7 @@ public class bookDetailActivity extends AppCompatActivity{
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 mtoast("请求异常，加载不出来");
             }
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
@@ -298,7 +322,9 @@ public class bookDetailActivity extends AppCompatActivity{
                     JSONArray comments_list=book_comments.getJSONArray("data");
                     if(comment_size==0)
                     {
-                        comment_list=null;
+                        if_empty=1;
+                        no_comment.setText("这本书暂时没有评论哦~\n来当第一位吧！");
+                        no_comment.setGravity(Gravity.CENTER);
                     }
                     if(comment_size!=0){
                         for(int i = 0; i < comment_size; i++){
@@ -312,8 +338,10 @@ public class bookDetailActivity extends AppCompatActivity{
                             comment_list.add(comment);
                         }
                         runOnUiThread(() -> {
-                            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.book_comment);
-                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            RecyclerView recyclerView = findViewById(R.id.book_comment);
+                            if(recyclerView!=null){
+                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            }
                         });
                         /*new Thread(new Runnable() {
                             @Override

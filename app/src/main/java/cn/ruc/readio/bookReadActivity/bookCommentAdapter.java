@@ -50,9 +50,9 @@ public class bookCommentAdapter extends RecyclerView.Adapter<bookCommentAdapter.
         likePieceComment_button.setOnClickListener(view1 -> {
             like_comment_times++;
             if(like_comment_times%2==0){
-                likePieceComment_button.setImageResource(R.drawable.likecomment);}
+                likePieceComment_button.setImageResource(R.drawable.thumb_up);}
             else {
-                likePieceComment_button.setImageResource(R.drawable.likedcomment);
+                likePieceComment_button.setImageResource(R.drawable.like_thumb_up);
             }
 
         });

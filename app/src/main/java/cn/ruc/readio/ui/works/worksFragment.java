@@ -81,13 +81,17 @@ public class worksFragment extends Fragment {
                         user.setAvaID(useri.getString("avator"));
                         tags tagi = new tags();
                         if(datai.has("tag")){
-                            String tagConent = datai.getJSONObject("tag").getString("content");
-                            int tagID = datai.getJSONObject("tag").getInt("tagId");
-                            int tagLinkedTimes = datai.getJSONObject("tag").getInt("linkedTimes");
-                            tagi.setContent(tagConent);
-                            tagi.setLinkedTimes(tagLinkedTimes);
-                            tagi.setTagId(tagID);
-                            work.setTag(tagi);
+                            JSONArray tagList = datai.getJSONArray("tag");
+                            if(tagList.length() > 0){
+                                JSONObject tagObj = (JSONObject)tagList.get(0);
+                                String tagConent = tagObj.getString("content");
+                                int tagID = tagObj.getInt("tagId");
+                                int tagLinkedTimes = tagObj.getInt("linkedTimes");
+                                tagi.setContent(tagConent);
+                                tagi.setLinkedTimes(tagLinkedTimes);
+                                tagi.setTagId(tagID);
+                                work.setTag(tagi);
+                            }
                         }
                         work.setUser(user);
                         works.add(work);

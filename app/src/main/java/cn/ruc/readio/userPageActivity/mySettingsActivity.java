@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
+import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
@@ -41,12 +42,14 @@ import okhttp3.Response;
 
 public class mySettingsActivity extends AppCompatActivity {
     private Activity settingAct = this;
+    static public mySettingsActivity setAct;
     String oldMail;
     String oldName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_settings);
+        setAct = this;
         if (Build.VERSION.SDK_INT >= 21){
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -177,13 +180,20 @@ public class mySettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Auth auth = new Auth();
                 auth.logout(settingAct);
-                finish();
+            }
+        });
+        changeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Auth auth = new Auth();
+                auth.logout(settingAct);
+                Intent intent = new Intent(settingAct, LoginActivity.class);
+                startActivity(intent);
             }
         });
 
 
     }
-
     public void getInfo()
     {
         final String[] userName = new String[1];

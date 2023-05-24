@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
+import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -195,17 +196,19 @@ public class Auth {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.code() == 200){
-                    Tools.my_toast(activity,"退出登陆成功！");
-                    Auth.Token token = new Auth.Token(activity);
-                    token.clear();
+                    if(activity != null){
+                        Tools.my_toast(activity,"退出登陆成功！");
+                        Auth.Token token = new Auth.Token(activity);
+                        token.clear();
+                        activity.finish();
+                    }
+
                 }else{
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Toast.makeText(activity, new JSONObject(response.body().string()).getString("msg"), Toast.LENGTH_SHORT);
-                                ((TextView)activity.findViewById(R.id.userName)).setText("点击登录/注册");
-                                ((ImageView)activity.findViewById(R.id.my_avator)).setImageResource(R.drawable.unlogged);
                             } catch (JSONException e) {
                                 Tools.my_toast(activity,"退出登陆失败");
                                 e.printStackTrace();

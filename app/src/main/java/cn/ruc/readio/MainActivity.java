@@ -13,11 +13,12 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
+import cn.ruc.readio.userPageActivity.newWorksActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-
+    static public MainActivity mainAct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -62,7 +62,7 @@ public class editWorkActivity extends AppCompatActivity {
                 EditText editContent = (EditText) findViewById(R.id.editPiece);
                 if(!TextUtils.isEmpty(editContent.getText())){
                     try {
-                        publishPiece(workName,toString().valueOf(editContent.getText()), seriesId, seriesName,1);
+                        publishPiece(workName,toString().valueOf(editContent.getText()), seriesId, seriesName,"1");
                     } catch (JSONException e) {
                         Tools.my_toast(thisact,"出错了，发表失败");
                     }
@@ -96,7 +96,7 @@ public class editWorkActivity extends AppCompatActivity {
                 EditText editContent = (EditText) findViewById(R.id.editPiece);
                 if(!TextUtils.isEmpty(editContent.getText())){
                     try {
-                        publishPiece(workName,toString().valueOf(editContent.getText()), seriesId, seriesName,0);
+                        publishPiece(workName,editContent.getText().toString(), seriesId, seriesName,"0");
                     } catch (JSONException e) {
                         Tools.my_toast(thisact,"出错了，保存失败");
                     }
@@ -118,7 +118,7 @@ public class editWorkActivity extends AppCompatActivity {
         });
 
     }
-    public void publishPiece(String workName, String content, String seriesId, String seriesName, int status) throws JSONException {
+    public void publishPiece(String workName, String content, String seriesId, String seriesName, String status) throws JSONException {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("piecesTitle", workName);

@@ -138,6 +138,14 @@ public class userPageFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Auth.Token token = new Auth.Token(getActivity());
+        if(token.isEmpty())
+        {
+            ((TextView)getActivity().findViewById(R.id.userName)).setText("点击登录 / 注册");
+            ((ImageView)getActivity().findViewById(R.id.my_avator)).setImageResource(R.drawable.unlogged);
+            ((TextView)getActivity().findViewById(R.id.userID)).setText("");
+
+        }
         super.onResume();
         Log.d("dtehaha", "onRe");
         getProfile();

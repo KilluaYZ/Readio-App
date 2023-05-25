@@ -60,8 +60,13 @@ public class worksFragment extends Fragment {
         binding = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     public void refreshData(){
-        HttpUtil.getRequestAsyn("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Tools.my_toast(getActivity(),"请求异常，加载不出来");

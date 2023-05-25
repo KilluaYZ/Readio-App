@@ -40,6 +40,7 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
         private TextView seriesName;
         private TextView publishedTime;
         private TextView withdrawButton;
+        private TextView deleteButton;
 
         public ViewHolder(View view){
             super(view);
@@ -51,7 +52,7 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
             collectsNum = view.findViewById(R.id.manageCollectNumText);
             commentsNum = view.findViewById(R.id.manageCommentText);
             publishedTime = view.findViewById(R.id.managePublishedTime);
-
+            deleteButton = view.findViewById(R.id.deleteWorkButton);
         }
     }
 
@@ -66,6 +67,14 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
                 Toast.makeText(parent.getContext(), "作品已撤回草稿箱", Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return viewHolder;
     }
 

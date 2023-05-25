@@ -12,7 +12,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.User;
@@ -68,7 +70,11 @@ public class bookDetailActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_bookdetail);
-
+        if (Build.VERSION.SDK_INT >= 21){
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }  //用于调整状态栏为透明色
         /*接受传递的消息*/
         Intent intent = getIntent();
 
@@ -278,19 +284,42 @@ public class bookDetailActivity extends AppCompatActivity{
                             }
                         });
                     }
-
                     /*取出书籍自身信息部分*/
                     JSONObject book_info = data.getJSONObject("book_info");
+                    bookDetailAct.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                book_name.setText(book_info.getString("bookName"));
+                            } catch (JSONException e) {
+                                Tools.my_toast(bookDetailAct,"加载失败");
+                            }
+                            try {
+                                length.setText(book_info.getString("length"));
+                            } catch (JSONException e) {
+                                Tools.my_toast(bookDetailAct,"加载失败");
+                            }
+                            try {
+                                view_count.setText(book_info.getString("views"));
+                            } catch (JSONException e) {
+                                Tools.my_toast(bookDetailAct,"加载失败");
+                            }
+                            try {
+                                likes.setText(book_info.getString("likes"));
+                            } catch (JSONException e) {
+                                Tools.my_toast(bookDetailAct,"加载失败");
+                            }
+                            shares.setText(book_info.optString("shares", "0"));
+                            try {
+                                if (!book_info.getString("abstract").equals("null")) {
+                                    book_abstract.setText(book_info.getString("abstract"));
+                                }
+                            } catch (JSONException e) {
+                                Tools.my_toast(bookDetailAct,"加载失败");
+                            }
 
-
-                    book_name.setText(book_info.getString("bookName"));
-                    length.setText(book_info.getString("length"));
-                    view_count.setText(book_info.getString("views"));
-                    likes.setText(book_info.getString("likes"));
-                    shares.setText(book_info.optString("shares", "0"));
-                    if (!book_info.getString("abstract").equals("null")) {
-                        book_abstract.setText(book_info.getString("abstract"));
-                    }
+                        }
+                    });
 
                     if(!book_info.getString("bitmap").equals("null")) {
                         final Bitmap[] cover = {null};
@@ -300,7 +329,7 @@ public class bookDetailActivity extends AppCompatActivity{
                                 try {
                                     cover[0] = Tools.getImageBitmapSyn(bookDetailActivity.this, book_info.getString("bitmap"));
                                 } catch (JSONException | IOException | ParseException e) {
-                                    throw new RuntimeException(e);
+                                    Tools.my_toast(bookDetailAct,"加载失败");
                                 }
                             }
                         }).run();

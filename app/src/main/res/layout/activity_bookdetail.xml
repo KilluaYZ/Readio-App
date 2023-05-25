@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/container"
-    tools:context=".bookReadActivity.bookDetailActivity">
+    tools:context=".bookReadActivity.bookDetailActivity"
+    android:fitsSystemWindows="true">
     <RelativeLayout
         android:id="@+id/detail_page"
         android:layout_width="match_parent"

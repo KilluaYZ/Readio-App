@@ -8,6 +8,7 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,7 +47,7 @@ import java.util.Objects;
 
 
 public class bookDetailActivity extends AppCompatActivity{
-
+    private Activity bookDetailAct = this;
     private String BookName,Author;
     private int BookID;
     private List<PieceComments> comment_list=new ArrayList<>();
@@ -241,21 +242,41 @@ public class bookDetailActivity extends AppCompatActivity{
                     String added = data.getString("added");
                     if (added.equals("true")) {
                         if_add_bookmark = 1;
-                        add_shelf.setImageResource(R.drawable.bookmarked);
-                        add_shelf_text.setText("已加入书架");
+                        bookDetailAct.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                add_shelf.setImageResource(R.drawable.bookmarked);
+                                add_shelf_text.setText("已加入书架");
+                            }
+                        });
                     } else {
-                        add_shelf.setImageResource(R.drawable.bookmark);
-                        add_shelf_text.setText("加入书架");
+                        bookDetailAct.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                add_shelf.setImageResource(R.drawable.bookmark);
+                                add_shelf_text.setText("加入书架");
+                            }
+                        });
                     }
                     /*取出是否点赞*/
                     String liked = data.getString("liked");
                     if (liked.equals("true")) {
                         if_like = 1;
-                        like_this_book.setImageResource(R.drawable.thumb_up_ed);
-                        like_this_book_text.setText("已点赞");
+                        bookDetailAct.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                like_this_book.setImageResource(R.drawable.thumb_up_ed);
+                                like_this_book_text.setText("已点赞");
+                            }
+                        });
                     } else {
-                        like_this_book.setImageResource(R.drawable.thumb_up_1);
-                        like_this_book_text.setText("点赞");
+                        bookDetailAct.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                like_this_book.setImageResource(R.drawable.thumb_up_1);
+                                like_this_book_text.setText("点赞");
+                            }
+                        });
                     }
 
                     /*取出书籍自身信息部分*/

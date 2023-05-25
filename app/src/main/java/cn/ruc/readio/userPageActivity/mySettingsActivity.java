@@ -66,7 +66,13 @@ public class mySettingsActivity extends AppCompatActivity {
         LinearLayout changeAccount = (LinearLayout) findViewById(R.id.changeAccountBar);
         LinearLayout Logout = (LinearLayout) findViewById(R.id.Logout);
         ImageView exit = (ImageView) findViewById(R.id.exitSetting);
-
+        ReadioInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(settingAct,ReadioActivity.class);
+                startActivity(intent);
+            }
+        });
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

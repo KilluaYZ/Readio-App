@@ -183,31 +183,36 @@ public class userPageFragment extends Fragment {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
-                        String userId = String.valueOf(responseJsonObject.getInt("userId"));
-                        String userName = responseJsonObject.getString("userName");
+                    if(response.code() == 200){
+                        try {
+                            JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
+                            String userId = String.valueOf(responseJsonObject.getInt("userId"));
+                            String userName = responseJsonObject.getString("userName");
 //                    handler.obtainMessage(1,userId);
 //                    handler.obtainMessage(2,userName);
 //                    Bitmap my_avamap = HttpUtil.getAvaSyn(responseJsonObject.getString("avator"));
 //                    HttpUtil.getAvaAsyn(responseJsonObject.getString("avator"),binding.myAvator,getActivity());
-                        if(getActivity() != null && binding.myAvator != null)
-                        {
-                            Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
-                        if(getActivity() != null) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    binding.userID.setText("ID:" + userId);
-                                    binding.userName.setText(userName);
+                            if(getActivity() != null && binding.myAvator != null)
+                            {
+                                Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
+                            if(getActivity() != null) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        binding.userID.setText("ID:" + userId);
+                                        binding.userName.setText(userName);
 //                            binding.myAvator.setImageBitmap(my_avamap);
-                                }
-                            });
+                                    }
+                                });
+                            }
+                            Log.d(this.toString(), "拿到profile数据");
+                        } catch (JSONException | ParseException e) {
+                            e.printStackTrace();
+                            Tools.my_toast(getActivity(),"解析profile信息失败");
                         }
-                        Log.d(this.toString(), "拿到profile数据");
-                    } catch (JSONException | ParseException e) {
-                        e.printStackTrace();
-                        Tools.my_toast(getActivity(),"解析profile信息失败");
+                    }else{
+                        Auth.Token token = new Auth.Token(getActivity());
+                        token.clear();
                     }
                 }
             });

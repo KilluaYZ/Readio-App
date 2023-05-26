@@ -91,9 +91,9 @@ public class commendFragment extends Fragment {
                     /*向recyclerview所需的list中加内容*/
                     for(int i = 0; i < commend_list.length(); i++){
                         JSONObject commend_item = commend_list.getJSONObject(i);
-                        String bookID=commend_item.optString("bookId");
+                        String bookID = commend_item.getString("bookId");
                         int BookID=0;
-                        if(!bookID.equals("null"))  BookID=Integer.valueOf(bookID);
+                        if(!bookID.equals("null"))  BookID = Integer.valueOf(bookID);
                         Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorID"),BookID);
                         recommendation_lists.add(recommendation);
                     }

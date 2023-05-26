@@ -27,6 +27,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
     private List<Works> WorksList;
 
     public WorkAdapter(Context context, List<Works> WorksList){
+
         this.WorksList = WorksList;
     }
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -131,9 +132,5 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
     @Override
     public int getItemCount() {
         return WorksList.size();
-    }
-
-    public void setHeart(){
-
     }
 }

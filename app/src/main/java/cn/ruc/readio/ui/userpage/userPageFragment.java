@@ -28,6 +28,8 @@ import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
+import cn.ruc.readio.userPageActivity.myCollectionActivity;
+import cn.ruc.readio.userPageActivity.myLikesActivity;
 import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.userPageActivity.worksManageActivity;
@@ -129,6 +131,22 @@ public class userPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), changeAvatorActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.myLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), myLikesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.myCollectionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), myCollectionActivity.class);
                 startActivity(intent);
             }
         });

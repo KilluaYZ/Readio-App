@@ -6,5 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".bookReadActivity.commentDetailActivity"
     android:fitsSystemWindows="true">
+    <ExpandableListView
+        android:id="@+id/detail_page_lv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:layout_marginBottom="64dp"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

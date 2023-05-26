@@ -1,5 +1,7 @@
 package cn.ruc.readio.ui.commend;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import java.util.Objects;
 
@@ -9,7 +11,15 @@ public class Recommendation {
     private final String author;
     private final String book_name;
     private final int book_id;
+    private String picId;
+    private Bitmap pic;
 
+    public void setPicId(String picId){
+        this.picId=picId;
+    }
+    public void setPic(Bitmap pic){
+        this.pic=pic;
+    }
     @NonNull
     public String getQuote() {
         return quote;
@@ -22,6 +32,12 @@ public class Recommendation {
     }
     public int getBookId() {
         return book_id;
+    }
+    public String getPicId() {
+        return picId;
+    }
+    public Bitmap getPic() {
+        return pic;
     }
     public String getSource() {
 

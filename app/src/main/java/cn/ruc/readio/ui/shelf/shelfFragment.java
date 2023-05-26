@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.telecom.Call;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,18 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
 import cn.ruc.readio.bookReadActivity.readBookActivity;
 import cn.ruc.readio.databinding.FragmentShelfBinding;
+import cn.ruc.readio.ui.userpage.login.LoginActivity;
+import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -42,6 +48,7 @@ public class shelfFragment extends Fragment {
 
     private FragmentShelfBinding binding;
     private GridView grid_view;
+    private int if_empty=0;
 
     private List<BookItem> lists;
 
@@ -52,27 +59,27 @@ public class shelfFragment extends Fragment {
         View root = binding.getRoot();
 
         lists = new ArrayList<>();
-        //refreshData();
-        lists=getData();
+        Auth.Token token = new Auth.Token(getActivity());
+        if(token.isEmpty())
+        {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+        refreshData();
+        if(if_empty==1)
+        {
+            if(getActivity()!=null)
+            {
+                Toast.makeText(getActivity(),"您的书架里还没有书呐！\n快往里头添加一些吧！",Toast.LENGTH_SHORT).show();
+            }
+        }
+        //lists=getData();
         grid_view = binding.bookGridview;
 
         bookAdapter myAdapter = new bookAdapter(getContext(),lists);
         grid_view.setAdapter(myAdapter);
 
         return root;
-
-        /*setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_shelf, container, false);
-        Context context = view.getContext();
-
-        grid_view= view.findViewById(R.id.book_gridview);
-        lists=getData();
-
-        bookAdapter myAdapter = new bookAdapter(getContext(),lists);
-        grid_view.setAdapter(myAdapter);
-
-        return view;*/
-
     }
     private List<BookItem> getData()
     {
@@ -92,12 +99,7 @@ public class shelfFragment extends Fragment {
 
 
     public void refreshData(){
-        String token="05b1c3dd3d048c587cf0b483814227b24c0c97ad";
-        Activity activity = null;
-        ArrayList<Pair<String,String>> queryParaameter = null;
-        HttpUtil.getRequestWithTokenAsyn(activity,"/app/books/list",queryParaameter, new Callback() {
-
-            //Request.Builder request = new Request.Builder().addHeader("Authorization",token);
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/app/books/list",new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                 mtoast("请求异常，加载不出来");
@@ -107,13 +109,24 @@ public class shelfFragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
+                    int mybook_num=data.getInt("size");
                     JSONArray mybook_list = data.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject mybook = mybook_list.getJSONObject(i);
-                        BookItem book = new BookItem(mybook.getString("bookName"), mybook.getString("authorID"));
-                        lists.add(book);
+                    if(mybook_num == 0){
+                        if_empty=1;
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(),"您的书架里还没有书呐！\n快往里头添加一些吧！",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-
+                    else {
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject mybook = mybook_list.getJSONObject(i);
+                            BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"));
+                            lists.add(book);
+                        }
+                    }
                     /*获取封面*/
                     /*new Thread(new Runnable() {
                         @Override
@@ -141,7 +154,7 @@ public class shelfFragment extends Fragment {
                         }
                     });*/
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    Tools.my_toast(Objects.requireNonNull(getActivity()),"加载失败");
                 }
             }
         });

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +17,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentCommendBinding;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -31,8 +32,9 @@ import okhttp3.Response;
 
 public class commendFragment extends Fragment {
     private RecyclerView recycler_view;
+
+    private String bookName,author;
     private FragmentCommendBinding binding;
-    private ImageView commend_pic;
     private List<Recommendation> recommendation_lists;
 
     public commendFragment() {
@@ -78,53 +80,52 @@ public class commendFragment extends Fragment {
         HttpUtil.getRequestAsyn("/app/homepage", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
                     /*从服务器中获取书籍信息的list*/
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
                     JSONArray commend_list=data.getJSONArray("data");
                     /*向recyclerview所需的list中加内容*/
                     for(int i = 0; i < commend_list.length(); i++){
                         JSONObject commend_item = commend_list.getJSONObject(i);
-                        String bookID = commend_item.getString("bookId");
+                        String bookID=commend_item.optString("bookId");
                         int BookID=0;
-                        if(!bookID.equals("null"))  BookID = Integer.valueOf(bookID);
-                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorID"),BookID);
+                        if(!bookID.equals("null"))  BookID=Integer.parseInt(bookID);
+                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorId"),BookID);
+                        /*get_bookinfo(BookID);
+                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),bookName,author,BookID);*/
                         recommendation_lists.add(recommendation);
                     }
                     /*随机获取图片（待完善）*/
-                    /*new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for(int i = 0;i < recommendation_lists.size(); ++i){
-                                *//*随机生成一些picID*//*
-                                String picID= String.valueOf(R.drawable.warship_natural_selection);
-                                *//*从服务器中获取图片*//*
-                                //Bitmap pic = HttpUtil.getAvaSyn(picID);
-                                commend_pic.setImageResource(R.drawable.warship_natural_selection);
-                                //commend_pic.setImageBitmap(pic);
-                                Log.d("commendCardAdapter","需要更新");
-                                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                                    @SuppressLint("NotifyDataSetChanged")
-                                    @Override
-                                    public void run() {
-                                        Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged();
-                                    }
-                                });
+                    new Thread(() -> {
+                        for(int i = 0;i < recommendation_lists.size(); ++i){
+                            Bitmap pic = null;
+                            try {
+                                String picId=get_randomPicId();
+                                //String picId="6e6f1de8ac743c762a4fcd9ecd83c576addf657f88e69c2ba94e2e99d23399d8";
+                                recommendation_lists.get(i).setPicId(picId);
+                                pic = Tools.getImageBitmapSyn(getActivity(), recommendation_lists.get(i).getPicId());
+                            } catch (IOException | JSONException | ParseException e) {
+                                Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
                             }
-
+                            recommendation_lists.get(i).setPic(pic);
+                            Log.d("commendCardAdapter","需要更新");
+                            Objects.requireNonNull(getActivity()).runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
                         }
-                    }).run();*/
+
+                    }).start();
 
                     Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                         if(getActivity() != null)
                         {
-                        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.commend_card);
+                        RecyclerView recyclerView = getActivity().findViewById(R.id.commend_card);
                             if(recyclerView != null)
                             {
                                 Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
@@ -137,9 +138,35 @@ public class commendFragment extends Fragment {
             }
         });
     }
+    /*获取书籍名称和作者名称的函数，等待api中...*/
+    /*public void get_bookinfo(int BookID) {
+        HttpUtil.getRequestAsyn("/app/book/" + BookID, new ArrayList<>(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mtoast("请求异常，加载不出来");
+            }
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
 
-    private void  mtoast(String msg){
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show());
+                    assert response.body() != null;
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONObject data = jsonObject.getJSONObject("data");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }*/
+    /*获取随机图片id的函数，等待api中...*/
+    public String get_randomPicId(){
+        String picId="6e6f1de8ac743c762a4fcd9ecd83c576addf657f88e69c2ba94e2e99d23399d8";
+        return picId;
+    }
+
+    private void  mtoast(){
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
 
 }

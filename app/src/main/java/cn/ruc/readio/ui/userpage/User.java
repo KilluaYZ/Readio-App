@@ -8,7 +8,7 @@ public class User {
     private String phoneNumber;
     private Bitmap avator;
     private String avaID;
-
+    public User(){};
     public User(String userName,String eMail, String phoneNumber){
         this.userName = userName;
         this.eMail = eMail;

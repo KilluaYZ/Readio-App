@@ -72,7 +72,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
                 int position = viewHolder.getAdapterPosition();
                 if(WorksList.get(position).getMylike()==0){
                     viewHolder.likeButton.setImageResource(R.drawable.msaik_like);
-                    WorksList.get(position).addLike();
+                    WorksList.get(position).addLike(worksFragment.workFrag.getActivity(),toString().valueOf(WorksList.get(position).getWorkID()));
                     if(WorksList.get(position).getLikesNum() >= 1000){
                         String num = String.valueOf(WorksList.get(position).getLikesNum());
                         String num1 = num.substring(0,1);
@@ -83,7 +83,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
                 }
                 else{
                     viewHolder.likeButton.setImageResource(R.drawable.heart_plus_48);
-                    WorksList.get(position).subLike();
+                    WorksList.get(position).subLike(worksFragment.workFrag.getActivity(),toString().valueOf(WorksList.get(position).getWorkID()));
                     if(WorksList.get(position).getLikesNum() >= 1000){
                         String num = String.valueOf(WorksList.get(position).getLikesNum());
                         String num1 = num.substring(0,1);
@@ -104,6 +104,13 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
         holder.workTitle.setText(works.getPieceTitle());
         holder.workContent.setText(works.getContent());
         holder.workUser.setText(works.getWorkUser());
+        if(works.getMylike()==1)
+        {
+            holder.likeButton.setImageResource(R.drawable.msaik_like);
+        }
+        else{
+            holder.likeButton.setImageResource(R.drawable.heart_plus_48);
+        }
         if(works.getLikesNum() >= 1000){
             String num = String.valueOf(works.getLikesNum());
             String num1 = num.substring(0,1);
@@ -124,5 +131,9 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
     @Override
     public int getItemCount() {
         return WorksList.size();
+    }
+
+    public void setHeart(){
+
     }
 }

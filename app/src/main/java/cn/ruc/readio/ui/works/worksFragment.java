@@ -34,6 +34,8 @@ import okhttp3.Response;
 
 public class worksFragment extends Fragment {
 
+    static public Fragment workFrag;
+
     private FragmentWorksBinding binding;
     User user = new User("zyy","123456","123456");
     ArrayList<Works> works = new ArrayList<Works>();
@@ -41,6 +43,7 @@ public class worksFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentWorksBinding.inflate(inflater, container, false);
+        workFrag = this;
         View root = binding.getRoot();
         refreshData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
@@ -57,8 +60,13 @@ public class worksFragment extends Fragment {
         binding = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     public void refreshData(){
-        HttpUtil.getRequestAsyn("/works/getPiecesBrief", new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Tools.my_toast(getActivity(),"请求异常，加载不出来");
@@ -77,6 +85,10 @@ public class worksFragment extends Fragment {
                         work.setContent(datai.getString("content"));
                         work.setLikesNum(datai.getInt("likes"));
                         work.setWorkID(datai.getInt("piecesId"));
+                        if(datai.getInt("isLiked")==1)
+                        {
+                            work.changeMyLike();
+                        }
                         User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
                         user.setAvaID(useri.getString("avator"));
                         tags tagi = new tags();
@@ -97,6 +109,7 @@ public class worksFragment extends Fragment {
                         works.add(work);
 
                     }
+
 
                     new Thread(new Runnable() {
                         @Override

@@ -41,11 +41,14 @@ import okhttp3.Response;
 public class readWorksActivity extends AppCompatActivity {
     ImageView ava = null;
     int like_clicked_times = 0;
+    int is_liked = 0;
+    int is_collect = 0;
     int collect_clicked_times = 0;
     public List<PieceComments> comment_list = new ArrayList<>();
     private mBottomSheetDialog bottomSheetDialog;
     private BottomSheetBehavior bottomSheetBehavior;
     private ActivityReadWorksBinding binding;
+    private String pieceId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -69,8 +72,7 @@ public class readWorksActivity extends AppCompatActivity {
 
             ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
             queryParam.add(new Pair<>("piecesId",workId));
-            Log.d("piecesId",workId);
-            HttpUtil.getRequestAsyn("/works/getPiecesDetail", queryParam, new Callback() {
+            HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/works/getPiecesDetail", queryParam, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     mtoast("请求异常，加载不出来");
@@ -87,13 +89,27 @@ public class readWorksActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     try {
+                                        pieceId =  data.getString("piecesId");
                                         read_content.setText("\n"+data.getString("content"));
                                         read_title.setText("\n"+data.getString("title"));
                                         readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
                                         userName.setText((data.getJSONObject("user").getString("userName")));
                                         String avaId = data.getJSONObject("user").getString(("avator"));
-//                                        HttpUtil.getAvaAsyn(avaId,binding.authorAvator,readWorksActivity.this);
-//                                        ava.setImageBitmap(HttpUtil.getAvaSyn(avaId));
+                                        if(data.getInt("isLiked")==1)
+                                        {
+                                            like_button.setImageResource(R.drawable.liked);
+                                            is_liked = 1;
+                                        }
+                                        else {
+                                            like_button.setImageResource(R.drawable.like);
+                                        }
+                                        if(data.getInt("isCollected")==1)
+                                        {
+                                            collect_button.setImageResource(R.drawable.collected);
+                                        }
+                                        else {
+                                            collect_button.setImageResource(R.drawable.collect);
+                                        }
                                         Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
 
                                     } catch (JSONException e) {
@@ -141,10 +157,36 @@ public class readWorksActivity extends AppCompatActivity {
 
         like_button.setOnClickListener(view -> {
             like_clicked_times++;
-            if(like_clicked_times % 2 == 0){
-                like_button.setImageResource(R.drawable.like);}
+            if(is_liked == 1){
+                is_liked = 0;
+                like_button.setImageResource(R.drawable.like);
+                ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
+                pieceid.add(Pair.create("piecesId",pieceId));
+                HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/like/del", pieceid, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                    }
+                });
+            }
             else{
+                is_liked = 1;
                 like_button.setImageResource(R.drawable.liked);
+                ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
+                pieceid.add(Pair.create("piecesId",pieceId));
+                HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/like/add", pieceid, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                    }
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                    }
+                });
             }
         });
 
@@ -164,6 +206,42 @@ public class readWorksActivity extends AppCompatActivity {
             comment_list.add(commenti);
             }
             bottomsheet();
+        });
+        collect_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
+                pieceid.add(Pair.create("piecesId",pieceId));
+                if(is_collect==1)
+                {
+                    is_collect=0;
+                    collect_button.setImageResource(R.drawable.collect);
+                HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/collect/del", pieceid, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                    }
+                });}
+                else{
+                    is_collect = 1;
+                    collect_button.setImageResource(R.drawable.collected);
+                    HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/collect/add", pieceid, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                        }
+                    });
+                }
+
+            }
         });
     }
 

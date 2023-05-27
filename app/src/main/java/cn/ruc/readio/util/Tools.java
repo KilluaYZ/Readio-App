@@ -240,6 +240,13 @@ public class Tools {
     }
 
     public static FileInfo randomGetImgFileInfoSyn() throws IOException, JSONException {
+
+//        ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
+//        queryParam.add(Pair.create("userId", String.valueOf(3)));
+//        queryParam.add(Pair.create("bookId", String.valueOf(6)));
+//        queryParam.add(Pair.create("progress", String.valueOf(3)));
+//        HttpUtil.getRequestSyn("/book/update", queryParam);
+
         Response response = HttpUtil.getRequestSyn("/file/randomGetImgFileInfo", new ArrayList<>());
         FileInfo fileInfo = new FileInfo();
         if(response.code() == 200){

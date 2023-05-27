@@ -206,6 +206,8 @@ public class userPageFragment extends Fragment {
                             JSONObject responseJsonObject = new JSONObject(response.body().string()).getJSONObject("data").getJSONObject("userInfo");
                             String userId = String.valueOf(responseJsonObject.getInt("userId"));
                             String userName = responseJsonObject.getString("userName");
+                            int followerNum = responseJsonObject.getInt("followerNum");
+                            int subscribeNum = responseJsonObject.getInt("subscribeNum");
 //                    handler.obtainMessage(1,userId);
 //                    handler.obtainMessage(2,userName);
 //                    Bitmap my_avamap = HttpUtil.getAvaSyn(responseJsonObject.getString("avator"));
@@ -219,6 +221,8 @@ public class userPageFragment extends Fragment {
                                     public void run() {
                                         binding.userID.setText("ID:" + userId);
                                         binding.userName.setText(userName);
+                                        binding.followers.setText(String.valueOf(followerNum));
+                                        binding.stars.setText(String.valueOf(subscribeNum));
 //                            binding.myAvator.setImageBitmap(my_avamap);
                                     }
                                 });

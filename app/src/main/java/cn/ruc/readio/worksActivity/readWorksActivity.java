@@ -49,6 +49,8 @@ public class readWorksActivity extends AppCompatActivity {
     private BottomSheetBehavior bottomSheetBehavior;
     private ActivityReadWorksBinding binding;
     private String pieceId;
+
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -71,75 +73,124 @@ public class readWorksActivity extends AppCompatActivity {
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
         TextView updateTimeTextView = (TextView) findViewById(R.id.updateTimeTextView);
 
-            ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
-            queryParam.add(new Pair<>("piecesId",workId));
-            HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/works/getPiecesDetail", queryParam, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    mtoast("请求异常，加载不出来");
-                }
+        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+        queryParam.add(new Pair<>("piecesId",workId));
+        HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/works/getPiecesDetail", queryParam, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mtoast("请求异常，加载不出来");
+            }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        if (response.code() == 200){
-                            String s = response.body().string();
-                            JSONObject jsonObject = new JSONObject(s);
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        pieceId =  data.getString("piecesId");
-                                        read_content.setText("\n"+data.getString("content"));
-                                        read_title.setText("\n"+data.getString("title"));
-                                        readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
-                                        userName.setText((data.getJSONObject("user").getString("userName")));
-                                        String avaId = data.getJSONObject("user").getString(("avator"));
-                                        updateTimeTextView.setText(data.getString("updateTime"));
-                                        if(data.getInt("isLiked")==1)
-                                        {
-                                            like_button.setImageResource(R.drawable.liked);
-                                            is_liked = 1;
-                                        }
-                                        else {
-                                            like_button.setImageResource(R.drawable.like);
-                                        }
-                                        if(data.getInt("isCollected")==1)
-                                        {
-                                            collect_button.setImageResource(R.drawable.collected);
-                                        }
-                                        else {
-                                            collect_button.setImageResource(R.drawable.collect);
-                                        }
-                                        Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException | ParseException e) {
-                                        throw new RuntimeException(e);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    if (response.code() == 200){
+                        String s = response.body().string();
+                        JSONObject jsonObject = new JSONObject(s);
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    pieceId =  data.getString("piecesId");
+                                    read_content.setText("\n"+data.getString("content"));
+                                    read_title.setText("\n"+data.getString("title"));
+                                    readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
+                                    user = new User();
+                                    JSONObject userObj = data.getJSONObject("user");
+                                    user.fromJSONObject(userObj);
+                                    userName.setText(user.getUserName());
+                                    String avaId = user.getAvaID();
+                                    updateTimeTextView.setText(data.getString("updateTime"));
+                                    if(data.getInt("isLiked")==1)
+                                    {
+                                        like_button.setImageResource(R.drawable.liked);
+                                        is_liked = 1;
                                     }
+                                    else {
+                                        like_button.setImageResource(R.drawable.like);
+                                    }
+                                    if(data.getInt("isCollected")==1)
+                                    {
+                                        collect_button.setImageResource(R.drawable.collected);
+                                    }
+                                    else {
+                                        collect_button.setImageResource(R.drawable.collect);
+                                    }
+                                    Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
+                                    if(user.getSubscribed()){
+                                        follow_button.setVisibility(View.GONE);
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException | ParseException e) {
+                                    throw new RuntimeException(e);
                                 }
-                            });
-                        }else{
-                            mtoast("请求出错");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            }
+                        });
+                    }else{
+                        mtoast("请求出错");
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
+
+//        HttpUtil.getRequestAsyn("/app/book/18", new ArrayList<>(), new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                Log.d("hahaha", response.body().string());
+//            }
+//        });
 
          exitRead_button.setOnClickListener(view -> finish());
         /*
         判断用户是否已关注太太，如果已关注，follow_button要setGone
          */
         follow_button.setOnClickListener(view -> {
-            Toast.makeText(readWorksActivity.this, "成功关注太太", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(readWorksActivity.this, "成功关注太太", Toast.LENGTH_SHORT).show();
             /*
             传至服务器，更新数据库
              */
-            follow_button.setVisibility(view.GONE);
+            ArrayList<Pair<String, String>> userSubscribeAddQueryParam = new ArrayList<>();
+            userSubscribeAddQueryParam.add(Pair.create("userId", user.getUserId()));
+            Log.d("hahaha", "userId = "+user.getUserId());
+            HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/user/subscribe/add", userSubscribeAddQueryParam, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Tools.my_toast(readWorksActivity.this, "关注失败，请检查网络连接");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(response.code() == 200){
+                        Tools.my_toast(readWorksActivity.this, "成功关注太太！");
+                        readWorksActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //传服务器结束
+                                follow_button.setVisibility(View.GONE);
+                            }
+                        });
+                    }else{
+                        try {
+                            String msg = new JSONObject(response.body().string()).getString("msg");
+                            Tools.my_toast(readWorksActivity.this, msg);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+
         });
 
         sendComment_button.setOnClickListener(view -> {

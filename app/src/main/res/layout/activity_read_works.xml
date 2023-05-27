@@ -113,7 +113,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/yuanti"
-                        android:text="04-26"
+                        android:id="@+id/updateTimeTextView"
                         android:textColor="@color/grey"
                         android:textSize="13sp" />
                 </LinearLayout>

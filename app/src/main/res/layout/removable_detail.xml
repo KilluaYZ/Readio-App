@@ -134,6 +134,16 @@
             android:fontFamily="@font/honghei"
             android:text="@string/comment"
             android:textSize="20sp" />
+        <TextView
+            android:id="@+id/writecomment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:text="写评论"
+            android:textSize="15sp"
+            android:textColor="#D3EA1E1E" />
+
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

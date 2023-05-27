@@ -3,6 +3,10 @@ package cn.ruc.readio.ui.shelf;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
+import cn.ruc.readio.R;
+
 public class BookItem {
     private String BookName;
     private final String Author;
@@ -23,11 +27,11 @@ public class BookItem {
         return CoverID;
     }
 
-    public BookItem(String BookName, String Author, Bitmap coverID) {
+    public BookItem(String BookName, String Author, String coverID) {
         //this.img=img;
         this.BookName = BookName;
         this.Author=Author;
-        this.Cover =coverID;
+        this.CoverID =coverID;
     }
     public BookItem(String BookName,String Author){
         this.BookName = BookName;
@@ -40,7 +44,11 @@ public class BookItem {
     public void setAuthor(String Author){
         this.BookName = Author;
     }
-    public void setCover(Bitmap Cover){this.Cover = Cover;}
-    public void setCoverID(String CoverID){this.CoverID = CoverID;}
+    public void setCover(Bitmap Cover){
+        this.Cover = Cover;
+    }
+    public void setCoverID(String CoverID){
+        this.CoverID = CoverID;
+    }
 }
 

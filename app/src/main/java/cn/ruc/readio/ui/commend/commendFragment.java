@@ -1,6 +1,7 @@
 package cn.ruc.readio.ui.commend;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import cn.ruc.readio.R;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
 import cn.ruc.readio.databinding.FragmentCommendBinding;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
@@ -108,10 +110,7 @@ public class commendFragment extends Fragment {
                         for(int i = 0;i < recommendation_lists.size(); ++i){
                             Bitmap pic = null;
                             try {
-                                String picId=get_randomPicId();
-                                //String picId="6e6f1de8ac743c762a4fcd9ecd83c576addf657f88e69c2ba94e2e99d23399d8";
-                                recommendation_lists.get(i).setPicId(picId);
-                                pic = Tools.getImageBitmapSyn(getActivity(), recommendation_lists.get(i).getPicId());
+                                pic = Tools.randomGetImgSyn(getActivity());
                             } catch (IOException | JSONException | ParseException e) {
                                 Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
                             }
@@ -159,11 +158,6 @@ public class commendFragment extends Fragment {
             }
         });
     }*/
-    /*获取随机图片id的函数，等待api中...*/
-    public String get_randomPicId(){
-        String picId="6e6f1de8ac743c762a4fcd9ecd83c576addf657f88e69c2ba94e2e99d23399d8";
-        return picId;
-    }
 
     private void  mtoast(){
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "请求异常，加载不出来",Toast.LENGTH_LONG).show());

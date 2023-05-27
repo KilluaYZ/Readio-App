@@ -32,12 +32,16 @@ public class aBookCommentAdapter extends RecyclerView.Adapter<aBookCommentAdapte
         private final TextView commentContent;
         private final TextView commentUser;
         private final TextView likesNum;
+        private final TextView date;
+        private final ImageView userAvator;
         private final CardView jumpView;
         public ViewHolder(View view){
             super(view);
             commentContent = view.findViewById(R.id.commentContentText);
             commentUser = view.findViewById(R.id.commentUserText);
             likesNum = view.findViewById(R.id.likePieceCommentNum);
+            date=view.findViewById(R.id.commentTimeText);
+            userAvator=view.findViewById(R.id.comment_user_avator);
             jumpView=view.findViewById(R.id.comment_card);
         }
     }
@@ -67,7 +71,8 @@ public class aBookCommentAdapter extends RecyclerView.Adapter<aBookCommentAdapte
         holder.commentContent.setText(comment.getContent());
         holder.commentUser.setText(comment.getUserName());
         holder.likesNum.setText(String.valueOf(comment.getLikesNum()));
-
+        holder.date.setText(comment.getDate());
+        holder.userAvator.setImageBitmap(comment.getUserAvator());
         holder.jumpView.setOnClickListener(view -> {
             Intent intent=new Intent();
             intent.setClass(context, commentDetailActivity.class);

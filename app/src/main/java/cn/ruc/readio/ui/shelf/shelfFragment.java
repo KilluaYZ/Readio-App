@@ -107,54 +107,60 @@ public class shelfFragment extends Fragment {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 try {
+                    Log.d("正在获取报文", "onResponse:ll ");
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
-                    int mybook_num=data.getInt("size");
+                    int mybook_num = data.getInt("size");
                     JSONArray mybook_list = data.getJSONArray("data");
-                    if(mybook_num == 0){
-                        if_empty=1;
+                    if (mybook_num == 0) {
+                        if_empty = 1;
                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(),"您的书架里还没有书呐！\n快往里头添加一些吧！",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "您的书架里还没有书呐！\n快往里头添加一些吧！", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
-                    else {
-                        for (int i = 0; i < data.length(); i++) {
+                    } else {
+                        for (int i = 0; i < mybook_list.length(); i++) {
+                            Log.d("正在分割数据", "onResponse: dd");
                             JSONObject mybook = mybook_list.getJSONObject(i);
-                            BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"));
+                            BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"), mybook.optString("bitmap"));
                             lists.add(book);
                         }
-                    }
-                    /*获取封面*/
-                    /*new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for(int i = 0;i < lists.size(); ++i){
-                                Bitmap pic = HttpUtil.getAvaSyn(lists.get(i).getCoverID());
-                                lists.get(i).setCover(pic);
-                                Log.d("bookadpter","需要更新");
-                                getActivity().runOnUiThread(new Runnable() {
+                        Log.d("书籍列表", "正在更新");
+                        Log.d("书籍列表", String.valueOf(lists.size()));
+                        /*获取封面*/
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < lists.size(); ++i) {
+                                    if(lists.get(i).getCoverID()!="null") {
+                                        Bitmap pic = HttpUtil.getAvaSyn(lists.get(i).getCoverID());
+                                        lists.get(i).setCover(pic);
+                                    }
+                                    Log.d("bookadpter", "需要更新");
+                                }
+                                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        binding.bookGridview.getAdapter().notifyDataSetChanged();
+                                        bookAdapter myAdapter = new bookAdapter(getContext(), lists);
+                                        binding.bookGridview.setAdapter(myAdapter);
                                     }
                                 });
                             }
+                        }).start();
 
-                        }
-                    }).run();*/
-
-                    /*getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            GridView gridView = getActivity().findViewById(R.id.book_gridview);
-                            //gridView.getAdapter().getItem().
-                        }
-                    });*/
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("bookadpter", "正在更新");
+                                bookAdapter myAdapter = new bookAdapter(getContext(), lists);
+                                binding.bookGridview.setAdapter(myAdapter);
+                            }
+                        });
+                    }
                 } catch (JSONException e) {
-                    Tools.my_toast(Objects.requireNonNull(getActivity()),"加载失败");
+                    Tools.my_toast(Objects.requireNonNull(getActivity()),"书架加载失败");
                 }
             }
         });

@@ -55,7 +55,7 @@ public class likesAdapter extends RecyclerView.Adapter<likesAdapter.ViewHolder>{
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d("RECD","onCreateViewHolder");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_likes, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R .layout.item_likes, parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.likedWorkContent.setOnClickListener(new View.OnClickListener() {
             @Override

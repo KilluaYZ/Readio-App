@@ -89,7 +89,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="15"
             android:textSize="13sp"
-            android:text="小羊同学" />
+            android:text="小羊同学"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="10sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -101,7 +105,7 @@
             <ImageView
                 android:id="@+id/likePieceButton"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="20dp"
                 android:layout_gravity="left"
                 android:layout_weight="1"
                 android:src="@drawable/heart_plus_48" />

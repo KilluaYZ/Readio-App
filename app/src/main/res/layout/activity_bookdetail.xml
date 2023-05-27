@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@color/blue"
+        android:backgroundTint="#0000"
         tools:ignore="ExtraText">
         <!--标题-->
         <LinearLayout

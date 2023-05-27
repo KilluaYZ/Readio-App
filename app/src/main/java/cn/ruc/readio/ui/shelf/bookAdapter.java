@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import java.util.List;
+import java.util.Objects;
+
 import cn.ruc.readio.R;
 import cn.ruc.readio.bookReadActivity.readBookActivity;
 
@@ -65,8 +67,13 @@ public class bookAdapter extends BaseAdapter {
             if(books.getCover()==null)
             {
                 holder.cover.setImageResource(R.drawable.default_cover2);
-            }else{
-            holder.cover.setImageBitmap(books.getCover());}
+            }else {
+                if (Objects.equals(books.getCoverID(), "null")) {
+                    holder.cover.setImageResource(R.drawable.xiaoyang);
+                } else {
+                    holder.cover.setImageBitmap(books.getCover());
+                }
+            }
 
             /*设置跳转阅读界面*/
             holder.jumpview.setOnClickListener(view -> {

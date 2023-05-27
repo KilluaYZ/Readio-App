@@ -198,4 +198,59 @@ public class Tools {
 
         return null;
     }
+
+    //异步随机获取图片
+    //@param Activity activity  调用该函数的activity
+    //@param ImageView view     装随机获取到的图片的view
+    public static void randomGetImgAsyn(Activity activity, ImageView view){
+        HttpUtil.getRequestAsyn("/file/randomGetImgFileInfo", new ArrayList<>(), new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Tools.my_toast(activity, "请检查网络连接");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.code() == 200){
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string()).getJSONObject("data");
+                        String fileId = obj.getString("fileId");
+                        getImageBitmapAsyn(fileId,view,activity);
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }else{
+                    Log.e("Tools.randomGetImgFileInfoSyn", "随机获取fileInfo失败，请检查网络连接");
+                }
+            }
+        });
+    }
+
+    //同步随机获取图片
+    //@param Activity activity  调用该函数的activity
+    //@return Bitmap            随机获取到的图片转化成的Bitmap
+    public static Bitmap randomGetImgSyn(Activity activity) throws JSONException, IOException, ParseException {
+        FileInfo fileInfo = randomGetImgFileInfoSyn();
+        if(fileInfo == null){
+            return null;
+        }
+        String fileId = fileInfo.getFileId();
+        return getImageBitmapSyn(activity, fileId);
+    }
+
+    public static FileInfo randomGetImgFileInfoSyn() throws IOException, JSONException {
+        Response response = HttpUtil.getRequestSyn("/file/randomGetImgFileInfo", new ArrayList<>());
+        FileInfo fileInfo = new FileInfo();
+        if(response.code() == 200){
+            JSONObject obj = new JSONObject(response.body().string()).getJSONObject("data");
+            fileInfo.setFileId(obj.getString("fileId"));
+            fileInfo.setFileName(obj.getString("fileName"));
+            fileInfo.setFileType(obj.getString("fileType"));
+            fileInfo.setFilePath(obj.getString("filePath"));
+        }else{
+            Log.e("Tools.randomGetImgFileInfoSyn", "随机获取fileInfo失败，请检查网络连接");
+        }
+        return (fileInfo.getFileId() != null && fileInfo.getFileId().length() > 0) ? fileInfo : null;
+    }
 }

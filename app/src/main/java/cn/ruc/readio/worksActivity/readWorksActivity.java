@@ -69,6 +69,7 @@ public class readWorksActivity extends AppCompatActivity {
         TextView readSerialName = (TextView) findViewById(R.id.readSerialText);
         TextView userName = (TextView) findViewById(R.id.readUserNameText);
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
+        TextView updateTimeTextView = (TextView) findViewById(R.id.updateTimeTextView);
 
             ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
             queryParam.add(new Pair<>("piecesId",workId));
@@ -95,6 +96,7 @@ public class readWorksActivity extends AppCompatActivity {
                                         readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
                                         userName.setText((data.getJSONObject("user").getString("userName")));
                                         String avaId = data.getJSONObject("user").getString(("avator"));
+                                        updateTimeTextView.setText(data.getString("updateTime"));
                                         if(data.getInt("isLiked")==1)
                                         {
                                             like_button.setImageResource(R.drawable.liked);

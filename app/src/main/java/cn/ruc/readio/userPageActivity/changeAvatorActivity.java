@@ -33,6 +33,7 @@ import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.ActivityChangeAvatorBinding;
 import cn.ruc.readio.util.BitmapBase64;
 import cn.ruc.readio.util.HttpUtil;
+import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -64,101 +65,104 @@ public class changeAvatorActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinnerView);
         spinner.setAdapter(adapter);
 
-        refreshSpinnerData();
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("天啦噜！","出问题辣！");
-                String res = parent.getItemAtPosition(position).toString();
-                Toast.makeText(changeAvatorActivity.this,"正在从服务器获取:"+res,Toast.LENGTH_LONG).show();
-                ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
-                queryParam.add(Pair.create("fileId", resourceIdArrayList.get(position)));
-                HttpUtil.getRequestAsyn("/file/getFileBinaryById", queryParam, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mtoast("从服务器获取图片失败，请检查网络连接");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-
-                        if(response.code() == 200){
-                            byte[] picBytes = response.body().bytes();
-                            Bitmap pic = BitmapFactory.decodeByteArray(picBytes,0,picBytes.length);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    avatorImageView.setImageBitmap(pic);
-                                }
-                            });
-
-                        }else{
-                            mtoast("获取图片失败");
-                        }
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        Tools.randomGetImgAsyn(this, avatorImageView);
 
 
-        addImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, 2);
-            }
-        });
+//        refreshSpinnerData();
 
-        Button button = (Button) findViewById(R.id.uploadButton);
-        EditText nameEdit = (EditText) findViewById(R.id.nameEdit);
-        EditText typeEdit = (EditText) findViewById(R.id.typeEdit);
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("天啦噜！","出问题辣！");
+//                String res = parent.getItemAtPosition(position).toString();
+//                Toast.makeText(changeAvatorActivity.this,"正在从服务器获取:"+res,Toast.LENGTH_LONG).show();
+//                ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+//                queryParam.add(Pair.create("fileId", resourceIdArrayList.get(position)));
+//                HttpUtil.getRequestAsyn("/file/getFileBinaryById", queryParam, new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        mtoast("从服务器获取图片失败，请检查网络连接");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//
+//                        if(response.code() == 200){
+//                            byte[] picBytes = response.body().bytes();
+//                            Bitmap pic = BitmapFactory.decodeByteArray(picBytes,0,picBytes.length);
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    avatorImageView.setImageBitmap(pic);
+//                                }
+//                            });
+//
+//                        }else{
+//                            mtoast("获取图片失败");
+//                        }
+//
+//                    }
+//                });
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mtoast("图片上传中，请稍等");
+//            }
 
-                JSONObject postBody = new JSONObject();
-                try {
-                    postBody.put("fileName", nameEdit.getText());
-                    postBody.put("fileType", typeEdit.getText());
-                    postBody.put("fileContent", BitmapBase64.bitmapToBase64(dataBitMap));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    mtoast("信息填写不正确！");
-                } catch (NullPointerException e){
-                    e.printStackTrace();
-                }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
-                HttpUtil.postRequestJsonAsyn("/file/uploadBinary", postBody.toString(), new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mtoast("上传失败，请检查网络连接");
-                    }
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if(response.code() == 200){
-                            mtoast("上传成功");
-                            refreshSpinnerData();
+//        addImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_PICK, null);
+//                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//                startActivityForResult(intent, 2);
+//            }
+//        });
 
-                        }else{
-                            mtoast(new String(response.body().string().getBytes(StandardCharsets.UTF_8)));
-                        }
-                    }
-                });
+//        Button button = (Button) findViewById(R.id.uploadButton);
+//        EditText nameEdit = (EditText) findViewById(R.id.nameEdit);
+//        EditText typeEdit = (EditText) findViewById(R.id.typeEdit);
 
-            }
-        });
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mtoast("图片上传中，请稍等");
+//
+//                JSONObject postBody = new JSONObject();
+//                try {
+//                    postBody.put("fileName", nameEdit.getText());
+//                    postBody.put("fileType", typeEdit.getText());
+//                    postBody.put("fileContent", BitmapBase64.bitmapToBase64(dataBitMap));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    mtoast("信息填写不正确！");
+//                } catch (NullPointerException e){
+//                    e.printStackTrace();
+//                }
+//
+//                HttpUtil.postRequestJsonAsyn("/file/uploadBinary", postBody.toString(), new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        mtoast("上传失败，请检查网络连接");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        if(response.code() == 200){
+//                            mtoast("上传成功");
+//                            refreshSpinnerData();
+//
+//                        }else{
+//                            mtoast(new String(response.body().string().getBytes(StandardCharsets.UTF_8)));
+//                        }
+//                    }
+//                });
+//
+//            }
+//        });
     }
 
 

@@ -92,9 +92,11 @@ public class worksFragment extends Fragment {
                         User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
                         user.setAvaID(useri.getString("avator"));
                         tags tagi = new tags();
+                        tags tagj = new tags();
                         if(datai.has("tag")){
                             JSONArray tagList = datai.getJSONArray("tag");
-                            if(tagList.length() > 0){
+                            work.setTagNum(tagList.length());
+                            if(tagList.length() == 1 ){
                                 JSONObject tagObj = (JSONObject)tagList.get(0);
                                 String tagConent = tagObj.getString("content");
                                 int tagID = tagObj.getInt("tagId");
@@ -103,6 +105,25 @@ public class worksFragment extends Fragment {
                                 tagi.setLinkedTimes(tagLinkedTimes);
                                 tagi.setTagId(tagID);
                                 work.setTag(tagi);
+                            }
+                            if(tagList.length() >= 2 ){
+                                JSONObject tagObj = (JSONObject)tagList.get(0);
+                                String tagConent = tagObj.getString("content");
+                                int tagID = tagObj.getInt("tagId");
+                                int tagLinkedTimes = tagObj.getInt("linkedTimes");
+                                tagi.setContent(tagConent);
+                                tagi.setLinkedTimes(tagLinkedTimes);
+                                tagi.setTagId(tagID);
+                                work.setTag(tagi);
+
+                                tagObj = (JSONObject) tagList.get(1);
+                                String tagConent1 = tagObj.getString("content");
+                                int tagID1 = tagObj.getInt("tagId");
+                                int tagLinkedTimes1 = tagObj.getInt("linkedTimes");
+                                tagj.setContent(tagConent1);
+                                tagj.setLinkedTimes(tagLinkedTimes1);
+                                tagj.setTagId(tagID1);
+                                work.setTag2(tagj);
                             }
                         }
                         work.setUser(user);

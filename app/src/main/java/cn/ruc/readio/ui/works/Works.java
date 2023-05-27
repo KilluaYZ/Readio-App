@@ -23,10 +23,12 @@ public class Works {
     private Date date;
     private int likesNum;
     private tags tag;
+    private tags tag2;
     private int mylike;
     private int collectsNum;
     private int commentsNum;
     private String publishedTime;
+    private int tagNum;
 
     public Works(String content, String serialTitle, String pieceTitle, User user) {
         this.content = content;
@@ -34,10 +36,12 @@ public class Works {
         this.serialTitle = serialTitle;
         this.user = user;
         this.mylike = 0;
+        tagNum = 0;
     }
 
     public Works(){
         mylike = 0;
+        tagNum = 0;
     }
     public String getSerialTitle(){
         return serialTitle;
@@ -54,11 +58,12 @@ public class Works {
 
     public int getWorkID(){ return workID;}
     public tags getTag(){ return tag;}
+    public tags getTag2(){ return tag2;}
     public String getWorkUser(){
         return user.getUserName();
     }
     public String getAvaId(){return user.getAvaID();}
-
+    public int getTagNum(){return tagNum;}
     public User getUser() {return user;}
 
     public int getMylike(){return mylike;}
@@ -94,10 +99,11 @@ public class Works {
     public void setTag(tags tag){
         this.tag = tag;
     }
+    public void setTag2(tags tag2){ this.tag2 = tag2;}
     public void setPublishedTime(String publishedTime){ this.publishedTime = publishedTime; }
     public void setCollectsNum(int collectsNum){this.collectsNum = collectsNum;}
     public void setCommentsNum(int commentsNum){this.commentsNum = commentsNum;}
-
+    public void setTagNum(int num){ this.tagNum = num;}
     public void changeMyLike(){
         if (mylike==0){
             mylike = 1;

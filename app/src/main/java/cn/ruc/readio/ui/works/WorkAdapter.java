@@ -36,8 +36,10 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
         private TextView workUser;
         private TextView likesNum;
         private TextView workTag;
+        private TextView workTag1;
         private ImageView likeButton;
         private ImageView userAva;
+        private TextView moreTag;
         public ViewHolder(View view){
             super(view);
             workTitle = view.findViewById(R.id.workTitle);
@@ -45,8 +47,10 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
             workUser = view.findViewById(R.id.workUser);
             likesNum = view.findViewById(R.id.likesNum);
             workTag = view.findViewById(R.id.workTag);
+            workTag1 = view.findViewById(R.id.workTag1);
             likeButton = view.findViewById(R.id.likePieceButton);
             userAva = view.findViewById(R.id.userAvator);
+            moreTag = view.findViewById(R.id.workTagmore);
         }
     }
 
@@ -105,6 +109,10 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
         holder.workTitle.setText(works.getPieceTitle());
         holder.workContent.setText(works.getContent());
         holder.workUser.setText(works.getWorkUser());
+        if(works.getTagNum() <= 2)
+        {
+            holder.moreTag.setVisibility(View.GONE);
+        }
         if(works.getMylike()==1)
         {
             holder.likeButton.setImageResource(R.drawable.msaik_like);
@@ -125,8 +133,18 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder>{
             }
         else{
             holder.workTag.setVisibility(View.VISIBLE);
-            holder.workTag.setText("#"+works.getTag().getContent());}
-        Log.d("workadapter", "userAvator is null? = "+String.valueOf(works.getUser().getAvator()));
+            holder.workTag.setText("#"+works.getTag().getContent());
+        }
+
+        if(works.getTag2() == null){
+//            holder.workTag.setText("暂无Tag");
+            holder.workTag1.setVisibility(View.GONE);
+        }
+        else{
+            holder.workTag1.setVisibility(View.VISIBLE);
+            holder.workTag1.setText("#"+works.getTag2().getContent());
+        }
+
         holder.userAva.setImageBitmap(works.getUser().getAvator());
     }
     @Override

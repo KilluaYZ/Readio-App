@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.userpage.subscribe.SubscriberActivity">
+    tools:context=".ui.userpage.subscribe.SubscriberActivity"
+    android:fitsSystemWindows="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/subscribe_activity_title"
         android:layout_width="match_parent"

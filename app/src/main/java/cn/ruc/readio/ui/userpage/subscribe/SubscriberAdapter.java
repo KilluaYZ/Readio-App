@@ -54,13 +54,23 @@ public class SubscriberAdapter extends RecyclerView.Adapter<SubscriberAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.subscriber_user_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.followBtn.setOnClickListener(new View.OnClickListener() {
+
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        User subscriber =  SubscriberList.get(position);
+        holder.userNameTextView.setText(subscriber.getUserName());
+        holder.avatarCircleImageView.setImageBitmap(subscriber.getAvator());
+        holder.userIdTextView.setText("ID: "+subscriber.getUserId());
+        holder.followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unfollowed){
-                    viewHolder.followBtnText.setText("关注");
+                if(holder.unfollowed){
+                    holder.followBtnText.setText("关注");
                     ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
-                    queryParam.add(new Pair<>("userId", viewHolder.userIdTextView.getText().toString()));
+                    queryParam.add(new Pair<>("userId", subscriber.getUserId()));
                     HttpUtil.getRequestWithTokenAsyn(activity, "/user/subscribe/del", queryParam, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
@@ -73,9 +83,9 @@ public class SubscriberAdapter extends RecyclerView.Adapter<SubscriberAdapter.Vi
                         }
                     });
                 }else{
-                    viewHolder.followBtnText.setText("取消关注");
+                    holder.followBtnText.setText("取消关注");
                     ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
-                    queryParam.add(new Pair<>("userId", viewHolder.userIdTextView.getText().toString()));
+                    queryParam.add(new Pair<>("userId", subscriber.getUserId()));
                     HttpUtil.getRequestWithTokenAsyn(activity, "/user/subscribe/add", queryParam, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
@@ -88,20 +98,9 @@ public class SubscriberAdapter extends RecyclerView.Adapter<SubscriberAdapter.Vi
                         }
                     });
                 }
-                viewHolder.unfollowed = !viewHolder.unfollowed;
+                holder.unfollowed = !holder.unfollowed;
             }
         });
-
-
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User subscriber =  SubscriberList.get(position);
-        holder.userNameTextView.setText(subscriber.getUserName());
-        holder.avatarCircleImageView.setImageBitmap(subscriber.getAvator());
-        holder.userIdTextView.setText(subscriber.getUserId());
     }
 
     @Override

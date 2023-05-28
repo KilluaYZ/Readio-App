@@ -57,7 +57,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.ViewHo
         User subscriber =  FolloerList.get(position);
         holder.userNameTextView.setText(subscriber.getUserName());
         holder.avatarCircleImageView.setImageBitmap(subscriber.getAvator());
-        holder.userIdTextView.setText(subscriber.getUserId());
+        holder.userIdTextView.setText("ID: "+subscriber.getUserId());
     }
 
     @Override

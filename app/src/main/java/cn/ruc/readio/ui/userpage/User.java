@@ -98,6 +98,6 @@ public class User {
         if(obj.has("isSubscribed")){
             setSubscribed(obj.getInt("isSubscribed") == 0 ? false : true);
         }
-
     }
+
 }

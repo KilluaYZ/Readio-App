@@ -138,19 +138,7 @@ public class readWorksActivity extends AppCompatActivity {
             }
         });
 
-//        HttpUtil.getRequestAsyn("/app/book/18", new ArrayList<>(), new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                Log.d("hahaha", response.body().string());
-//            }
-//        });
-
-         exitRead_button.setOnClickListener(view -> finish());
+        exitRead_button.setOnClickListener(view -> finish());
         /*
         判断用户是否已关注太太，如果已关注，follow_button要setGone
          */

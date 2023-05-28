@@ -26,7 +26,10 @@ import java.util.ArrayList;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentUserpageBinding;
+import cn.ruc.readio.ui.userpage.follower.FollowerActivity;
+import cn.ruc.readio.ui.userpage.follower.FollowerAdapter;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
+import cn.ruc.readio.ui.userpage.subscribe.SubscriberActivity;
 import cn.ruc.readio.userPageActivity.changeAvatorActivity;
 import cn.ruc.readio.userPageActivity.myCollectionActivity;
 import cn.ruc.readio.userPageActivity.myLikesActivity;
@@ -147,6 +150,21 @@ public class userPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), myCollectionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.stars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SubscriberActivity.class);
+                startActivity(intent);
+            }
+        });
+        binding.followers.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), FollowerActivity.class);
                 startActivity(intent);
             }
         });

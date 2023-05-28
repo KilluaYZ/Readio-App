@@ -160,7 +160,7 @@ public class worksFragment extends Fragment {
                             }
 
                         }
-                    }).run();
+                    }).start();
                     if(getActivity() != null)
                     {
                         getActivity().runOnUiThread(new Runnable() {

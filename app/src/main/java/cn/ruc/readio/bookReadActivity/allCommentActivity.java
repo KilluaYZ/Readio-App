@@ -89,7 +89,7 @@ public class allCommentActivity extends AppCompatActivity {
 
     }
     public void refreshData(){
-        HttpUtil.getRequestAsyn("/app/book/"+ BookID, new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(this,"/app/book/"+ BookID, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 mtoast("请求异常，加载不出来");

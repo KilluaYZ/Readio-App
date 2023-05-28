@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
+                    android:textColor="@color/black"
                     android:text="呆头鹅"/>
 
                 <TextView
@@ -55,6 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/jianti"
                     android:text="好棒棒哦，呆头鹅好喜欢"
                     android:textSize="16sp" />
@@ -86,7 +88,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/likepart"
                     android:layout_marginEnd="20dp"
-                    android:src="@drawable/pinglun"
+                    android:src="@drawable/comment"
                     android:contentDescription="comments" />
                 <LinearLayout
                     android:id="@+id/likepart"

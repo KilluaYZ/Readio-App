@@ -96,6 +96,7 @@ public class FileReader {
         FileInfoDBHelper fileInfoDBHelper = new FileInfoDBHelper(activity, "readio.db", null, 1);
         SQLiteDatabase db = fileInfoDBHelper.getReadableDatabase();
         String[] fileIds = new String[]{fileId};
+        if(!fileIds.equals("null")){
         Cursor cursor = db.query("file_info", new String[]{"fileId", "fileName", "fileType", "filePath"},"fileId=?", fileIds, null, null, null);
 
         while(cursor.moveToNext()){
@@ -131,7 +132,7 @@ public class FileReader {
 //            }
             fileInfo.setContent(readFileContent(activity, fileInfo));
             return fileInfo;
-        }
+        }}
 
         return null;
     }

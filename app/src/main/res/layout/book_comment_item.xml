@@ -88,7 +88,7 @@
                         android:id="@+id/commentButton"
                         android:layout_width="18dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/pinglun"
+                        android:src="@drawable/thepinglun"
                         android:contentDescription="comments"
                         android:layout_marginRight="1.5dp"/>
                     <TextView

@@ -256,7 +256,7 @@ public class bookDetailActivity extends AppCompatActivity{
                         if_empty=1;
                     }
                     if(comment_size!=0) {
-                        for (int i = 0; i < 3; i++) {
+                        for (int i = 0; i < comment_size; i++) {
                             JSONObject comment_item = comments_list.getJSONObject(i);
                             User user = get_userinfo(comment_item.getString("userId"));
                             PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
@@ -266,16 +266,16 @@ public class bookDetailActivity extends AppCompatActivity{
                     }
                     /*取出是否加入书架*/
                     String added = data.getString("added");
-                    Log.d("if_add_bookmark", added);
+//                    Log.d("if_add_bookmark", added);
                     if (added.equals("1")) {
                         if_add_bookmark = 1;
                         bookDetailAct.runOnUiThread(() -> {
-                            add_shelf.setImageResource(R.drawable.bookmarked);
+                            add_shelf.setImageResource(R.drawable.addedinshelf);
                             add_shelf_text.setText("已加入书架");
                         });
                     } else {
                         bookDetailAct.runOnUiThread(() -> {
-                            add_shelf.setImageResource(R.drawable.bookmark);
+                            add_shelf.setImageResource(R.drawable.addinshelf);
                             add_shelf_text.setText("加入书架");
                         });
                     }
@@ -284,12 +284,12 @@ public class bookDetailActivity extends AppCompatActivity{
                     if (liked.equals("1")) {
                         if_like = 1;
                         bookDetailAct.runOnUiThread(() -> {
-                            like_this_book.setImageResource(R.drawable.thumb_up_ed);
+                            like_this_book.setImageResource(R.drawable.ok);
                             like_this_book_text.setText("已点赞");
                         });
                     } else {
                         bookDetailAct.runOnUiThread(() -> {
-                            like_this_book.setImageResource(R.drawable.thumb_up_1);
+                            like_this_book.setImageResource(R.drawable.commend);
                             like_this_book_text.setText("点赞");
                         });
                     }
@@ -435,7 +435,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this, "添加失败，请重试", Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.bookmark);
+                        add_shelf.setImageResource(R.drawable.addinshelf);
                         add_shelf_text.setText("加入书架");
                     }
                 });
@@ -446,7 +446,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this,"加入啦",Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.bookmarked);
+                        add_shelf.setImageResource(R.drawable.addedinshelf);
                         add_shelf_text.setText("已加入书架");
                     }
                 });
@@ -464,7 +464,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this, "取消加入失败，请重试", Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.bookmarked);
+                        add_shelf.setImageResource(R.drawable.addedinshelf);
                         add_shelf_text.setText("已加入书架");
                     }
                 });
@@ -476,7 +476,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this,"删除啦",Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.bookmark);
+                        add_shelf.setImageResource(R.drawable.addinshelf);
                         add_shelf_text.setText("加入书架");
                     }
                 });
@@ -493,7 +493,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this, "点赞失败，请重试", Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.thumb_up_1);
+                        like_this_book.setImageResource(R.drawable.commend);
                         like_this_book_text.setText("点赞");
                     }
                 });
@@ -504,7 +504,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this,"感谢您的点赞^_^",Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.thumb_up_ed);
+                        like_this_book.setImageResource(R.drawable.ok);
                         like_this_book_text.setText("已点赞");
                         likes.setText(String.valueOf(book_likes+1));
                     }
@@ -521,7 +521,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this, "取消点赞失败，请重试", Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.thumb_up_1);
+                        like_this_book.setImageResource(R.drawable.ok);
                         like_this_book_text.setText("点赞");
                     }
                 });
@@ -532,7 +532,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         Toast.makeText(bookDetailActivity.this,"不要哇ToT",Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.thumb_up_1);
+                        like_this_book.setImageResource(R.drawable.commend);
                         like_this_book_text.setText("点赞");
                         if(if_like==0) {
                             likes.setText(String.valueOf(book_likes));

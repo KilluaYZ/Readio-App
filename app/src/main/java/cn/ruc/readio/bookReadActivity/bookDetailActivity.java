@@ -1,4 +1,6 @@
 package cn.ruc.readio.bookReadActivity;
+import static java.lang.Math.min;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
@@ -51,7 +53,7 @@ public class bookDetailActivity extends AppCompatActivity{
     private ImageView book_cover;
     private int like_book_times=0,add_shelf_times=0,if_like=0,if_add_bookmark=0,if_empty=0;
     private TextView no_comment;
-    private int book_likes,book_shares;
+    private int book_likes=0,book_shares=0;
 
 
     @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
@@ -184,7 +186,6 @@ public class bookDetailActivity extends AppCompatActivity{
         write_comment=findViewById(R.id.writecomment);
         more_comment=findViewById(R.id.more_comment);
 
-        book_name.setText(BookName);
     }
     @SuppressLint("ResourceAsColor")
     private void setBackgroundColor() {
@@ -243,31 +244,10 @@ public class bookDetailActivity extends AppCompatActivity{
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
 
-                    /*取出书籍评论*/
-                    JSONObject book_comments=data.getJSONObject("comments");
-                    int comment_size=book_comments.getInt("size");
-                    JSONArray comments_list=book_comments.getJSONArray("data");
-                    if(comment_size==0)
-                    {
-                        bookDetailAct.runOnUiThread(() -> {
-                            no_comment.setText("这本书暂时没有评论哦~\n来当第一位吧！");
-                            no_comment.setGravity(Gravity.CENTER);
-                        });
-                        if_empty=1;
-                    }
-                    if(comment_size!=0) {
-                        for (int i = 0; i < comment_size; i++) {
-                            JSONObject comment_item = comments_list.getJSONObject(i);
-                            User user = get_userinfo(comment_item.getString("userId"));
-                            PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
-                            comment.setDate(comment_item.getString("createTime"));
-                            comment_list.add(comment);
-                        }
-                    }
                     /*取出是否加入书架*/
                     String added = data.getString("added");
 //                    Log.d("if_add_bookmark", added);
-                    if (added.equals("1")) {
+                    if (added.equals("true")) {
                         if_add_bookmark = 1;
                         bookDetailAct.runOnUiThread(() -> {
                             add_shelf.setImageResource(R.drawable.addedinshelf);
@@ -281,7 +261,7 @@ public class bookDetailActivity extends AppCompatActivity{
                     }
                     /*取出是否点赞*/
                     String liked = data.getString("liked");
-                    if (liked.equals("1")) {
+                    if (liked.equals("true")) {
                         if_like = 1;
                         bookDetailAct.runOnUiThread(() -> {
                             like_this_book.setImageResource(R.drawable.ok);
@@ -316,18 +296,10 @@ public class bookDetailActivity extends AppCompatActivity{
                         } catch (JSONException e) {
                             Tools.my_toast(bookDetailActivity.this,"加载失败4");
                         }
-                        try {
-                            likes.setText(book_info.getString("likes"));
-                        } catch (JSONException e) {
-                            Tools.my_toast(bookDetailActivity.this,"加载失败5");
-                        }
-                        try {
-                            book_likes = Integer.parseInt(book_info.getString("likes"));
-                        } catch (JSONException e) {
-                            Tools.my_toast(bookDetailActivity.this,"加载失败6");
-                        }
+                        likes.setText(book_info.optString("likes","0"));
+                        book_likes = Integer.parseInt(book_info.optString("likes","0"));
                         shares.setText(book_info.optString("shares", "0"));
-                        book_shares = Integer.parseInt(book_info.optString("shares", "0"));
+                        book_shares= Integer.parseInt(book_info.optString("shares", "0"));
                         try {
                             if (!book_info.getString("abstract").equals("null")) {
                                 book_abstract.setText(book_info.getString("abstract"));
@@ -353,6 +325,28 @@ public class bookDetailActivity extends AppCompatActivity{
                             Tools.my_toast(bookDetailActivity.this,"加载失败9");
                         }
                     });
+                    /*取出书籍评论*/
+                    JSONObject book_comments=data.getJSONObject("comments");
+                    int comment_size=book_comments.getInt("size");
+                    JSONArray comments_list=book_comments.getJSONArray("data");
+                    if(comment_size==0)
+                    {
+                        bookDetailAct.runOnUiThread(() -> {
+                            no_comment.setText("这本书暂时没有评论哦~\n来当第一位吧！");
+                            no_comment.setGravity(Gravity.CENTER);
+                        });
+                        if_empty=1;
+                    }
+                    if(comment_size!=0) {
+                        int show_size=min(3,comment_size); //书籍详情页最多显示3条
+                        for (int i = 0; i < show_size; i++) {
+                            JSONObject comment_item = comments_list.getJSONObject(i);
+                            User user = get_userinfo(comment_item.getString("userId"));
+                            PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
+                            comment.setDate(comment_item.getString("createTime"));
+                            comment_list.add(comment);
+                        }
+                    }
                 } catch (JSONException e) {
                     Tools.my_toast(bookDetailActivity.this,"加载失败10");
                 }

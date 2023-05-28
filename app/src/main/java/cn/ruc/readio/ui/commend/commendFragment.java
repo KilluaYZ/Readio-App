@@ -99,8 +99,14 @@ public class commendFragment extends Fragment {
                         JSONObject commend_item = commend_list.getJSONObject(i);
                         String bookID=commend_item.optString("bookId");
                         int BookID=0;
-                        if(!bookID.equals("null"))  BookID=Integer.parseInt(bookID);
-                        Recommendation recommendation = new Recommendation(commend_item.getString("content"),commend_item.getString("album"),commend_item.optString("authorId"),BookID);
+                        Recommendation recommendation;
+                        if(!bookID.equals("null")) {
+                            BookID = Integer.parseInt(bookID);
+                            recommendation = new Recommendation(commend_item.getString("content"), commend_item.optString("bookName"), commend_item.optString("authorName"), BookID);
+                        }
+                        else{
+                            recommendation = new Recommendation(commend_item.getString("content"), commend_item.optString("album"), commend_item.optString("authorName"), BookID);
+                        }
                         /*get_bookinfo(BookID);
                         Recommendation recommendation = new Recommendation(commend_item.getString("content"),bookName,author,BookID);*/
                         recommendation_lists.add(recommendation);

@@ -35,7 +35,7 @@ public class Recommendation {
     public String getSource() {
 
         if(Objects.equals(author, "null") && !Objects.equals(book_name, "null")) {
-            return book_name;
+            return "《"+book_name+"》";
         }
         else if (Objects.equals(book_name, "null") && !Objects.equals(author, "null")) {
             return author;
@@ -43,10 +43,10 @@ public class Recommendation {
         else if(Objects.equals(book_name, "null") && Objects.equals(author, "null")){
             return "null";
         }
-        else return author +book_name;
+        else return author +"《"+book_name+"》";
     }
 
-    public Recommendation(String quote, String author,String book_name,int book_id) {
+    public Recommendation(String quote, String book_name,String author,int book_id) {
 
         this.quote = quote;
         this.author = author;

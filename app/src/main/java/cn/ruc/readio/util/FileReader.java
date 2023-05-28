@@ -35,7 +35,16 @@ public class FileReader {
         this.activity = activity;
     }
 
+    private static FileInfoDBHelper fileInfoDBHelperInstance = null;
+    public synchronized FileInfoDBHelper getFileInfoDBHelperInstance(){
+        if(fileInfoDBHelperInstance == null){
+            fileInfoDBHelperInstance = new FileInfoDBHelper(activity,"readio.db",null,1);
+        }
+        return fileInfoDBHelperInstance;
+    }
+
     class FileInfoDBHelper extends SQLiteOpenHelper{
+
         public FileInfoDBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version){
             super(context, name, factory, version);
         }
@@ -60,7 +69,7 @@ public class FileReader {
     }
 
     public void insert(FileInfo fileInfo) throws IOException {
-        FileInfoDBHelper fileInfoDBHelper = new FileInfoDBHelper(activity, "readio.db",null,1);
+        FileInfoDBHelper fileInfoDBHelper = getFileInfoDBHelperInstance();
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
 
         writeFileContent(activity, fileInfo);
@@ -76,14 +85,14 @@ public class FileReader {
     }
 
     public void delete(String fileId){
-        FileInfoDBHelper fileInfoDBHelper = new FileInfoDBHelper(activity, "readio.db", null, 1);
+        FileInfoDBHelper fileInfoDBHelper = getFileInfoDBHelperInstance();
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
         String[] fileIds = new String[]{fileId};
         db.delete("file_info", "fileId=?", fileIds);
     }
 
     public void updateVisitTime(String fileId){
-        FileInfoDBHelper fileInfoDBHelper = new FileInfoDBHelper(activity, "readio.db", null, 1);
+        FileInfoDBHelper fileInfoDBHelper = getFileInfoDBHelperInstance();
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         Date visitTime = new Date(System.currentTimeMillis());
@@ -93,33 +102,32 @@ public class FileReader {
     }
 
     public FileInfo getFileInfoByFileId(String fileId) throws IOException, ParseException {
-        FileInfoDBHelper fileInfoDBHelper = new FileInfoDBHelper(activity, "readio.db", null, 1);
+        FileInfoDBHelper fileInfoDBHelper = getFileInfoDBHelperInstance();
         SQLiteDatabase db = fileInfoDBHelper.getReadableDatabase();
         String[] fileIds = new String[]{fileId};
-        if(!fileIds.equals("null")){
-        Cursor cursor = db.query("file_info", new String[]{"fileId", "fileName", "fileType", "filePath"},"fileId=?", fileIds, null, null, null);
+        if(fileId != null && !fileIds.equals("null")){
+            Cursor cursor = db.query("file_info", new String[]{"fileId", "fileName", "fileType", "filePath"},"fileId=?", fileIds, null, null, null);
+            while(cursor.moveToNext()){
+                FileInfo fileInfo = new FileInfo();
+                int coloumnId = cursor.getColumnIndex("fileId");
+                if(coloumnId != -1){
+                    fileInfo.setFileId(cursor.getString(coloumnId));
+                }
 
-        while(cursor.moveToNext()){
-            FileInfo fileInfo = new FileInfo();
-            int coloumnId = cursor.getColumnIndex("fileId");
-            if(coloumnId != -1){
-                fileInfo.setFileId(cursor.getString(coloumnId));
-            }
+                coloumnId = cursor.getColumnIndex("fileName");
+                if(coloumnId != -1){
+                    fileInfo.setFileName(cursor.getString(coloumnId));
+                }
 
-            coloumnId = cursor.getColumnIndex("fileName");
-            if(coloumnId != -1){
-                fileInfo.setFileName(cursor.getString(coloumnId));
-            }
+                coloumnId = cursor.getColumnIndex("filePath");
+                if(coloumnId != -1){
+                    fileInfo.setFilePath(cursor.getString(coloumnId));
+                }
 
-            coloumnId = cursor.getColumnIndex("filePath");
-            if(coloumnId != -1){
-                fileInfo.setFilePath(cursor.getString(coloumnId));
-            }
-
-            coloumnId = cursor.getColumnIndex("fileType");
-            if(coloumnId != -1){
-                fileInfo.setFileType(cursor.getString(coloumnId));
-            }
+                coloumnId = cursor.getColumnIndex("fileType");
+                if(coloumnId != -1){
+                    fileInfo.setFileType(cursor.getString(coloumnId));
+                }
 
 //            coloumnId = cursor.getColumnIndex("createTime");
 //            if(coloumnId != -1){

@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -57,6 +59,11 @@ public class readWorksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityReadWorksBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (Build.VERSION.SDK_INT >= 21){
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         String workId;
         Intent intent = getIntent();
         workId = intent.getStringExtra("extra_data");

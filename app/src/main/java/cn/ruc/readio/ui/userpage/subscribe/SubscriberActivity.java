@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class SubscriberActivity extends AppCompatActivity {
                                 user.fromJSONObject(userObj);
                                 SubscribeList.add(user);
                             }
+
                             if(recyclerView != null && SubscriberActivity.this != null){
                                 // 如果recycleView不为null，则先更新一点数据
                                 SubscriberActivity.this.runOnUiThread(new Runnable() {

@@ -50,7 +50,7 @@
             android:exported="false"
             android:theme="@style/myDialog" />
         <activity
-            android:name=".userPageActivity.changeAvatorActivity"
+            android:name=".ui.userpage.changeAvatar.changeAvatorActivity"
             android:exported="false" />
         <activity
             android:name=".ui.userpage.login.LoginActivity"

@@ -1,101 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical">
+    tools:context=".ui.userpage.changeAvatar.changeAvatorActivity"
+    android:background="#F6F6F6"
+    >
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        tools:context=".userPageActivity.changeAvatorActivity">
-
-        <Spinner
-            android:id="@+id/spinnerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:spinnerMode="dropdown"
-            android:layout_gravity="center"
-            />
+        android:id="@+id/activity_change_avator_top_view"
+        android:layout_height="250dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/activity_change_avatar_top_view_bg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="32dp"
-            android:src="@drawable/user"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:elevation="2dp"/>
+            android:layout_height="match_parent"
+            android:src="@drawable/login_bd"
+            android:scaleType="centerCrop"
+            android:alpha="0.4" />
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/activity_change_avatar_blurView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:minWidth="100dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/baseline_add_24"
-            android:elevation="2dp" />
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:blurOverlayColor="#14000000">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="name"
-                android:textColor="@color/black"
-                />
-
-            <EditText
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:id="@+id/nameEdit"/>
+                android:layout_height="match_parent">
 
-        </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:id="@+id/activity_change_avatar_user_cur_avatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:src="@drawable/xiaoyang"
+                    />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:text="type"
-                />
+        </eightbitlab.com.blurview.BlurView>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:id="@+id/typeEdit"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+<!--    <ImageView-->
+<!--        app:layout_constraintTop_toBottomOf="@id/activity_change_avator_top_view"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/activity_change_avator_bottom_recycle_view"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0.8dp"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:layout_marginBottom="30dp"-->
+<!--        android:id="@+id/activity_change_avator_my_line"-->
+<!--        android:src="#46B8BAB6"/>-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/uploadButton"
-            android:textColor="@color/black"
-            android:text="上传" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/activity_change_avator_bottom_recycle_view"
+        app:layout_constraintTop_toBottomOf="@id/activity_change_avator_top_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
-    </LinearLayout>
 
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

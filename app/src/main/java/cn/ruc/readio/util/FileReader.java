@@ -88,8 +88,6 @@ public class FileReader {
             //只要出错了就返回false
             e.printStackTrace();
             db.endTransaction();
-        } finally {
-            db.close();
         }
 
     }
@@ -99,7 +97,6 @@ public class FileReader {
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
         String[] fileIds = new String[]{fileId};
         db.delete("file_info", "fileId=?", fileIds);
-        db.close();
     }
 
     public void updateVisitTime(String fileId){
@@ -110,7 +107,6 @@ public class FileReader {
         values.put("visitTime", visitTime.toString());
         String[] fileIds = new String[]{fileId};
         db.update("file_info", values, "fileId=?", fileIds);
-        db.close();
     }
 
     public FileInfo getFileInfoByFileId(String fileId) throws IOException, ParseException {

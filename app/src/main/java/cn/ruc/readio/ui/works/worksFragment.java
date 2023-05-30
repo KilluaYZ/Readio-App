@@ -51,7 +51,51 @@ public class worksFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         WorkAdapter workAdapter = new WorkAdapter(getContext(),works);
         recyclerView.setAdapter(workAdapter);
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private int lastVisibleItemPosition = 0;
+            private Boolean isSlidingToLast = false;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                manager.invalidateSpanAssignments(); //防止第一行到顶部有空白
+                int currentScrollState = newState;
+                int visibleItemCount = manager.getChildCount();
+                int totItemCount = manager.getItemCount();
+                if(isSlidingToLast && visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition >= totItemCount - 1){
+                    refreshData();
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0){
+                    StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                    int[] lastPositions = null;
+                    lastPositions = new int[manager.getSpanCount()];
+                    manager.findLastVisibleItemPositions(lastPositions);
+                    lastVisibleItemPosition = findMax(lastPositions);
+                    isSlidingToLast = true;
+                }else{
+                    isSlidingToLast = false;
+                }
+            }
+        });
+
         return root;
+    }
+
+    private int findMax(int[] lastPositions) {
+        int max = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
 
     @Override

@@ -68,20 +68,30 @@ public class FileReader {
         }
     }
 
-    public void insert(FileInfo fileInfo) throws IOException {
+    public void insert(FileInfo fileInfo) {
         FileInfoDBHelper fileInfoDBHelper = getFileInfoDBHelperInstance();
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
 
-        writeFileContent(activity, fileInfo);
-
-        ContentValues values = new ContentValues();
-        values.put("fileId", fileInfo.getFileId());
-        values.put("fileName", fileInfo.getFileName());
-        values.put("fileType", fileInfo.getFileType());
-        values.put("filePath", fileInfo.getFilePath());
+        try{
+            db.beginTransaction();
+            writeFileContent(activity, fileInfo);
+            ContentValues values = new ContentValues();
+            values.put("fileId", fileInfo.getFileId());
+            values.put("fileName", fileInfo.getFileName());
+            values.put("fileType", fileInfo.getFileType());
+            values.put("filePath", fileInfo.getFilePath());
 //        values.put("createTime", fileInfo.getCreateTime().getTime());
 //        values.put("visitTime", fileInfo.getVisitTime().getTime());
-        db.insert("file_info", null, values);
+            db.insert("file_info", null, values);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            //只要出错了就返回false
+            e.printStackTrace();
+            db.endTransaction();
+        } finally {
+            db.close();
+        }
+
     }
 
     public void delete(String fileId){
@@ -89,6 +99,7 @@ public class FileReader {
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
         String[] fileIds = new String[]{fileId};
         db.delete("file_info", "fileId=?", fileIds);
+        db.close();
     }
 
     public void updateVisitTime(String fileId){
@@ -99,6 +110,7 @@ public class FileReader {
         values.put("visitTime", visitTime.toString());
         String[] fileIds = new String[]{fileId};
         db.update("file_info", values, "fileId=?", fileIds);
+        db.close();
     }
 
     public FileInfo getFileInfoByFileId(String fileId) throws IOException, ParseException {

@@ -140,13 +140,16 @@ public class shelfFragment extends Fragment {
                                     }
                                     Log.d("bookadpter", "需要更新");
                                 }
-                                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        bookAdapter myAdapter = new bookAdapter(getContext(), lists);
-                                        binding.bookGridview.setAdapter(myAdapter);
-                                    }
-                                });
+
+                                if(getActivity() != null){
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            bookAdapter myAdapter = new bookAdapter(getContext(), lists);
+                                            binding.bookGridview.setAdapter(myAdapter);
+                                        }
+                                    });
+                                }
                             }
                         }).start();
 

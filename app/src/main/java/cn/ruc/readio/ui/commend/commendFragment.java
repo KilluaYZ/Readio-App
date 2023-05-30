@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,8 +69,39 @@ public class commendFragment extends Fragment {
         commendCardAdapter myAdapter = new commendCardAdapter(recommendation_lists, getContext());
         recycler_view.setAdapter(myAdapter);
 
+        recycler_view.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private int lastVisibleItemPosition = 0;
+            private Boolean isSlidingToLast = false;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int currentScrollState = newState;
+                int visibleItemCount = manager.getChildCount();
+                int totItemCount = manager.getItemCount();
+                if(isSlidingToLast && visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition >= totItemCount - 1){
+                    refreshData();
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dx > 0){
+                    LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    lastVisibleItemPosition = manager.findLastVisibleItemPosition();
+                    isSlidingToLast = true;
+                }else{
+                    isSlidingToLast = false;
+                }
+            }
+        });
+
         return root;
     }
+
 
     /*初始化函数，用于test*/
     private void initData() {
@@ -115,12 +148,13 @@ public class commendFragment extends Fragment {
                     new Thread(() -> {
                         for(int i = 0;i < recommendation_lists.size(); ++i){
                             Bitmap pic = null;
+                            Recommendation recommendation = recommendation_lists.get(i);
                             try {
                                 pic = Tools.randomGetImgSyn(getActivity());
                             } catch (IOException | JSONException | ParseException e) {
                                 Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
                             }
-                            recommendation_lists.get(i).setPic(pic);
+                            recommendation.setPic(pic);
                             Log.d("commendCardAdapter","需要更新");
                             Objects.requireNonNull(getActivity()).runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
                         }

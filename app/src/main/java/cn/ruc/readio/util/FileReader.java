@@ -73,7 +73,7 @@ public class FileReader {
         SQLiteDatabase db = fileInfoDBHelper.getWritableDatabase();
 
         try{
-            db.beginTransaction();
+
             writeFileContent(activity, fileInfo);
             ContentValues values = new ContentValues();
             values.put("fileId", fileInfo.getFileId());
@@ -83,11 +83,9 @@ public class FileReader {
 //        values.put("createTime", fileInfo.getCreateTime().getTime());
 //        values.put("visitTime", fileInfo.getVisitTime().getTime());
             db.insert("file_info", null, values);
-            db.setTransactionSuccessful();
         } catch (Exception e) {
             //只要出错了就返回false
             e.printStackTrace();
-            db.endTransaction();
         }
 
     }

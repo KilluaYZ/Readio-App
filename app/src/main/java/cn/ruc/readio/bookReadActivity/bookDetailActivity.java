@@ -310,16 +310,22 @@ public class bookDetailActivity extends AppCompatActivity{
                             Tools.my_toast(bookDetailActivity.this,"加载失败7");
                         }
                         try {
-                            if (!book_info.getString("bitmap").equals("null")) {
+                            if (!book_info.getString("coverId").equals("null")) {
                                 final Bitmap[] cover = {null};
-                                new Thread(() -> {
-                                    try {
-                                        cover[0] = Tools.getImageBitmapSyn(bookDetailActivity.this, book_info.getString("bitmap"));
+//                                new Thread(() -> {
+//                                    try {
+//                                        cover[0] = Tools.getImageBitmapSyn(bookDetailActivity.this, book_info.getString("coverId"));
+//                                    } catch (JSONException | IOException | ParseException e) {
+//                                        Tools.my_toast(bookDetailAct, "加载失败8");
+//                                    }
+//                                }).start();
+//                                bookDetailActivity.this.runOnUiThread(() -> book_cover.setImageBitmap(cover[0]));
+
+                                    try{
+                                        Tools.getImageBitmapAsyn(book_info.getString("coverId"),book_cover,bookDetailAct);
                                     } catch (JSONException | IOException | ParseException e) {
-                                        Tools.my_toast(bookDetailAct, "加载失败8");
+//                                        Tools.my_toast(bookDetailAct, "加载失败8");
                                     }
-                                }).start();
-                                bookDetailActivity.this.runOnUiThread(() -> book_cover.setImageBitmap(cover[0]));
                             }
                         } catch (JSONException e) {
                             Tools.my_toast(bookDetailActivity.this,"加载失败9");

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
         private ImageView likeButton;
         private ImageView userAva;
         private TextView moreTag;
+        private LinearLayout enterRead;
 
         public ViewHolder(View view) {
             super(view);
@@ -50,6 +52,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
             likeButton = view.findViewById(R.id.likePieceButton);
             userAva = view.findViewById(R.id.userAvator);
             moreTag = view.findViewById(R.id.workTagmore);
+            enterRead = view.findViewById(R.id.enterReadButton);
         }
     }
 
@@ -58,7 +61,7 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.work_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.workContent.setOnClickListener(new View.OnClickListener() {
+        viewHolder.enterRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int position = viewHolder.getAdapterPosition();

@@ -148,8 +148,10 @@ public class bookDetailActivity extends AppCompatActivity{
                 startActivity(intent1);
             }else {
                 Intent intent2 = new Intent(bookDetailActivity.this, writeCommentActivity.class);
+                intent2.putExtra("BookID", BookID);
                 startActivity(intent2);
             }
+
         });
         /*添加跳转到所有评论界面链接*/
         more_comment.setOnClickListener(view -> {

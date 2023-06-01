@@ -22,7 +22,9 @@
             android:exported="false" />
         <activity
             android:name=".bookReadActivity.writeCommentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            />
         <activity
             android:name=".userPageActivity.ReadioActivity"
             android:exported="false" />

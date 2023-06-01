@@ -3,6 +3,7 @@ package cn.ruc.readio.ui.shelf;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.bookReadActivity.readBookActivity;
+import cn.ruc.readio.util.Tools;
 
 public class bookAdapter extends BaseAdapter {
 
@@ -64,16 +71,27 @@ public class bookAdapter extends BaseAdapter {
         BookItem books = bookList.get(position);
         if (books != null) {
             holder.text.setText(books.getBookName());
-            if(books.getCover()==null)
-            {
-                holder.cover.setImageResource(R.drawable.default_cover2);
-            }else {
+//            if(books.getCover()==null)
+//            {
+//                holder.cover.setImageResource(R.drawable.default_cover2);
+//            }else {
                 if (Objects.equals(books.getCoverID(), "null")) {
-                    holder.cover.setImageResource(R.drawable.xiaoyang);
+                    holder.cover.setImageResource(R.drawable.default_cover2);
                 } else {
-                    holder.cover.setImageBitmap(books.getCover());
+                    try {
+                        Tools.getImageBitmapAsyn(books.getCoverID(),holder.cover,shelfFragment.shelffrag.getActivity());
+//                        Bitmap bookCoverBitmap = Tools.getImageBitmapSyn(shelfFragment.shelffrag.getActivity(), books.getCoverID());
+//                        holder.cover.setImageBitmap(bookCoverBitmap);
+                    } catch (IOException e) {
+                        Tools.my_toast(shelfFragment.shelffrag.getActivity(),"封面获取失败");
+                    } catch (ParseException e) {
+                        Tools.my_toast(shelfFragment.shelffrag.getActivity(),"封面获取失败");
+                    }
+
+
+//                    holder.cover.setImageBitmap(books.getCover());
                 }
-            }
+//            }
 
             /*设置跳转阅读界面*/
             holder.jumpview.setOnClickListener(view -> {

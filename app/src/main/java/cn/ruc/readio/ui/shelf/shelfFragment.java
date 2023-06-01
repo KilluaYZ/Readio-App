@@ -49,6 +49,7 @@ public class shelfFragment extends Fragment {
     private FragmentShelfBinding binding;
     private GridView grid_view;
     private int if_empty=0;
+    static public Fragment shelffrag;
 
     private List<BookItem> lists;
 
@@ -57,7 +58,7 @@ public class shelfFragment extends Fragment {
 
         binding = FragmentShelfBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        shelffrag = this;
         lists = new ArrayList<>();
         Auth.Token token = new Auth.Token(getActivity());
         if(token.isEmpty())
@@ -124,7 +125,7 @@ public class shelfFragment extends Fragment {
                         for (int i = 0; i < mybook_list.length(); i++) {
                             Log.d("正在分割数据", "onResponse: dd");
                             JSONObject mybook = mybook_list.getJSONObject(i);
-                            BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"), mybook.optString("bitmap"));
+                            BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"), mybook.optString("coverId"));
                             lists.add(book);
                         }
                         Log.d("书籍列表", "正在更新");
@@ -133,14 +134,13 @@ public class shelfFragment extends Fragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                for (int i = 0; i < lists.size(); ++i) {
-                                    if(lists.get(i).getCoverID()!="null") {
-                                        Bitmap pic = HttpUtil.getAvaSyn(lists.get(i).getCoverID());
-                                        lists.get(i).setCover(pic);
-                                    }
-                                    Log.d("bookadpter", "需要更新");
-                                }
-
+//                                for (int i = 0; i < lists.size(); ++i) {
+//                                    if(lists.get(i).getCoverID()!="null") {
+//                                        Bitmap pic = HttpUtil.getAvaSyn(lists.get(i).getCoverID());
+//                                        lists.get(i).setCover(pic);
+//                                    }
+//                                    Log.d("bookadpter", "需要更新");
+//                                }
                                 if(getActivity() != null){
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override

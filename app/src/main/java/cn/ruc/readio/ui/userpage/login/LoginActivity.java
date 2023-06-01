@@ -90,7 +90,12 @@ public class LoginActivity extends AppCompatActivity {
         );
         transaction.replace(R.id.login_register_form_layout, new LoginFormFragment());
         TextView updateView = (TextView) findViewById(R.id.login_activity_topbar_change_view);
-        updateView.setText("register");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateView.setText("register");
+            }
+        });
         transaction.commit();
     }
 

@@ -42,7 +42,7 @@ public class allCommentActivity extends AppCompatActivity {
 
     private List<PieceComments> comment_list =new ArrayList<>();
     private String BookName,Author;
-    private int BookID;
+    private int BookID,child_commentnum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -69,6 +69,7 @@ public class allCommentActivity extends AppCompatActivity {
         RecyclerView recycler_view=findViewById(R.id.comments_recyclerView);
         recycler_view.setLayoutManager(m);
         aBookCommentAdapter myAdapter = new aBookCommentAdapter(allCommentActivity.this,comment_list);
+        myAdapter.getActivity(allCommentActivity.this);
         recycler_view.setAdapter(myAdapter);
 
 
@@ -113,12 +114,16 @@ public class allCommentActivity extends AppCompatActivity {
                     if(comment_size!=0){
                         for(int i = 0; i < comment_size; i++){
                             JSONObject comment_item = comments_list.getJSONObject(i);
-                            User user = get_userinfo(comment_item.getString("userId"));
-                            //User user = new User("小美","20230522@ruc.edu.cn", "12345678");
-                            //user.setUserName("用户1");
+                            User user = get_userinfo(comment_item.getString("userId"),i);
                             user.setAvaID(String.valueOf(R.drawable.juicy_orange_smile_icon));
-
                             PieceComments comment = new PieceComments(comment_item.getString("content"),comment_item.getInt("likes"),user);
+                            comment.setBookId(String.valueOf(BookID));
+                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setLikesNum(comment_item.getInt("likes"));
+                            comment.setDate(comment_item.getString("createTime"));
+                            comment.setIf_liked(comment_item.getString("liked"));
+                            int childcommentnum=get_childcommentnum(comment_item.getString("commentId"),i);
+                            comment.setChildCommentNum(childcommentnum);
                             comment_list.add(comment);
                         }
                         runOnUiThread(() -> {
@@ -133,7 +138,7 @@ public class allCommentActivity extends AppCompatActivity {
         });
     }
 
-    User get_userinfo(String userId){
+    User get_userinfo(String userId,int i){
         User user = new User();
         ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
         queryParam.add(new Pair<>("userId",userId));
@@ -161,14 +166,29 @@ public class allCommentActivity extends AppCompatActivity {
                     }
                     user.setPhoneNumber(data.getString("phoneNumber"));
                     user.seteMail(data.getString("email"));
-
+                    comment_list.get(i).setUser(user);
                     allCommentActivity.this.runOnUiThread(() -> {
                         RecyclerView recyclerView = findViewById(R.id.comments_recyclerView);
                         if(recyclerView!=null) {
                             Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                         }
                     });
-                    refreshUserAvator();
+                    new Thread(() -> {
+                        Bitmap pic = null;
+                        try {
+                            pic = Tools.getImageBitmapSyn(allCommentActivity.this, comment_list.get(i).getUser().getAvaID());
+                        } catch (IOException | JSONException | ParseException e) {
+                            Tools.my_toast(allCommentActivity.this,"图片加载出错啦！");
+                        }
+                        comment_list.get(i).getUser().setAvator(pic);
+                        Log.d("commentAdapter","需要更新");
+                        allCommentActivity.this.runOnUiThread(() -> {
+                            RecyclerView recyclerView = findViewById(R.id.comments_recyclerView);
+                            if(recyclerView!=null) {
+                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            }
+                        });
+                    }).start();
                 } catch (JSONException ex) {
                     Tools.my_toast(allCommentActivity.this,"用户加载失败");
                 }
@@ -179,26 +199,37 @@ public class allCommentActivity extends AppCompatActivity {
     private void mtoast(String msg){
         runOnUiThread(() -> Toast.makeText(allCommentActivity.this,msg,Toast.LENGTH_LONG).show());
     }
-    @SuppressLint("NotifyDataSetChanged")
-    public void refreshUserAvator(){
-        new Thread(() -> {
-            for(int i = 0;i < comment_list.size(); ++i){
-                Bitmap pic = null;
-                try {
-                    pic = Tools.getImageBitmapSyn(allCommentActivity.this, comment_list.get(i).getUser().getAvaID());
-                } catch (IOException | JSONException | ParseException e) {
-                    Tools.my_toast(allCommentActivity.this,"图片加载出错啦！");
-                }
-                comment_list.get(i).getUser().setAvator(pic);
-                Log.d("commentAdapter","需要更新");
-                allCommentActivity.this.runOnUiThread(() -> {
-                    RecyclerView recyclerView = findViewById(R.id.comments_recyclerView);
-                    if(recyclerView!=null) {
-                        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
-    }
 
+    int get_childcommentnum(String commentId,int i) {
+        ///app/book/<int:book_id>/comment/<int:comment_id>
+        HttpUtil.getRequestAsyn("app/book/"+BookID+"/comment/"+commentId, new ArrayList<>() ,new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mtoast("请求异常，加载不出来");
+            }
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    /*获取该评论的所有信息*/
+                    assert response.body() != null;
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONObject data = jsonObject.getJSONObject("data");
+
+                    /*取出子评论数量*/
+                    child_commentnum =data.getInt("size");
+                    comment_list.get(i).setChildCommentNum(child_commentnum);
+                    allCommentActivity.this.runOnUiThread(() -> {
+                        RecyclerView recyclerView = findViewById(R.id.comments_recyclerView);
+                        if (recyclerView != null) {
+                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                        }
+                    });
+                } catch (JSONException ex) {
+                    Tools.my_toast(allCommentActivity.this, "子评论数量加载失败");
+                }
+            }
+        });
+        return child_commentnum;
+    }
 }

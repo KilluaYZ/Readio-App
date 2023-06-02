@@ -84,7 +84,6 @@
                     android:layout_toStartOf="@+id/likepart"
                     android:layout_marginEnd="20dp">
                     <ImageView
-
                         android:id="@+id/commentButton"
                         android:layout_width="18dp"
                         android:layout_height="16dp"
@@ -106,7 +105,6 @@
                     android:orientation="horizontal"
                     android:layout_alignParentEnd="true">
                     <ImageView
-
                         android:id="@+id/likePieceCommentButton"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"

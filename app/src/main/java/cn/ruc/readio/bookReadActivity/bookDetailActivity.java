@@ -53,7 +53,7 @@ public class bookDetailActivity extends AppCompatActivity{
     private ImageView book_cover;
     private int like_book_times=0,add_shelf_times=0,if_like=0,if_add_bookmark=0,if_empty=0;
     private TextView no_comment;
-    private int book_likes=0,book_shares=0;
+    private int book_likes=0,book_shares=0,child_commentnum;
 
 
     @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
@@ -88,6 +88,13 @@ public class bookDetailActivity extends AppCompatActivity{
         /*设置返回按钮*/
         ImageButton re_button = findViewById(R.id.return_commend);
         re_button.setOnClickListener(v -> finish());
+
+        /*设置分享按钮*/
+        ImageButton share_button=findViewById(R.id.share_button);
+        share_button.setOnClickListener(view->{
+            Tools.my_toast(bookDetailActivity.this,"分享功能，待开发...");
+        });
+
 
         /*设置加入书架按钮*/
         add_shelf.setOnClickListener(view1 -> {
@@ -229,6 +236,7 @@ public class bookDetailActivity extends AppCompatActivity{
         RecyclerView recycler_view = findViewById(R.id.book_comment);
         recycler_view.setLayoutManager(m);
         bookCommentAdapter myAdapter = new bookCommentAdapter(context,comment_list);
+        myAdapter.getActivity(bookDetailActivity.this);
         recycler_view.setAdapter(myAdapter);
 
     }
@@ -303,10 +311,10 @@ public class bookDetailActivity extends AppCompatActivity{
                         shares.setText(book_info.optString("shares", "0"));
                         book_shares= Integer.parseInt(book_info.optString("shares", "0"));
                         try {
-                            if (!book_info.getString("abstract").equals("null")) {
+                            if (!book_info.optString("abstract").equals("null")) {
                                 book_abstract.setText(book_info.getString("abstract"));
                             } else {
-                                book_abstract.setText(book_info.getString("这里是书籍简介~\n但这本书暂时没有~"));
+                                book_abstract.setText("这里是书籍简介~\n但这本书暂时没有~");
                             }
                         } catch (JSONException e) {
                             Tools.my_toast(bookDetailActivity.this,"加载失败7");
@@ -349,9 +357,15 @@ public class bookDetailActivity extends AppCompatActivity{
                         int show_size=min(3,comment_size); //书籍详情页最多显示3条
                         for (int i = 0; i < show_size; i++) {
                             JSONObject comment_item = comments_list.getJSONObject(i);
-                            User user = get_userinfo(comment_item.getString("userId"));
+                            User user = get_userinfo(comment_item.getString("userId"),i);
                             PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
+                            comment.setBookId(String.valueOf(BookID));
+                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setLikesNum(comment_item.getInt("likes"));
                             comment.setDate(comment_item.getString("createTime"));
+                            comment.setIf_liked(comment_item.getString("liked"));
+                            int childcommentnum=get_childcommentnum(comment_item.getString("commentId"),i);
+                            comment.setChildCommentNum(childcommentnum);
                             comment_list.add(comment);
                         }
                     }
@@ -361,28 +375,8 @@ public class bookDetailActivity extends AppCompatActivity{
             }
         });
     }
-    @SuppressLint("NotifyDataSetChanged")
-    public void refreshUserAvator(){
-        new Thread(() -> {
-            for(int i = 0;i < comment_list.size(); ++i){
-                Bitmap pic = null;
-                try {
-                    pic = Tools.getImageBitmapSyn(bookDetailActivity.this, comment_list.get(i).getUser().getAvaID());
-                } catch (IOException | JSONException | ParseException e) {
-                    Tools.my_toast(bookDetailActivity.this,"图片加载出错啦！");
-                }
-                comment_list.get(i).getUser().setAvator(pic);
-                Log.d("commentAdapter","需要更新");
-                bookDetailActivity.this.runOnUiThread(() -> {
-                    RecyclerView recyclerView = findViewById(R.id.book_comment);
-                    if(recyclerView!=null) {
-                        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
-    }
-    User get_userinfo(String userId){
+
+    User get_userinfo(String userId,int i){
         User user = new User();
         ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
         queryParam.add(new Pair<>("userId",userId));
@@ -410,14 +404,29 @@ public class bookDetailActivity extends AppCompatActivity{
                     }
                     user.setPhoneNumber(data.getString("phoneNumber"));
                     user.seteMail(data.getString("email"));
-
+                    comment_list.get(i).setUser(user);
                     bookDetailActivity.this.runOnUiThread(() -> {
                         RecyclerView recyclerView = findViewById(R.id.book_comment);
                         if(recyclerView!=null) {
                             Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                         }
                     });
-                    refreshUserAvator();
+                    new Thread(() -> {
+                        Bitmap pic = null;
+                        try {
+                            pic = Tools.getImageBitmapSyn(bookDetailActivity.this, comment_list.get(i).getUser().getAvaID());
+                        } catch (IOException | JSONException | ParseException e) {
+                            Tools.my_toast(bookDetailActivity.this,"图片加载出错啦！");
+                        }
+                        comment_list.get(i).getUser().setAvator(pic);
+                        Log.d("commentAdapter","需要更新");
+                        bookDetailActivity.this.runOnUiThread(() -> {
+                            RecyclerView recyclerView = findViewById(R.id.book_comment);
+                            if(recyclerView!=null) {
+                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                            }
+                        });
+                    }).start();
                     } catch (JSONException ex) {
                     Tools.my_toast(bookDetailAct,"用户加载失败");
                 }
@@ -425,6 +434,42 @@ public class bookDetailActivity extends AppCompatActivity{
         });
         return user;
     }
+
+    int get_childcommentnum(String commentId,int i) {
+
+        ///app/book/<int:book_id>/comment/<int:comment_id>
+        HttpUtil.getRequestAsyn("app/book/"+BookID+"/comment/"+commentId, new ArrayList<>() ,new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mtoast("请求异常，加载不出来");
+            }
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    /*获取该评论的所有信息*/
+                    assert response.body() != null;
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONObject data = jsonObject.getJSONObject("data");
+
+                    /*取出子评论数量*/
+                    child_commentnum =data.getInt("size");
+                    comment_list.get(i).setChildCommentNum(child_commentnum);
+                    Log.d("commentAdapter","需要更新");
+                    bookDetailActivity.this.runOnUiThread(() -> {
+                        RecyclerView recyclerView = findViewById(R.id.book_comment);
+                        if (recyclerView != null) {
+                            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                        }
+                    });
+                } catch (JSONException ex) {
+                    Tools.my_toast(bookDetailAct, "子评论数量加载失败");
+                }
+            }
+        });
+        return child_commentnum;
+    }
+
     private void mtoast(String msg){
         runOnUiThread(() -> Toast.makeText(bookDetailActivity.this,msg,Toast.LENGTH_LONG).show());
     }
@@ -508,7 +553,11 @@ public class bookDetailActivity extends AppCompatActivity{
                         Toast.makeText(bookDetailActivity.this,"感谢您的点赞^_^",Toast.LENGTH_SHORT).show();
                         like_this_book.setImageResource(R.drawable.ok);
                         like_this_book_text.setText("已点赞");
+                        if(if_like==1){
+                            likes.setText(String.valueOf(book_likes));
+                        }else{
                         likes.setText(String.valueOf(book_likes+1));
+                        }
                     }
                 });
             }
@@ -536,11 +585,11 @@ public class bookDetailActivity extends AppCompatActivity{
                         Toast.makeText(bookDetailActivity.this,"不要哇ToT",Toast.LENGTH_SHORT).show();
                         like_this_book.setImageResource(R.drawable.commend);
                         like_this_book_text.setText("点赞");
-                        if(if_like==0) {
-                            likes.setText(String.valueOf(book_likes));
+                        if(if_like==1) {
+                            likes.setText(String.valueOf(book_likes-1));
                         }
                         else{
-                            likes.setText(String.valueOf(book_likes-1));
+                            likes.setText(String.valueOf(book_likes));
                         }
                     }
                 });

@@ -40,10 +40,11 @@
             android:id="@+id/send_button"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
             android:backgroundTint="#0000"
-            android:gravity="end"
             android:contentDescription="send"
+            android:gravity="end"
             android:scaleType="fitCenter"
             android:src="@drawable/airplane_icon_3" />
     </RelativeLayout>

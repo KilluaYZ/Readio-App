@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
+import cn.ruc.readio.util.HttpUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,5 +39,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
+        //初始化HttpUtil
+        String tmpUrl = HttpUtil.readHttpHost(this);
+        if(tmpUrl != null && !tmpUrl.isEmpty()){
+            HttpUtil.BASE_URL = tmpUrl;
+        }else{
+            HttpUtil.setBaseUrl_Tencent(this);
+        }
     }
 }

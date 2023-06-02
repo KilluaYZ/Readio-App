@@ -1,6 +1,8 @@
 package cn.ruc.readio.util;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -23,12 +25,13 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 
 public class HttpUtil {
-    private static String BASE_URL = "server.killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
-    private static String BASE_SCHEME = "http";
-    private static int BASE_PORT = 5000;
+    public static String BASE_URL = "killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
+    public static String BASE_SCHEME = "http";
+    public static int BASE_PORT = 5000;
 
-    public static int getServer()
+    public static int getServer(Activity activity)
     {
+//        BASE_URL = readHttpHost(activity);
         if(BASE_URL == "killuayz.top"){
             return 0;
         }
@@ -37,13 +40,27 @@ public class HttpUtil {
         }
     }
 
-    public static void setBaseUrl_Tencent()
+    public static void setBaseUrl_Tencent(Activity activity)
     {
         BASE_URL = "killuayz.top";
+        changeHttpHost(activity, BASE_URL);
     }
-    public static void setBaseUrl_550w()
+    public static void setBaseUrl_550w(Activity activity)
     {
         BASE_URL = "server.killuayz.top";
+        changeHttpHost(activity, BASE_URL);
+    }
+
+    public static void changeHttpHost(Activity activity, String host){
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("SERVER_HOST", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("SERVER_HOST",host);
+        editor.commit();
+    }
+
+    public static String readHttpHost(Activity activity){
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("SERVER_HOST", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("SERVER_HOST","");
     }
 
     /*

@@ -42,7 +42,7 @@ import okhttp3.Response;
 
 public class mySettingsActivity extends AppCompatActivity {
     private Activity settingAct = this;
-    private int server = HttpUtil.getServer();    // 0:腾讯  1:550
+    private int server = HttpUtil.getServer(this);    // 0:腾讯  1:550
     static public mySettingsActivity setAct;
     String oldMail;
     String oldName;
@@ -84,13 +84,13 @@ public class mySettingsActivity extends AppCompatActivity {
                 if(server == 0)
                 {
                     server = 1;
-                    HttpUtil.setBaseUrl_550w();
+                    HttpUtil.setBaseUrl_550w(mySettingsActivity.this);
                     TencentServre.setImageResource(R.drawable.close);
                     Server550.setImageResource(R.drawable.open);
                 }
                 else{
                     server = 0;
-                    HttpUtil.setBaseUrl_Tencent();
+                    HttpUtil.setBaseUrl_Tencent(mySettingsActivity.this);
                     TencentServre.setImageResource(R.drawable.open);
                     Server550.setImageResource(R.drawable.close);
                 }
@@ -104,13 +104,13 @@ public class mySettingsActivity extends AppCompatActivity {
                 if(server == 0)
                 {
                     server = 1;
-                    HttpUtil.setBaseUrl_550w();
+                    HttpUtil.setBaseUrl_550w(mySettingsActivity.this);
                     TencentServre.setImageResource(R.drawable.close);
                     Server550.setImageResource(R.drawable.open);
                 }
                 else{
                     server = 0;
-                    HttpUtil.setBaseUrl_Tencent();
+                    HttpUtil.setBaseUrl_Tencent(mySettingsActivity.this);
                     TencentServre.setImageResource(R.drawable.open);
                     Server550.setImageResource(R.drawable.close);
                 }

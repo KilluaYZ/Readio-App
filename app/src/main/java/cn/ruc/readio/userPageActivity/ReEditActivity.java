@@ -1,6 +1,5 @@
 package cn.ruc.readio.userPageActivity;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -8,18 +7,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.util.HttpUtil;
@@ -43,21 +39,28 @@ public class ReEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String piecesId = intent.getStringExtra("piecesId");
         String piecesContent = intent.getStringExtra("piecesContent");
+        String status = intent.getStringExtra("status");
         TextView publish_button = (TextView) findViewById(R.id.publishButton);
         TextView exitEdit_button = (TextView) findViewById(R.id.editExitButton);
         TextView saveDraft_button = (TextView) findViewById(R.id.saveDraftButton);
         TextView addTag_button = (TextView) findViewById(R.id.addTagButton);
         EditText editContent = (EditText) findViewById(R.id.editPiece);
+        if(status.equals("0")) {
+            publish_button.setText("存回草稿箱");
+        }else{
+            publish_button.setText("重新发布");
+        }
         editContent.setText(piecesContent);
         Activity thisact = this;
         saveDraft_button.setVisibility(View.GONE);
         addTag_button.setVisibility(View.GONE);
+
         publish_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!TextUtils.isEmpty(editContent.getText())){
                     try {
-                        publishPiece(piecesId,toString().valueOf(editContent.getText()));
+                        updatePiece(piecesId,toString().valueOf(editContent.getText()));
                         Toast.makeText(ReEditActivity.this, "您修改的内容已重新发布（⌯'▾'⌯）", Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         Tools.my_toast(thisact,"出错了，发表失败");
@@ -84,7 +87,7 @@ public class ReEditActivity extends AppCompatActivity {
 
 
     }
-    public void publishPiece(String piecesId, String content) throws JSONException {
+    public void updatePiece(String piecesId, String content) throws JSONException {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("piecesId", piecesId);

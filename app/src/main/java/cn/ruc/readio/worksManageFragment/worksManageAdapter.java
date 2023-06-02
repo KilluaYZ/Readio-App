@@ -4,25 +4,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import cn.ruc.readio.ui.works.Works;
 import cn.ruc.readio.userPageActivity.ReEditActivity;
-import cn.ruc.readio.userPageActivity.editWorkActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
-import cn.ruc.readio.worksActivity.readWorksActivity;
 import cn.ruc.readio.worksManageFragment.publishedManageFragment;
-import cn.ruc.readio.worksManageFragment.draftManageFragment;
+
 import static androidx.core.content.ContextCompat.startActivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cn.ruc.readio.R;
 import okhttp3.Call;
@@ -31,18 +25,14 @@ import okhttp3.Response;
 
 import androidx.annotation.NonNull;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.ViewHolder>{
     private List<Works> WorksList;
-    private static worksManageAdapter mAdapter;
     private publishedManageFragment fragment;
     public worksManageAdapter(publishedManageFragment fragment, List<Works> WorksList){
-        mAdapter = this;
         this.WorksList = WorksList;
         this.fragment = fragment;
     }
@@ -87,6 +77,7 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
                 Intent intent = new Intent(view.getContext(), ReEditActivity.class);
                 intent.putExtra("piecesId", String.valueOf(WorksList.get(position).getWorkID()));
                 intent.putExtra("piecesContent", String.valueOf(WorksList.get(position).getContent()));
+                intent.putExtra("status","1");
                 Log.d("pieceid", String.valueOf(WorksList.get(position).getWorkID()));
                 startActivity(view.getContext(), intent, null);
             }
@@ -113,7 +104,6 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
                 });
             }
         });
-
         viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

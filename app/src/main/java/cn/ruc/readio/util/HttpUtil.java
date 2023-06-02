@@ -23,7 +23,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 
 public class HttpUtil {
-    private static String BASE_URL = "killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
+    private static String BASE_URL = "server.killuayz.top"; //http://killuayz.top:5000  http://127.0.0.1:5000
     private static String BASE_SCHEME = "http";
     private static int BASE_PORT = 5000;
     /*

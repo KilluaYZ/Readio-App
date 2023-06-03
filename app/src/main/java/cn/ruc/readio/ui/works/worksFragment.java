@@ -8,6 +8,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class worksFragment extends Fragment {
 
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         workFrag = this;
+        ImageView searchButton = binding.searchButton;
         View root = binding.getRoot();
         refreshData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
@@ -84,7 +86,12 @@ public class worksFragment extends Fragment {
                 }
             }
         });
-
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshSearchData();
+            }
+        });
         return root;
     }
 
@@ -110,6 +117,7 @@ public class worksFragment extends Fragment {
     }
 
     public void refreshData(){
+
         HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -221,6 +229,130 @@ public class worksFragment extends Fragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+
+    public void refreshSearchData(){
+
+        String mode = "search";
+        String keyword = binding.edittext.getText().toString();
+        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+        queryParam.add(Pair.create("mode",mode));
+        queryParam.add(Pair.create("keyword",keyword));
+        HttpUtil.getRequestAsyn("/works/getPiecesBrief", queryParam, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Tools.my_toast(getActivity(),"api启用失败");
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject jsonObject1 = new JSONObject(response.body().string());
+                    JSONArray data = jsonObject1.getJSONArray("data");
+                    works.clear();
+                    for(int i = 0; i < data.length(); i++){
+                        JSONObject datai = data.getJSONObject(i);
+                        JSONObject useri = datai.getJSONObject("user");
+                        Works work = new Works();
+                        work.setPieceTitle(datai.getString("title"));
+                        work.setContent(datai.getString("content"));
+                        work.setLikesNum(datai.getInt("likes"));
+                        work.setWorkID(datai.getInt("piecesId"));
+                        if(datai.getInt("isLiked")==1)
+                        {
+                            work.changeMyLike();
+                        }
+                        User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
+                        user.setAvaID(useri.getString("avator"));
+                        tags tagi = new tags();
+                        tags tagj = new tags();
+                        if(datai.has("tag")){
+                            JSONArray tagList = datai.getJSONArray("tag");
+                            work.setTagNum(tagList.length());
+                            if(tagList.length() == 1 ){
+                                JSONObject tagObj = (JSONObject)tagList.get(0);
+                                String tagConent = tagObj.getString("content");
+                                int tagID = tagObj.getInt("tagId");
+                                int tagLinkedTimes = tagObj.getInt("linkedTimes");
+                                tagi.setContent(tagConent);
+                                tagi.setLinkedTimes(tagLinkedTimes);
+                                tagi.setTagId(tagID);
+                                work.setTag(tagi);
+                            }
+                            if(tagList.length() >= 2 ){
+                                JSONObject tagObj = (JSONObject)tagList.get(0);
+                                String tagConent = tagObj.getString("content");
+                                int tagID = tagObj.getInt("tagId");
+                                int tagLinkedTimes = tagObj.getInt("linkedTimes");
+                                tagi.setContent(tagConent);
+                                tagi.setLinkedTimes(tagLinkedTimes);
+                                tagi.setTagId(tagID);
+                                work.setTag(tagi);
+
+                                tagObj = (JSONObject) tagList.get(1);
+                                String tagConent1 = tagObj.getString("content");
+                                int tagID1 = tagObj.getInt("tagId");
+                                int tagLinkedTimes1 = tagObj.getInt("linkedTimes");
+                                tagj.setContent(tagConent1);
+                                tagj.setLinkedTimes(tagLinkedTimes1);
+                                tagj.setTagId(tagID1);
+                                work.setTag2(tagj);
+                            }
+                        }
+                        work.setUser(user);
+                        works.add(work);
+
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i = 0;i < works.size(); ++i){
+//                                Bitmap pic = HttpUtil.getAvaSyn(works.get(i).getUser().getAvaID());
+                                Bitmap pic = null;
+                                try {
+                                    if(getActivity() != null) {
+                                        pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
+                                    }
+                                } catch (IOException | JSONException | ParseException e) {
+                                    Tools.my_toast(getActivity(),"图片加载出错啦！");
+                                }
+                                works.get(i).getUser().setAvator(pic);
+                                Log.d("workadpter","需要更新");
+                                if(getActivity() != null) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(binding != null) {
+                                                binding.worksColumn.getAdapter().notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+
+                        }
+                    }).start();
+                    if(getActivity() != null)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(getActivity() != null) {
+                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.works_column);
+                                    if (recyclerView != null) {
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    Tools.my_toast(getActivity(),"搜索失败，请检查网络");
+
                 }
             }
         });

@@ -106,9 +106,6 @@ public class readBookActivity extends Activity {
                     Page--;
                 }
                 readPage.setText(toString().valueOf(Page+1));
-                Log.d("hhhhhhhh","we are in"+toString().valueOf(nPosition));
-                Log.d("hhhhhhhh","viewcontainer_size-1"+toString().valueOf(viewContainer.size() - 1));
-                Log.d("hhhhhhhh","the page is"+toString().valueOf(Page));
                 if (nPosition == viewContainer.size() - 1) {
                     if(contentList == null)
                     {
@@ -119,8 +116,6 @@ public class readBookActivity extends Activity {
                             if(ifLoad.get(Page+1) == 0) {
                                 addPage(contentList.get(Page+1));
                                 Loaded(Page+1);
-                                Log.d("hhhhhhhh","addBehind:Page="+toString().valueOf(Page+1));
-                                Log.d("hhhhhhhh","length="+viewContainer.size());
                             }
                         }
                         else{
@@ -142,8 +137,6 @@ public class readBookActivity extends Activity {
                                 addPageFront(contentList.get(Page-1));
                                 pager.setCurrentItem(nPosition+1, false);
                                 Loaded(Page-1);
-                                Log.d("hhhhhhhh","addFront:Page="+toString().valueOf(Page-1));
-                                Log.d("hhhhhhhh","length="+viewContainer.size());
                             }
                         }
                         else{
@@ -157,10 +150,6 @@ public class readBookActivity extends Activity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state != pager.SCROLL_STATE_IDLE) return;
-//                Log.d("hhhhhhh","Position="+toString().valueOf(nPosition));
-//                Log.d("hhhhhhh","Page="+toString().valueOf(Page));
-//                Log.d("hhhhhhh","LastPosition="+toString().valueOf(lastPosition));
-//                Log.d("hhhhhhh","changedPage="+toString().valueOf(Page));
                 pager.setCurrentItem(nPosition, false);
                 }
 
@@ -234,10 +223,7 @@ public class readBookActivity extends Activity {
                     my_book.setBookName(bookinfo.getString("bookName"));
                     my_book.setAuthorName(bookinfo.getString("authorName"));
                     my_book.setSize(bookinfo.getInt("size"));
-                    Log.d("hhhhhhhhh","hhh");
                     my_book.setProgress(bookinfo.getInt("progress"));
-                    Log.d("hhhhhhhhh",toString().valueOf(bookinfo.getInt("progress")));
-//                    my_book.setProgress(1300);
                     JSONArray content=bookinfo.getJSONArray("content");
                     ArrayList<Pair<String, String>> bookcontent=new ArrayList<>();
 
@@ -255,7 +241,6 @@ public class readBookActivity extends Activity {
                             TextView view1_content = view1.findViewById(R.id.content);
                             TextView view2_content = view2.findViewById(R.id.content);
                             Page = my_book.getProgress()/300;
-                            Log.d("hhhhhhhh","Page="+toString().valueOf(Page));
                             readPage.setText(toString().valueOf(Page+1));
                             view1_content.setText(contentList.get(Page));
                             Loaded(Page);
@@ -275,7 +260,6 @@ public class readBookActivity extends Activity {
                                     Page--;
                                 }
                             }
-//                            pager.getAdapter().notifyDataSetChanged();
                         }
                     });
                 } catch (JSONException e) {

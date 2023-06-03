@@ -71,25 +71,15 @@ public class bookAdapter extends BaseAdapter {
         BookItem books = bookList.get(position);
         if (books != null) {
             holder.text.setText(books.getBookName());
-//            if(books.getCover()==null)
-//            {
-//                holder.cover.setImageResource(R.drawable.default_cover2);
-//            }else {
                 if (Objects.equals(books.getCoverID(), "null")) {
                     holder.cover.setImageResource(R.drawable.default_cover2);
                 } else {
                     try {
                         Tools.getImageBitmapAsyn(books.getCoverID(),holder.cover,shelfFragment.shelffrag.getActivity());
-//                        Bitmap bookCoverBitmap = Tools.getImageBitmapSyn(shelfFragment.shelffrag.getActivity(), books.getCoverID());
-//                        holder.cover.setImageBitmap(bookCoverBitmap);
                     } catch (IOException | ParseException e) {
                         Tools.my_toast(Objects.requireNonNull(shelfFragment.shelffrag.getActivity()),"封面获取失败");
                     }
-
-
-//                    holder.cover.setImageBitmap(books.getCover());
                 }
-//            }
 
             /*设置跳转阅读界面*/
             holder.jumpview.setOnClickListener(view -> {

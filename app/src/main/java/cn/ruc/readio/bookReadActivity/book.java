@@ -11,6 +11,7 @@ public class book {
     private String bookAbstract;
     private String bookId;
     private int size;
+    private int progress;
     private ArrayList<Pair<String, String>> content;
 
     public book(){}
@@ -33,7 +34,19 @@ public class book {
     public void setContent(ArrayList<Pair<String, String>> content){
         this.content=content;
     }
-
+    public void setProgress(int page)
+    {
+        progress = page;
+    }
+    public String getBookName(){return bookName;}
+    public int getProgress()
+    {
+        return progress;
+    }
+    public String getBookId()
+    {
+        return bookId;
+    }
 
     public ArrayList<Pair<String, String>> getContent() {
         return content;

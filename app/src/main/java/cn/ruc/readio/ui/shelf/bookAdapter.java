@@ -80,7 +80,6 @@ public class bookAdapter extends BaseAdapter {
                         Tools.my_toast(Objects.requireNonNull(shelfFragment.shelffrag.getActivity()),"封面获取失败");
                     }
                 }
-//            }
 
             /*设置跳转阅读界面*/
             holder.jumpview.setOnClickListener(view -> {

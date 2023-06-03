@@ -256,8 +256,8 @@ public class readBookActivity extends Activity {
                             TextView view2_content = view2.findViewById(R.id.content);
                             Page = my_book.getProgress()/300;
                             Log.d("hhhhhhhh","Page="+toString().valueOf(Page));
-                            readPage.setText(toString().valueOf(Page));
-                            view1_content.setText(contentList.get(Page+1));
+                            readPage.setText(toString().valueOf(Page+1));
+                            view1_content.setText(contentList.get(Page));
                             Loaded(Page);
                             view2_content.setText(contentList.get(Page+1));
                             Loaded(Page+1);
@@ -269,12 +269,10 @@ public class readBookActivity extends Activity {
                                     TextView content = (TextView) view.findViewById(R.id.content);
                                     content.setText(contentList.get(Page-1));
                                     viewContainer.add(0,view);
-                                    pager.getAdapter().notifyDataSetChanged();
-                                    Page--;
-                                    pager.setCurrentItem(nPosition+1, false);
                                     Loaded(Page-1);
-                                    Log.d("hhhhhhhh","addFront:Page="+toString().valueOf(Page-1));
-                                    Log.d("hhhhhhhh","length="+viewContainer.size());
+                                    pager.getAdapter().notifyDataSetChanged();
+                                    pager.setCurrentItem(nPosition+1, false);
+                                    Page--;
                                 }
                             }
 //                            pager.getAdapter().notifyDataSetChanged();

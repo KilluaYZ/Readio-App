@@ -5,6 +5,7 @@
     android:id="@+id/shelf_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
     tools:context=".ui.shelf.shelfFragment">
     <LinearLayout
         android:id="@+id/head"
@@ -35,15 +36,16 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/paler_grey"
-                    android:paddingStart="5dp"
+                    android:paddingLeft="5dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/search_48" />
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:entries="@array/spinner_data1"
                     android:spinnerMode="dropdown"/>
+
                 <EditText
                     android:id="@+id/edittext"
                     android:layout_width="0dp"
@@ -52,7 +54,7 @@
                     android:background="@color/paler_grey"
                     android:hint="搜你想看~"
                     android:maxLength="10"
-                    android:paddingStart="15dp"
+                    android:paddingLeft="15dp"
                     android:singleLine="true"
                     android:textSize="15sp" />
                 <TextView
@@ -63,7 +65,7 @@
                     android:textSize="15sp"
                     android:textColor="#D31A97EA"
                     android:background="@color/paler_grey"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:gravity="center"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -79,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="我的书架"
+                android:text="搜索结果"
                 android:textSize="20sp"/>
         </LinearLayout>
     </LinearLayout>
@@ -87,23 +89,18 @@
     <ScrollView
         android:id="@+id/my_shelf"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/head"
         app:layout_constraintBottom_toTopOf="parent"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp">
-        <cn.ruc.readio.ui.shelf.myGridView
-            android:id="@+id/book_gridview"
+        android:isScrollContainer="true"
+        android:scrollbars="none">
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:verticalSpacing="15dp"
-            android:numColumns="auto_fit"
-            android:scrollbars="none">
-        </cn.ruc.readio.ui.shelf.myGridView>
+            android:id="@+id/search_recyclerView">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </ScrollView>
 

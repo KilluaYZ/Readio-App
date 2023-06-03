@@ -91,9 +91,7 @@ public class bookDetailActivity extends AppCompatActivity{
 
         /*设置分享按钮*/
         ImageButton share_button=findViewById(R.id.share_button);
-        share_button.setOnClickListener(view->{
-            Tools.my_toast(bookDetailActivity.this,"分享功能，待开发...");
-        });
+        share_button.setOnClickListener(view-> Tools.my_toast(bookDetailActivity.this,"分享功能，待开发..."));
 
 
         /*设置加入书架按钮*/
@@ -244,7 +242,7 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.getRequestWithTokenAsyn(this ,"/app/book/"+ BookID, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -322,19 +320,10 @@ public class bookDetailActivity extends AppCompatActivity{
                         try {
                             if (!book_info.getString("coverId").equals("null")) {
                                 final Bitmap[] cover = {null};
-//                                new Thread(() -> {
-//                                    try {
-//                                        cover[0] = Tools.getImageBitmapSyn(bookDetailActivity.this, book_info.getString("coverId"));
-//                                    } catch (JSONException | IOException | ParseException e) {
-//                                        Tools.my_toast(bookDetailAct, "加载失败8");
-//                                    }
-//                                }).start();
-//                                bookDetailActivity.this.runOnUiThread(() -> book_cover.setImageBitmap(cover[0]));
-
                                     try{
                                         Tools.getImageBitmapAsyn(book_info.getString("coverId"),book_cover,bookDetailAct);
                                     } catch (JSONException | IOException | ParseException e) {
-//                                        Tools.my_toast(bookDetailAct, "加载失败8");
+                                        Tools.my_toast(bookDetailAct, "加载失败8");
                                     }
                             }
                         } catch (JSONException e) {
@@ -360,7 +349,7 @@ public class bookDetailActivity extends AppCompatActivity{
                             User user = get_userinfo(comment_item.getString("userId"),i);
                             PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
                             comment.setBookId(String.valueOf(BookID));
-                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setCommentId(Integer.parseInt(comment_item.getString("commentId")));
                             comment.setLikesNum(comment_item.getInt("likes"));
                             comment.setDate(comment_item.getString("createTime"));
                             comment.setIf_liked(comment_item.getString("liked"));
@@ -383,7 +372,7 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.getRequestAsyn("/user/get", queryParam, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -441,7 +430,7 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.getRequestAsyn("app/book/"+BookID+"/comment/"+commentId, new ArrayList<>() ,new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -470,32 +459,26 @@ public class bookDetailActivity extends AppCompatActivity{
         return child_commentnum;
     }
 
-    private void mtoast(String msg){
-        runOnUiThread(() -> Toast.makeText(bookDetailActivity.this,msg,Toast.LENGTH_LONG).show());
+    private void mtoast(){
+        runOnUiThread(() -> Toast.makeText(bookDetailActivity.this, "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
     private void add_book_to_shelf(String bookId){
         String json = "{\"bookId\"" +":"+ bookId+"}";
         HttpUtil.postRequestWithTokenJsonAsyn(bookDetailActivity.this,"/app/books/add", json, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this, "添加失败，请重试", Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.addinshelf);
-                        add_shelf_text.setText("加入书架");
-                    }
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this, "添加失败，请重试", Toast.LENGTH_SHORT).show();
+                    add_shelf.setImageResource(R.drawable.addinshelf);
+                    add_shelf_text.setText("加入书架");
                 });
             }
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this,"加入啦",Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.addedinshelf);
-                        add_shelf_text.setText("已加入书架");
-                    }
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this,"加入啦",Toast.LENGTH_SHORT).show();
+                    add_shelf.setImageResource(R.drawable.addedinshelf);
+                    add_shelf_text.setText("已加入书架");
                 });
             }
         });
@@ -507,25 +490,19 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.postRequestWithTokenJsonAsyn(this,"/app/books/delete", json, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this, "取消加入失败，请重试", Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.addedinshelf);
-                        add_shelf_text.setText("已加入书架");
-                    }
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this, "取消加入失败，请重试", Toast.LENGTH_SHORT).show();
+                    add_shelf.setImageResource(R.drawable.addedinshelf);
+                    add_shelf_text.setText("已加入书架");
                 });
 
             }
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this,"删除啦",Toast.LENGTH_SHORT).show();
-                        add_shelf.setImageResource(R.drawable.addinshelf);
-                        add_shelf_text.setText("加入书架");
-                    }
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this,"删除啦",Toast.LENGTH_SHORT).show();
+                    add_shelf.setImageResource(R.drawable.addinshelf);
+                    add_shelf_text.setText("加入书架");
                 });
             }
         });
@@ -536,28 +513,22 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.postRequestWithTokenJsonAsyn(bookDetailActivity.this,"/app/book/"+bookId+"/like", json, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this, "点赞失败，请重试", Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.commend);
-                        like_this_book_text.setText("点赞");
-                    }
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this, "点赞失败，请重试", Toast.LENGTH_SHORT).show();
+                    like_this_book.setImageResource(R.drawable.commend);
+                    like_this_book_text.setText("点赞");
                 });
             }
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this,"感谢您的点赞^_^",Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.ok);
-                        like_this_book_text.setText("已点赞");
-                        if(if_like==1){
-                            likes.setText(String.valueOf(book_likes));
-                        }else{
-                        likes.setText(String.valueOf(book_likes+1));
-                        }
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this,"感谢您的点赞^_^",Toast.LENGTH_SHORT).show();
+                    like_this_book.setImageResource(R.drawable.ok);
+                    like_this_book_text.setText("已点赞");
+                    if(if_like==1){
+                        likes.setText(String.valueOf(book_likes));
+                    }else{
+                    likes.setText(String.valueOf(book_likes+1));
                     }
                 });
             }
@@ -568,29 +539,23 @@ public class bookDetailActivity extends AppCompatActivity{
         HttpUtil.postRequestWithTokenJsonAsyn(bookDetailActivity.this,"/app/book/"+bookId+"/like", json, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this, "取消点赞失败，请重试", Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.ok);
-                        like_this_book_text.setText("点赞");
-                    }
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this, "取消点赞失败，请重试", Toast.LENGTH_SHORT).show();
+                    like_this_book.setImageResource(R.drawable.ok);
+                    like_this_book_text.setText("点赞");
                 });
             }
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                bookDetailAct.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(bookDetailActivity.this,"不要哇ToT",Toast.LENGTH_SHORT).show();
-                        like_this_book.setImageResource(R.drawable.commend);
-                        like_this_book_text.setText("点赞");
-                        if(if_like==1) {
-                            likes.setText(String.valueOf(book_likes-1));
-                        }
-                        else{
-                            likes.setText(String.valueOf(book_likes));
-                        }
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                bookDetailAct.runOnUiThread(() -> {
+                    Toast.makeText(bookDetailActivity.this,"不要哇ToT",Toast.LENGTH_SHORT).show();
+                    like_this_book.setImageResource(R.drawable.commend);
+                    like_this_book_text.setText("点赞");
+                    if(if_like==1) {
+                        likes.setText(String.valueOf(book_likes-1));
+                    }
+                    else{
+                        likes.setText(String.valueOf(book_likes));
                     }
                 });
             }

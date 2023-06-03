@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,16 +101,33 @@ public class writeCommentActivity extends AppCompatActivity {
         ImageButton send_button=findViewById(R.id.send_button);
         send_button.setOnClickListener(v -> {
             comment_content=edit_comment.getText().toString();
-            try {
-                sendcomment();
-                Tools.my_toast(writeCommentActivity.this,"发表评论成功");
-                edit_comment.setText("");
-            } catch (IOException e) {
-                //Tools.my_toast(writeCommentActivity.this,"加载出错啦！");
-                Toast.makeText(writeCommentActivity.this,"发表评论失败",Toast.LENGTH_SHORT).show();
-                Log.d("response_msg", response_msg);
+            if(comment_content.length()==0){
+                Tools.my_toast(writeCommentActivity.this,"你还没写东西呐！\n请输入些什么再发布吧~");
+            }else{
+                try {
+                    sendcomment();
+                    Tools.my_toast(writeCommentActivity.this,"发表评论成功");
+                    edit_comment.setText("");
+                } catch (IOException e) {
+                    //Tools.my_toast(writeCommentActivity.this,"加载出错啦！");
+                    Toast.makeText(writeCommentActivity.this,"发表评论失败",Toast.LENGTH_SHORT).show();
+                    Log.d("response_msg", response_msg);
+                }
             }
         });
+
+        /*星星评分*/
+        RatingBar describe_score=findViewById(R.id.RatingBar);
+        TextView describe_tip=findViewById(R.id.describe_tip);
+        describe_score.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                String score = String.valueOf(rating);
+                String scoreState1 = fun_getScoreState(score);
+                describe_tip.setText(scoreState1);
+            }
+        });
+
 
     }
     public void sendcomment() throws IOException {
@@ -141,5 +159,42 @@ public class writeCommentActivity extends AppCompatActivity {
     }
     private void mtoast(){
         runOnUiThread(() -> Toast.makeText(writeCommentActivity.this, "请求异常，加载不出来",Toast.LENGTH_LONG).show());
+    }
+
+    private String fun_getScoreState(String score) {
+        String rating = "";
+        switch (score) {
+            case "0.5":
+                rating = "差";
+                break;
+            case "1.0":
+                rating = "差";
+                break;
+            case "1.5":
+                rating = "较差";
+                break;
+            case "2.0":
+                rating = "较差";
+                break;
+            case "2.5":
+                rating = "一般";
+                break;
+            case "3.0":
+                rating = "一般";
+                break;
+            case "3.5":
+                rating = "好";
+                break;
+            case "4.0":
+                rating = "好";
+                break;
+            case "4.5":
+                rating = "极好";
+                break;
+            case "5.0":
+                rating = "极好";
+                break;
+        }
+        return rating;
     }
 }

@@ -58,11 +58,12 @@ public class readBookActivity extends Activity {
         contentList = null;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_book);
-        if (Build.VERSION.SDK_INT >= 21){
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }  //用于调整状态栏为透明色
+
+        /*调整状态栏为透明色*/
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         readPage = findViewById(R.id.pageBar);
         BookInfo = findViewById(R.id.book_nameBar);
         ifLoad = new ArrayList<>();
@@ -75,8 +76,8 @@ public class readBookActivity extends Activity {
         Author = intent.getStringExtra("Author");
         BookID = intent.getStringExtra("BookID");
 
+        /*得到书籍信息*/
         getBook();
-
 
         pager = (ViewPager) this.findViewById(R.id.viewpager);
         view1 = LayoutInflater.from(this).inflate(R.layout.item_bookview,null);
@@ -95,7 +96,6 @@ public class readBookActivity extends Activity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
                 nPosition = position;
@@ -198,19 +198,18 @@ public class readBookActivity extends Activity {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("bookId",my_book.getBookId());
-            jsonObject.put("progress",toString().valueOf(getProgress()));
+            jsonObject.put("progress",String.valueOf(getProgress()));
         } catch (JSONException e) {
             Tools.my_toast(readBookActivity.this,"进度上传失败");
         }
         String json = jsonObject.toString();
         HttpUtil.postRequestWithTokenJsonAsyn(readBookActivity.this, "/app/books/update", json, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Tools.my_toast(readBookActivity.this,"进度上传失败");
             }
-
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Tools.my_toast(readBookActivity.this,"进度保存成功~");
             }
         });
@@ -226,6 +225,7 @@ public class readBookActivity extends Activity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject bookinfo = jsonObject.getJSONObject("data");
 
@@ -236,7 +236,7 @@ public class readBookActivity extends Activity {
                     my_book.setSize(bookinfo.getInt("size"));
                     Log.d("hhhhhhhhh","hhh");
                     my_book.setProgress(bookinfo.getInt("progress"));
-                    Log.d("hhhhhhhhh",toString().valueOf(bookinfo.getInt("progress")));
+                    Log.d("hhhhhhhhh",String.valueOf(bookinfo.getInt("progress")));
 //                    my_book.setProgress(1300);
                     JSONArray content=bookinfo.getJSONArray("content");
                     ArrayList<Pair<String, String>> bookcontent=new ArrayList<>();
@@ -255,8 +255,8 @@ public class readBookActivity extends Activity {
                             TextView view1_content = view1.findViewById(R.id.content);
                             TextView view2_content = view2.findViewById(R.id.content);
                             Page = my_book.getProgress()/300;
-                            Log.d("hhhhhhhh","Page="+toString().valueOf(Page));
-                            readPage.setText(toString().valueOf(Page+1));
+                            Log.d("hhhhhhhh","Page="+String.valueOf(Page));
+                            readPage.setText(String.valueOf(Page+1));
                             view1_content.setText(contentList.get(Page));
                             Loaded(Page);
                             view2_content.setText(contentList.get(Page+1));
@@ -270,12 +270,11 @@ public class readBookActivity extends Activity {
                                     content.setText(contentList.get(Page-1));
                                     viewContainer.add(0,view);
                                     Loaded(Page-1);
-                                    pager.getAdapter().notifyDataSetChanged();
+                                    Objects.requireNonNull(pager.getAdapter()).notifyDataSetChanged();
                                     pager.setCurrentItem(nPosition+1, false);
                                     Page--;
                                 }
                             }
-//                            pager.getAdapter().notifyDataSetChanged();
                         }
                     });
                 } catch (JSONException e) {

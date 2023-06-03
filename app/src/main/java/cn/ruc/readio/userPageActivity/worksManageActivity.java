@@ -9,17 +9,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import cn.ruc.readio.R;
-import cn.ruc.readio.databinding.ActivityMainBinding;
-import cn.ruc.readio.databinding.ActivityWorksManageBinding;
 import cn.ruc.readio.worksManageFragment.draftManageFragment;
 import cn.ruc.readio.worksManageFragment.publishedManageFragment;
 

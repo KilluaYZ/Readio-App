@@ -42,6 +42,7 @@ import okhttp3.Response;
 
 public class mySettingsActivity extends AppCompatActivity {
     private Activity settingAct = this;
+    private int server = HttpUtil.getServer(this);    // 0:腾讯  1:550
     static public mySettingsActivity setAct;
     String oldMail;
     String oldName;
@@ -66,6 +67,57 @@ public class mySettingsActivity extends AppCompatActivity {
         LinearLayout changeAccount = (LinearLayout) findViewById(R.id.changeAccountBar);
         LinearLayout Logout = (LinearLayout) findViewById(R.id.Logout);
         ImageView exit = (ImageView) findViewById(R.id.exitSetting);
+        ImageView TencentServre = (ImageView) findViewById(R.id.chooseTencentServer);
+        ImageView Server550 = (ImageView) findViewById(R.id.choose550Server);
+        if(server == 0)
+        {
+            TencentServre.setImageResource(R.drawable.open);
+            Server550.setImageResource(R.drawable.close);
+        }
+        else{
+            TencentServre.setImageResource(R.drawable.close);
+            Server550.setImageResource(R.drawable.open);
+        }
+        TencentServre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(server == 0)
+                {
+                    server = 1;
+                    HttpUtil.setBaseUrl_550w(mySettingsActivity.this);
+                    TencentServre.setImageResource(R.drawable.close);
+                    Server550.setImageResource(R.drawable.open);
+                }
+                else{
+                    server = 0;
+                    HttpUtil.setBaseUrl_Tencent(mySettingsActivity.this);
+                    TencentServre.setImageResource(R.drawable.open);
+                    Server550.setImageResource(R.drawable.close);
+                }
+
+            }
+        });
+
+        Server550.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(server == 0)
+                {
+                    server = 1;
+                    HttpUtil.setBaseUrl_550w(mySettingsActivity.this);
+                    TencentServre.setImageResource(R.drawable.close);
+                    Server550.setImageResource(R.drawable.open);
+                }
+                else{
+                    server = 0;
+                    HttpUtil.setBaseUrl_Tencent(mySettingsActivity.this);
+                    TencentServre.setImageResource(R.drawable.open);
+                    Server550.setImageResource(R.drawable.close);
+                }
+
+            }
+        });
+
         ReadioInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

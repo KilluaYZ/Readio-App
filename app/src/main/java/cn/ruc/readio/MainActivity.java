@@ -2,6 +2,7 @@ package cn.ruc.readio;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.userPageActivity.newWorksActivity;
+import cn.ruc.readio.util.HttpUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,5 +40,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
+        //初始化HttpUtil
+        String tmpUrl = HttpUtil.readHttpHost(this);
+        if(tmpUrl != null && !tmpUrl.isEmpty()){
+            if(tmpUrl.equals("killuayz.top")){
+                HttpUtil.setBaseUrl_Tencent(this);
+            }else{
+                HttpUtil.setBaseUrl_550w(this);
+            }
+        }else{
+            HttpUtil.setBaseUrl_Tencent(this);
+        }
     }
 }

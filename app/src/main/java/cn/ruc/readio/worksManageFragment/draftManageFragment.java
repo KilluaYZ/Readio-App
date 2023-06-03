@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import cn.ruc.readio.databinding.FragmentDraftBinding;
-import cn.ruc.readio.R;
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.ui.works.tags;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.worksManageFragment.publishedManageFragment;
 import okhttp3.Call;
@@ -30,10 +28,12 @@ import java.util.ArrayList;
 
 public class draftManageFragment extends Fragment {
     private FragmentDraftBinding binding;
+    public static Fragment draftManageFrag;
     ArrayList<Works> works = new ArrayList<Works>();
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState){
         binding = FragmentDraftBinding.inflate(inflater, container,false);
+        draftManageFrag = this;
 //        View view = inflater.inflate(R.layout.fragment_published,container);
         View view = binding.getRoot();
         refreshData();
@@ -41,7 +41,7 @@ public class draftManageFragment extends Fragment {
 //        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.publishedManageBar);
         RecyclerView recyclerView = binding.draftManageBar;
         recyclerView.setLayoutManager(layoutManager);
-        draftManageAdapter works_manage_Adapter = new draftManageAdapter(getContext(),works);
+        draftManageAdapter works_manage_Adapter = new draftManageAdapter(this, works);
         recyclerView.setAdapter(works_manage_Adapter);
         return view;
     }
@@ -56,6 +56,7 @@ public class draftManageFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try{
+                    works.clear();
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray data = jsonObject.getJSONArray("data");
                     for(int i = 0; i < data.length(); i++){
@@ -66,6 +67,7 @@ public class draftManageFragment extends Fragment {
                             work.setContent(datai.getString("content"));
                             work.setLikesNum(datai.getInt("likes"));
                             Log.d("data__", datai.getString("title"));
+                            work.setWorkID(Integer.parseInt(datai.getString("piecesId")));
                             work.setCollectsNum(datai.getInt("collect"));
                             work.setCommentsNum(datai.getInt("comment"));
                             work.setSerialTitle(datai.getJSONObject("series").getString("seriesName"));

@@ -223,30 +223,34 @@ public class readWorksActivity extends AppCompatActivity {
                  */
                 //正常发送模式
                 String content = writeComment_button.getText().toString();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("piecesId", workId);
-                    jsonObject.put("content", content);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                if(content.length()==0){
+                    mtoast("请输入点什么再发送吧！");
+                }else{
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("piecesId", workId);
+                        jsonObject.put("content", content);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    writeComment_button.setText("");
+                                }
+                            });
+                        }
+                    });
                 }
-
-                HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                writeComment_button.setText("");
-                            }
-                        });
-                    }
-                });
             }
         });
 

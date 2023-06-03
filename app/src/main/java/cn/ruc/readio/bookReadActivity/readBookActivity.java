@@ -91,7 +91,7 @@ public class readBookActivity extends Activity {
         myAdapter.setNewViewList(viewContainer);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
+            @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
@@ -149,7 +149,7 @@ public class readBookActivity extends Activity {
             public void onPageScrollStateChanged(int state) {
                 if (state != pager.SCROLL_STATE_IDLE) return;
                 pager.setCurrentItem(nPosition, false);
-                }
+            }
 
             public void addPage(String text) {
                 LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);

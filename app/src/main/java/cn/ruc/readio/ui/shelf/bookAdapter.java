@@ -82,10 +82,8 @@ public class bookAdapter extends BaseAdapter {
                         Tools.getImageBitmapAsyn(books.getCoverID(),holder.cover,shelfFragment.shelffrag.getActivity());
 //                        Bitmap bookCoverBitmap = Tools.getImageBitmapSyn(shelfFragment.shelffrag.getActivity(), books.getCoverID());
 //                        holder.cover.setImageBitmap(bookCoverBitmap);
-                    } catch (IOException e) {
-                        Tools.my_toast(shelfFragment.shelffrag.getActivity(),"封面获取失败");
-                    } catch (ParseException e) {
-                        Tools.my_toast(shelfFragment.shelffrag.getActivity(),"封面获取失败");
+                    } catch (IOException | ParseException e) {
+                        Tools.my_toast(Objects.requireNonNull(shelfFragment.shelffrag.getActivity()),"封面获取失败");
                     }
 
 
@@ -99,6 +97,7 @@ public class bookAdapter extends BaseAdapter {
                 read_intent.setClass(context, readBookActivity.class);
                 read_intent.putExtra("BookName",bookList.get(position).getBookName());
                 read_intent.putExtra("Author",bookList.get(position).getAuthor());
+                read_intent.putExtra("BookID",bookList.get(position).getBookID());
                 context.startActivity(read_intent);
             });
 

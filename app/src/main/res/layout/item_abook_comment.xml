@@ -84,14 +84,14 @@
                 <LinearLayout
                     android:id="@+id/commentpart"
                     android:layout_width="wrap_content"
-                    android:layout_height="16dp"
+                    android:layout_height="20dp"
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/likepart"
                     android:layout_marginEnd="20dp">
                     <ImageView
                         android:id="@+id/commentButton"
                         android:layout_width="18dp"
-                        android:layout_height="16dp"
+                        android:layout_height="match_parent"
                         android:src="@drawable/thepinglun"
                         android:contentDescription="comments"
                         android:layout_marginRight="1.5dp"/>
@@ -99,6 +99,8 @@
                         android:id="@+id/ChildCommentNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
                         android:text="0"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -106,7 +108,7 @@
                 <LinearLayout
                     android:id="@+id/likepart"
                     android:layout_width="wrap_content"
-                    android:layout_height="16dp"
+                    android:layout_height="20dp"
                     android:orientation="horizontal"
                     android:layout_alignParentEnd="true">
                     <ImageView
@@ -120,7 +122,9 @@
                         android:id="@+id/likePieceCommentNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="162"
+                        android:layout_marginLeft="5dp"
                         android:textSize="12sp"/>
                 </LinearLayout>
             </RelativeLayout>

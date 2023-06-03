@@ -2,6 +2,7 @@ package cn.ruc.readio;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +43,11 @@ public class MainActivity extends AppCompatActivity {
         //初始化HttpUtil
         String tmpUrl = HttpUtil.readHttpHost(this);
         if(tmpUrl != null && !tmpUrl.isEmpty()){
-            HttpUtil.BASE_URL = tmpUrl;
+            if(tmpUrl.equals("killuayz.top")){
+                HttpUtil.setBaseUrl_Tencent(this);
+            }else{
+                HttpUtil.setBaseUrl_550w(this);
+            }
         }else{
             HttpUtil.setBaseUrl_Tencent(this);
         }

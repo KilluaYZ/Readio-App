@@ -93,7 +93,6 @@ public class PieceComments {
             likesNum--;
         }
         JSONObject json = new JSONObject();
-
         json.put("bookId",bookId);
         json.put("commentId",String.valueOf(commentID));
         json.put("like",like);

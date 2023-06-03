@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -45,11 +44,10 @@ public class allCommentActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_comment);
-        if (Build.VERSION.SDK_INT >= 21){
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }  //用于调整状态栏为透明色
+        /*调整状态栏为透明色*/
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
         /*接受传递的消息*/
         Intent intent = getIntent();
 
@@ -90,13 +88,14 @@ public class allCommentActivity extends AppCompatActivity {
         HttpUtil.getRequestWithTokenAsyn(this,"/app/book/"+ BookID, new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
                     /*获取所有书籍信息*/
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
 
@@ -142,7 +141,7 @@ public class allCommentActivity extends AppCompatActivity {
         HttpUtil.getRequestAsyn("/user/get", queryParam, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -193,8 +192,8 @@ public class allCommentActivity extends AppCompatActivity {
         });
         return user;
     }
-    private void mtoast(String msg){
-        runOnUiThread(() -> Toast.makeText(allCommentActivity.this,msg,Toast.LENGTH_LONG).show());
+    private void mtoast(){
+        runOnUiThread(() -> Toast.makeText(allCommentActivity.this, "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
 
     int get_childcommentnum(String commentId,int i) {
@@ -202,7 +201,7 @@ public class allCommentActivity extends AppCompatActivity {
         HttpUtil.getRequestAsyn("app/book/"+BookID+"/comment/"+commentId, new ArrayList<>() ,new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override

@@ -19,6 +19,11 @@
     <string name="comment">评论</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="spinner_data1">
+        <item>书名</item>
+        <item>作者</item>
+    </string-array>
+
 
 
 </resources>

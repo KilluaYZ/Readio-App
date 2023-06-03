@@ -6,14 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,8 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.util.HttpUtil;
@@ -66,12 +59,7 @@ public class writeCommentActivity extends AppCompatActivity {
 
         /*写评论部分*/
         edit_comment = findViewById(R.id.edit_comment);
-        edit_comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edit_comment.requestFocus();
-            }
-        });
+        edit_comment.setOnClickListener(v -> edit_comment.requestFocus());
 
         /*设置限制字数显示*/
         word_count=findViewById(R.id.word_count);
@@ -90,7 +78,7 @@ public class writeCommentActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             public void afterTextChanged(Editable s) {
                 if (s.length() > 500) {
-                    edit_comment.setText(s.toString().substring(0, 500)); //设置EditText只显示前面6位字符
+                    edit_comment.setText(s.toString().substring(0, 500)); //设置EditText只显示前面500位字符
                     edit_comment.setSelection(500);//让光标移至末端
                     Toast.makeText(writeCommentActivity.this, "输入字数已达上限", Toast.LENGTH_SHORT).show();
                 } else {
@@ -110,19 +98,16 @@ public class writeCommentActivity extends AppCompatActivity {
 
         /*设置发送评论按钮*/
         ImageButton send_button=findViewById(R.id.send_button);
-        send_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                comment_content=edit_comment.getText().toString();
-                try {
-                    sendcomment();
-                    Tools.my_toast(writeCommentActivity.this,"发表评论成功");
-                    edit_comment.setText("");
-                } catch (IOException e) {
-                    //Tools.my_toast(writeCommentActivity.this,"加载出错啦！");
-                    Toast.makeText(writeCommentActivity.this,"发表评论失败",Toast.LENGTH_SHORT).show();
-                    Log.d("response_msg", response_msg);
-                }
+        send_button.setOnClickListener(v -> {
+            comment_content=edit_comment.getText().toString();
+            try {
+                sendcomment();
+                Tools.my_toast(writeCommentActivity.this,"发表评论成功");
+                edit_comment.setText("");
+            } catch (IOException e) {
+                //Tools.my_toast(writeCommentActivity.this,"加载出错啦！");
+                Toast.makeText(writeCommentActivity.this,"发表评论失败",Toast.LENGTH_SHORT).show();
+                Log.d("response_msg", response_msg);
             }
         });
 
@@ -139,11 +124,12 @@ public class writeCommentActivity extends AppCompatActivity {
         HttpUtil.postRequestWithTokenJsonAsyn(writeCommentActivity.this ,"/app/book/"+BookID+"/comments/add", jsonString.toString(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     response_code = jsonObject.getString("code");
                     response_msg=jsonObject.optString("msg","null");
@@ -153,7 +139,7 @@ public class writeCommentActivity extends AppCompatActivity {
             }
         });
     }
-    private void mtoast(String msg){
-        runOnUiThread(() -> Toast.makeText(writeCommentActivity.this,msg,Toast.LENGTH_LONG).show());
+    private void mtoast(){
+        runOnUiThread(() -> Toast.makeText(writeCommentActivity.this, "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
 }

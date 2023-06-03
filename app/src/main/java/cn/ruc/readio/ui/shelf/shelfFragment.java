@@ -1,25 +1,20 @@
 package cn.ruc.readio.ui.shelf;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.util.Log;
-import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,17 +26,12 @@ import java.util.List;
 import java.util.Objects;
 
 
-import cn.ruc.readio.MainActivity;
-import cn.ruc.readio.R;
-import cn.ruc.readio.bookReadActivity.bookDetailActivity;
-import cn.ruc.readio.bookReadActivity.readBookActivity;
 import cn.ruc.readio.databinding.FragmentShelfBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import okhttp3.Callback;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class shelfFragment extends Fragment {
@@ -52,6 +42,10 @@ public class shelfFragment extends Fragment {
     static public Fragment shelffrag;
 
     private List<BookItem> lists;
+    private TextView search_button;
+    private EditText search_edit;
+    private String search_content,select_content;
+    private Spinner spinner;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,9 +68,30 @@ public class shelfFragment extends Fragment {
                 Toast.makeText(getActivity(),"您的书架里还没有书呐！\n快往里头添加一些吧！",Toast.LENGTH_SHORT).show();
             }
         }
-        //lists=getData();
-        grid_view = binding.bookGridview;
+        /*下拉选择框*/
+        spinner=binding.spinner;
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                select_content=parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //在下拉选项种选择了本来选的东西，也就是说没改变选项，调用这个
+            }
+        });
+        /*搜索按钮*/
+        search_edit=binding.edittext;
+        search_button=binding.search;
+        search_button.setOnClickListener(view -> {
+            search_content=search_edit.getText().toString();
+            Intent intent = new Intent(getContext(), searchBookActivity.class);
+            intent.putExtra("search_content", search_content);
+            intent.putExtra("select_content",select_content);
+            Objects.requireNonNull(getContext()).startActivity(intent);
+        });
 
+        grid_view = binding.bookGridview;
         bookAdapter myAdapter = new bookAdapter(getContext(),lists);
         grid_view.setAdapter(myAdapter);
 
@@ -98,69 +113,35 @@ public class shelfFragment extends Fragment {
         return data;
     }
 
-
     public void refreshData(){
         HttpUtil.getRequestWithTokenAsyn(getActivity(),"/app/books/list",new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
+                mtoast();
             }
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 try {
-                    Log.d("正在获取报文", "onResponse:ll ");
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");
                     int mybook_num = data.getInt("size");
                     JSONArray mybook_list = data.getJSONArray("data");
                     if (mybook_num == 0) {
                         if_empty = 1;
-                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getActivity(), "您的书架里还没有书呐！\n快往里头添加一些吧！", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "您的书架里还没有书呐！\n快往里头添加一些吧！", Toast.LENGTH_SHORT).show());
                     } else {
                         for (int i = 0; i < mybook_list.length(); i++) {
-                            Log.d("正在分割数据", "onResponse: dd");
                             JSONObject mybook = mybook_list.getJSONObject(i);
                             BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"), mybook.optString("coverId"));
                             book.setBookID(mybook.getString("id"));
                             lists.add(book);
                         }
-                        Log.d("书籍列表", "正在更新");
-                        Log.d("书籍列表", String.valueOf(lists.size()));
-                        /*获取封面*/
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                for (int i = 0; i < lists.size(); ++i) {
-//                                    if(lists.get(i).getCoverID()!="null") {
-//                                        Bitmap pic = HttpUtil.getAvaSyn(lists.get(i).getCoverID());
-//                                        lists.get(i).setCover(pic);
-//                                    }
-//                                    Log.d("bookadpter", "需要更新");
-//                                }
-                                if(getActivity() != null){
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            bookAdapter myAdapter = new bookAdapter(getContext(), lists);
-                                            binding.bookGridview.setAdapter(myAdapter);
-                                        }
-                                    });
-                                }
-                            }
-                        }).start();
 
-                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d("bookadpter", "正在更新");
-                                bookAdapter myAdapter = new bookAdapter(getContext(), lists);
-                                binding.bookGridview.setAdapter(myAdapter);
-                            }
+                        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+                            Log.d("bookadpter", "正在更新");
+                            bookAdapter myAdapter = new bookAdapter(getContext(), lists);
+                            binding.bookGridview.setAdapter(myAdapter);
                         });
                     }
                 } catch (JSONException e) {
@@ -170,8 +151,7 @@ public class shelfFragment extends Fragment {
         });
     }
 
-
-    private void  mtoast(String msg){
-        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show());
+    private void  mtoast(){
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
 }

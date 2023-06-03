@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="200dp">
     <androidx.cardview.widget.CardView
         android:id="@+id/comment_card"
         android:layout_width="match_parent"
@@ -45,19 +45,27 @@
                 android:layout_marginEnd="15dp"
                 android:textSize="18sp"
                 android:text="呆头鹅"
-                android:fontFamily="@font/yuanti"/>
+                android:fontFamily="@font/yuanti"
+                app:autoSizeMaxTextSize="20sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"/>
 
             <TextView
                 android:id="@+id/commentContentText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/comment_user_avator"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
+                android:layout_marginBottom="22dp"
                 android:fontFamily="@font/jianti"
                 android:text="好棒棒哦，呆头鹅好喜欢"
-                android:textSize="16sp" />
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"/>
 
             <RelativeLayout
                 android:id="@+id/lowRelativelayout"
@@ -80,7 +88,7 @@
                     android:id="@+id/commentpart"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_alignParentTop="true"
+                    android:orientation="horizontal"
                     android:layout_toStartOf="@+id/likepart"
                     android:layout_marginEnd="20dp">
                     <ImageView
@@ -89,13 +97,13 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/thepinglun"
                         android:contentDescription="comments"
-                        android:layout_marginRight="1.5dp"/>
+                        android:layout_marginEnd="1.5dp"/>
                     <TextView
                         android:id="@+id/ChildCommentNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="0"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -117,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="0"
                         android:textSize="12sp"/>
                 </LinearLayout>

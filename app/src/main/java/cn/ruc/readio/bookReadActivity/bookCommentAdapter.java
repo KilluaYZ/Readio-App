@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -41,7 +43,8 @@ public class bookCommentAdapter extends RecyclerView.Adapter<bookCommentAdapter.
         private final TextView likesNum,child_commentNum;
         private final TextView date;
         private final ImageView userAvator;
-        private ImageView likePieceComment_button;
+        private final ImageView likePieceComment_button;
+        private LinearLayout likepart;
         private final CardView jumpView;
         public ViewHolder(View view){
             super(view);
@@ -51,6 +54,7 @@ public class bookCommentAdapter extends RecyclerView.Adapter<bookCommentAdapter.
             date=view.findViewById(R.id.commentTimeText);
             child_commentNum=view.findViewById(R.id.ChildCommentNum);
             likePieceComment_button = view.findViewById(R.id.likePieceCommentButton);
+            likepart=view.findViewById(R.id.likepart);
             likesNum = view.findViewById(R.id.likePieceCommentNum);
             jumpView=view.findViewById(R.id.comment_card);
         }
@@ -72,29 +76,35 @@ public class bookCommentAdapter extends RecyclerView.Adapter<bookCommentAdapter.
         holder.child_commentNum.setText(String.valueOf(comment.getChildCommentNum()));
         holder.date.setText(comment.getDate());
         holder.userAvator.setImageBitmap(comment.getUserAvator());
+
         holder.jumpView.setOnClickListener(view -> {
-            Intent intent=new Intent();
+            Toast.makeText(context,"评论详情，待开发...",Toast.LENGTH_SHORT).show();
+            /*Intent intent=new Intent();
             intent.setClass(context, commentDetailActivity.class);
-            context.startActivity(intent);
+            context.startActivity(intent);*/
         });
 
         /*设置点赞按钮*/
         /*初始化*/
-        if(Objects.equals(comment.getIf_liked(), "true")){
+        if (Objects.equals(comment.getIf_liked(), "true")) {
             if_like_this_comment=1;
-        }else{
-            if_like_this_comment=0;
-        }
-        if(if_like_this_comment==1){
             holder.likePieceComment_button.setImageResource(R.drawable.like_thumb_up);
-        }else{
+        } else {
+            if_like_this_comment=0;
             holder.likePieceComment_button.setImageResource(R.drawable.thumb_up);
         }
         /*点赞事件*/
         for(int i=0;i<CommentsList.size();i++){
             like_comment_times.add(0);
         }
-        holder.likePieceComment_button.setOnClickListener(view1 -> {
+        holder.likepart.setOnClickListener(view1 -> {
+            if (Objects.equals(comment.getIf_liked(), "true")) {
+                if_like_this_comment=1;
+                holder.likePieceComment_button.setImageResource(R.drawable.like_thumb_up);
+            } else {
+                if_like_this_comment=0;
+                holder.likePieceComment_button.setImageResource(R.drawable.thumb_up);
+            }
             like_comment_times.set(position, like_comment_times.get(position) + 1);
             if ((if_like_this_comment + like_comment_times.get(position)) % 2 == 0) {
                 try {

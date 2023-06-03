@@ -118,7 +118,7 @@ public class bookDetailActivity extends AppCompatActivity{
             Intent read_intent=new Intent(bookDetailActivity.this,readBookActivity.class);
             read_intent.putExtra("BookName",BookName);
             read_intent.putExtra("Author",Author);
-            read_intent.putExtra("BookID",BookID);
+            read_intent.putExtra("BookID",String.valueOf(BookID));
             startActivity(read_intent);
         });
 

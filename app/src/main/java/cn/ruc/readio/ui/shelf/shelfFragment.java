@@ -126,6 +126,7 @@ public class shelfFragment extends Fragment {
                             Log.d("正在分割数据", "onResponse: dd");
                             JSONObject mybook = mybook_list.getJSONObject(i);
                             BookItem book = new BookItem(mybook.getString("bookName"), mybook.optString("authorID"), mybook.optString("coverId"));
+                            book.setBookID(mybook.getString("id"));
                             lists.add(book);
                         }
                         Log.d("书籍列表", "正在更新");

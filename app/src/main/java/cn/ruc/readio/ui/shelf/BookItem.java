@@ -9,6 +9,7 @@ import cn.ruc.readio.R;
 
 public class BookItem {
     private String BookName;
+    private String BookID;
     private final String Author;
     private Bitmap Cover;
     private String CoverID;
@@ -26,6 +27,7 @@ public class BookItem {
     public String getCoverID() {
         return CoverID;
     }
+    public String getBookID(){return BookID;}
 
     public BookItem(String BookName, String Author, String coverID) {
         //this.img=img;
@@ -49,6 +51,9 @@ public class BookItem {
     }
     public void setCoverID(String CoverID){
         this.CoverID = CoverID;
+    }
+    public void setBookID(String BookID){
+        this.BookID=BookID;
     }
 }
 

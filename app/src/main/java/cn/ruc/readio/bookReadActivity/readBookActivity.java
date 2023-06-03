@@ -1,9 +1,6 @@
 package cn.ruc.readio.bookReadActivity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -39,11 +36,9 @@ public class readBookActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_book);
-        if (Build.VERSION.SDK_INT >= 21){
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }  //用于调整状态栏为透明色
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         /*接受传递的消息*/
         Intent intent = getIntent();
@@ -71,6 +66,7 @@ public class readBookActivity extends Activity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
+                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject bookinfo = jsonObject.getJSONObject("data");
 
@@ -88,10 +84,8 @@ public class readBookActivity extends Activity {
                         bookcontent.add(Pair.create(contenti.getString("ChapterName"),contenti.getString("Text")));
                     }
                     my_book.setContent(bookcontent);
-                    readBookActivity.this.runOnUiThread(() -> {
-                        textView1.setText(my_book.getChapter(0));
-                    });
-                } catch (JSONException ex) {
+                    readBookActivity.this.runOnUiThread(() -> textView1.setText(my_book.getChapter(0)));
+                } catch (JSONException e) {
                     Tools.my_toast(readBookActivity.this, "子评论数量加载失败");
                 }
             }

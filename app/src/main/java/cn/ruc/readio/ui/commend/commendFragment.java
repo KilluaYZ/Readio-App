@@ -177,27 +177,6 @@ public class commendFragment extends Fragment {
             }
         });
     }
-    /*获取书籍名称和作者名称的函数，等待api中...*/
-    /*public void get_bookinfo(int BookID) {
-        HttpUtil.getRequestAsyn("/app/book/" + BookID, new ArrayList<>(), new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                mtoast("请求异常，加载不出来");
-            }
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                try {
-
-                    assert response.body() != null;
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    JSONObject data = jsonObject.getJSONObject("data");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
 
     private void  mtoast(){
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "请求异常，加载不出来",Toast.LENGTH_LONG).show());

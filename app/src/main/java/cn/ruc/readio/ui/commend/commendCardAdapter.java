@@ -85,7 +85,4 @@ public class commendCardAdapter extends RecyclerView.Adapter<commendCardAdapter.
     public int getItemCount() {
         return lists.size();
     }
-
-
-
 }

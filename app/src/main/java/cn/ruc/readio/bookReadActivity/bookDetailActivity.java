@@ -349,7 +349,7 @@ public class bookDetailActivity extends AppCompatActivity{
                             User user = get_userinfo(comment_item.getString("userId"),i);
                             PieceComments comment = new PieceComments(comment_item.getString("content"), comment_item.getInt("likes"), user);
                             comment.setBookId(String.valueOf(BookID));
-                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setCommentId(Integer.parseInt(comment_item.getString("commentId")));
                             comment.setLikesNum(comment_item.getInt("likes"));
                             comment.setDate(comment_item.getString("createTime"));
                             comment.setIf_liked(comment_item.getString("liked"));

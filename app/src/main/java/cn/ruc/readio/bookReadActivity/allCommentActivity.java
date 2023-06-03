@@ -114,7 +114,7 @@ public class allCommentActivity extends AppCompatActivity {
                             user.setAvaID(String.valueOf(R.drawable.juicy_orange_smile_icon));
                             PieceComments comment = new PieceComments(comment_item.getString("content"),comment_item.getInt("likes"),user);
                             comment.setBookId(String.valueOf(BookID));
-                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setCommentId(Integer.parseInt(comment_item.getString("commentId")));
                             comment.setLikesNum(comment_item.getInt("likes"));
                             comment.setDate(comment_item.getString("createTime"));
                             comment.setIf_liked(comment_item.getString("liked"));

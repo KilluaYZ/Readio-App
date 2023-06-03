@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +54,19 @@ public class readWorksActivity extends AppCompatActivity {
     private ActivityReadWorksBinding binding;
     private String pieceId;
 
+    public RecyclerView recyclerView;
+
+    public EditText fragment_comment_bar_editText;
+
+    public ImageView fragment_comment_reply_bar_btn;
+    private ImageView fragment_comment_cancel_reply_btn;
+
+    private Boolean isReply = false;
+
     private User user;
+
+    private String workId;
+    private int replyCommentId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -64,7 +78,7 @@ public class readWorksActivity extends AppCompatActivity {
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        String workId;
+
         Intent intent = getIntent();
         workId = intent.getStringExtra("extra_data");
         TextView follow_button = (TextView) findViewById(R.id.followAuthorButton);
@@ -79,6 +93,7 @@ public class readWorksActivity extends AppCompatActivity {
         TextView userName = (TextView) findViewById(R.id.readUserNameText);
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
         TextView updateTimeTextView = (TextView) findViewById(R.id.updateTimeTextView);
+
 
         ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
         queryParam.add(new Pair<>("piecesId",workId));
@@ -128,7 +143,14 @@ public class readWorksActivity extends AppCompatActivity {
                                     if(user.getSubscribed()){
                                         follow_button.setVisibility(View.GONE);
                                     }
-
+                                    //从server获取评论
+                                    JSONArray commentArray = data.getJSONArray("comments");
+                                    for(int i = 0;i < commentArray.length();++i){
+                                        JSONObject commentObj = commentArray.getJSONObject(i);
+                                        PieceComments pieceComments = new PieceComments();
+                                        pieceComments.fromJsonObj(commentObj);
+                                        comment_list.add(pieceComments);
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 } catch (IOException | ParseException e) {
@@ -195,11 +217,36 @@ public class readWorksActivity extends AppCompatActivity {
                 /*
                 发送评论给数据库
                  */
-                Toast.makeText(readWorksActivity.this, "已发送~", Toast.LENGTH_SHORT).show();
-                writeComment_button.setText("");
+
                 /*
                 刷新评论区页面？
                  */
+                //正常发送模式
+                String content = writeComment_button.getText().toString();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("piecesId", workId);
+                    jsonObject.put("content", content);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeComment_button.setText("");
+                            }
+                        });
+                    }
+                });
             }
         });
 
@@ -248,11 +295,11 @@ public class readWorksActivity extends AppCompatActivity {
         });
 
         read_comment_button.setOnClickListener(view -> {
-            for(int i = 0; i < 10; i++ ){
-                User user = new User("呆头鹅","2020201694@ruc.edu.cn","123456");
-            PieceComments commenti = new PieceComments("好棒",12,user);
-            comment_list.add(commenti);
-            }
+//            for(int i = 0; i < 10; i++ ){
+//                User user = new User("呆头鹅","2020201694@ruc.edu.cn","123456");
+//            PieceComments commenti = new PieceComments("好棒",12,user);
+//            comment_list.add(commenti);
+//            }
             bottomsheet();
         });
         collect_button.setOnClickListener(new View.OnClickListener() {
@@ -291,6 +338,8 @@ public class readWorksActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     private void bottomsheet(){
@@ -298,10 +347,31 @@ public class readWorksActivity extends AppCompatActivity {
                 //创建布局
                 View view = LayoutInflater.from(this).inflate(R.layout.work_comment_bottomsheet, null, false);
                 bottomSheetDialog = new mBottomSheetDialog(this, R.style.work_comment_bottomsheet);
-                RecyclerView recyclerView = view.findViewById(R.id.dialog_recycleView);
+                recyclerView = view.findViewById(R.id.dialog_recycleView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                pieceCommentAdapter mainAdapter = new pieceCommentAdapter(bottomSheetDialog.getContext(), comment_list);
+                pieceCommentAdapter mainAdapter = new pieceCommentAdapter(readWorksActivity.this, comment_list);
                 recyclerView.setAdapter(mainAdapter);
+
+                fragment_comment_bar_editText = (EditText) view.findViewById(R.id.fragment_comment_bar_editText);
+                fragment_comment_reply_bar_btn = (ImageView) view.findViewById(R.id.fragment_comment_reply_bar_btn);
+                fragment_comment_cancel_reply_btn = (ImageView) view.findViewById(R.id.fragment_comment_cancel_reply_btn);
+                fragment_comment_reply_bar_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            onCLickedCommentBtn();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+                fragment_comment_cancel_reply_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        endReplyMode();
+                    }
+                });
 
                 //设置点击dialog外部不消失
                 bottomSheetDialog.setCanceledOnTouchOutside(true);
@@ -343,6 +413,46 @@ public class readWorksActivity extends AppCompatActivity {
         return heightPixels - heightPixels / 4;
     }
 
+    public void refreshCommentData(){
+        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+        queryParam.add(new Pair<>("piecesId",workId));
+        HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/getPiecesDetail", queryParam, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Tools.my_toast(readWorksActivity.this, "刷新数据失败，请检查网络连接");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.code() == 200){
+                    try {
+                        comment_list.clear();
+                        JSONObject jsonObject = new JSONObject(response.body().string()).getJSONObject("data");
+                        //从server获取评论
+                        JSONArray commentArray = jsonObject.getJSONArray("comments");
+                        for(int i = 0;i < commentArray.length();++i){
+                            JSONObject commentObj = commentArray.getJSONObject(i);
+                            PieceComments pieceComments = new PieceComments();
+                            pieceComments.fromJsonObj(commentObj);
+                            comment_list.add(pieceComments);
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }else{
+
+                }
+            }
+        });
+    }
+
     private void mtoast(String msg){
         runOnUiThread(new Runnable() {
             @Override
@@ -350,6 +460,77 @@ public class readWorksActivity extends AppCompatActivity {
                 Toast.makeText(readWorksActivity.this,msg,Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void startReplyMode(PieceComments comment){
+        User toUser = comment.getUser();
+        replyCommentId = comment.getCommentId();
+        fragment_comment_bar_editText.setHint("@"+toUser.getUserName());
+        fragment_comment_cancel_reply_btn.setVisibility(View.VISIBLE);
+        isReply = true;
+    }
+
+    public void endReplyMode(){
+        fragment_comment_bar_editText.setHint("评论一下吧~");
+        fragment_comment_cancel_reply_btn.setVisibility(View.GONE);
+        replyCommentId = -1;
+        isReply = false;
+    }
+
+    public void onCLickedCommentBtn() throws JSONException {
+        if(isReply && replyCommentId != -1){
+            //回复模式
+            int commentId = replyCommentId;
+            String content = fragment_comment_bar_editText.getText().toString();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("commentId", commentId);
+            jsonObject.put("content", content);
+            HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/reply", jsonObject.toString(), new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Tools.my_toast(readWorksActivity.this, "发送成功");
+                    refreshCommentData();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment_comment_bar_editText.setText("");
+                        }
+                    });
+                    endReplyMode();
+                }
+            });
+
+        }else{
+            //正常发送模式
+            String content = fragment_comment_bar_editText.getText().toString();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("piecesId", workId);
+            jsonObject.put("content", content);
+            HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Tools.my_toast(readWorksActivity.this, "发送成功");
+                    refreshCommentData();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment_comment_bar_editText.setText("");
+                        }
+                    });
+                    endReplyMode();
+                }
+            });
+        }
     }
 
 }

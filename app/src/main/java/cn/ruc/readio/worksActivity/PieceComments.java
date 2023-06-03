@@ -1,18 +1,12 @@
 package cn.ruc.readio.worksActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
-import android.util.Pair;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
@@ -22,14 +16,35 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class PieceComments {
-    private int commentID;
+    private int commentId;
     private String bookId;
     private String content;
+    private int piecesId;
     private User user;
     private String date;
-    private int likesNum;
+    private int likesNum = 0;
     private int childCommentNum;
     private String if_liked;
+    private Boolean isYours;
+    private User toUser;
+
+    private Boolean liked = false;
+
+    public Boolean getLiked() {
+        return liked;
+    }
+
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
+    }
+
+    public User getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(User toUser) {
+        this.toUser = toUser;
+    }
 
     public PieceComments(String content, int LikesNum, User user) {
         this.content = content;
@@ -40,8 +55,17 @@ public class PieceComments {
     public PieceComments(){
 
     }
-    public int getCommentID(){
-        return commentID;
+
+    public int getPiecesId() {
+        return piecesId;
+    }
+
+    public void setPiecesId(int piecesId) {
+        this.piecesId = piecesId;
+    }
+
+    public int getCommentId(){
+        return commentId;
     }
     public String getContent(){
         return content;
@@ -59,8 +83,8 @@ public class PieceComments {
     public String getIf_liked(){return if_liked;}
     public String getBookId(){return bookId;}
 
-    public void setCommentID(int id){
-        this.commentID = id;
+    public void setCommentId(int id){
+        this.commentId = id;
     }
 
     public void setContent(String content) {
@@ -86,6 +110,14 @@ public class PieceComments {
         this.bookId = bookId;
     }
 
+    public void setYours(Boolean yours) {
+        isYours = yours;
+    }
+
+    public Boolean getYours() {
+        return isYours;
+    }
+
     public void bookcomment_like(Activity act, int like) throws JSONException {
         if(like==1){
             likesNum++;
@@ -94,9 +126,9 @@ public class PieceComments {
         }
         JSONObject json = new JSONObject();
         json.put("bookId",bookId);
-        json.put("commentId",String.valueOf(commentID));
+        json.put("commentId",String.valueOf(commentId));
         json.put("like",like);
-        HttpUtil.postRequestWithTokenJsonAsyn(act, "/app/book/"+bookId+"/comments/"+commentID+"/update", json.toString(), new Callback() {
+        HttpUtil.postRequestWithTokenJsonAsyn(act, "/app/book/"+bookId+"/comments/"+ commentId +"/update", json.toString(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Tools.my_toast(act,"点赞失败，请检查网络");
@@ -107,5 +139,38 @@ public class PieceComments {
                 //Tools.my_toast(act,"点赞成功！");
             }
         });
+    }
+
+    public void fromJsonObj(JSONObject jsonObject) throws JSONException {
+        if(jsonObject.has("commentId")){
+            this.commentId = jsonObject.getInt("commentId");
+        }
+
+        if(jsonObject.has("content")){
+            this.content = jsonObject.getString("content");
+        }
+
+        if(jsonObject.has("createTime")){
+            this.date = jsonObject.getString("createTime");
+        }
+        if(jsonObject.has("user")){
+            User tmp_user = new User();
+            tmp_user.fromJSONObject(jsonObject.getJSONObject("user"));
+            this.user = tmp_user;
+        }
+        if(jsonObject.has("toUser") && !jsonObject.get("toUser").toString().equals("null")){
+            User tmp_user = new User();
+            tmp_user.fromJSONObject(jsonObject.getJSONObject("toUser"));
+            this.toUser = tmp_user;
+        }
+        if(jsonObject.has("isYours")){
+            this.isYours = jsonObject.getBoolean("isYours");
+        }
+        if(jsonObject.has("liked")){
+            this.liked = jsonObject.getBoolean("liked");
+        }
+        if(jsonObject.has("likes")){
+            this.likesNum = jsonObject.getInt("likes");
+        }
     }
 }

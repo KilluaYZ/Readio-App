@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,12 +27,10 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.ruc.readio.R;
-import cn.ruc.readio.ui.commend.commendCardAdapter;
 import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import cn.ruc.readio.worksActivity.PieceComments;
-import cn.ruc.readio.worksActivity.pieceCommentAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -118,7 +115,7 @@ public class allCommentActivity extends AppCompatActivity {
                             user.setAvaID(String.valueOf(R.drawable.juicy_orange_smile_icon));
                             PieceComments comment = new PieceComments(comment_item.getString("content"),comment_item.getInt("likes"),user);
                             comment.setBookId(String.valueOf(BookID));
-                            comment.setCommentID(Integer.parseInt(comment_item.getString("commentId")));
+                            comment.setCommentId(Integer.parseInt(comment_item.getString("commentId")));
                             comment.setLikesNum(comment_item.getInt("likes"));
                             comment.setDate(comment_item.getString("createTime"));
                             comment.setIf_liked(comment_item.getString("liked"));

@@ -76,12 +76,33 @@
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true">
 
+<!--                <ImageView-->
+<!--                    android:layout_marginLeft="5dp"-->
+<!--                    android:textAlignment="viewEnd"-->
+<!--                    android:id="@+id/delete_comment_btn"-->
+<!--                    android:layout_width="20dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:src="@drawable/trush_bin"/>-->
+
                 <TextView
-                    android:layout_marginRight="5dp"
-                    android:id="@+id/likePieceCommentNum"
+                    android:layout_marginBottom="2dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="162"/>
+                    android:layout_height="20dp"
+                    android:id="@+id/delete_comment_btn"
+                    android:layout_marginRight="5dp"
+                    android:text="删除"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:textAlignment="viewEnd"
+                    android:id="@+id/reply_send_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/another_comment"/>
 
                 <ImageView
                     android:layout_marginLeft="5dp"
@@ -91,13 +112,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/likecomment"/>
-                <ImageView
-                    android:layout_marginLeft="5dp"
-                    android:textAlignment="viewEnd"
-                    android:id="@+id/reply_send_btn"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/another_comment"/>
+
+                <TextView
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/likePieceCommentNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="162"/>
+
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

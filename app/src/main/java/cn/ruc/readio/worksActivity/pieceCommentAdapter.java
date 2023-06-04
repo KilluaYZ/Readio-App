@@ -46,6 +46,8 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
         private TextView commentTime;
         private ImageView likePieceCommentButton;
         private  ImageView reply_send_btn;
+
+        private TextView delete_comment_btn;
         public ViewHolder(View view){
             super(view);
             commentContent = view.findViewById(R.id.commentContentText);
@@ -56,6 +58,7 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
             commentTime = view.findViewById(R.id.commentTimeText);
             likePieceCommentButton = view.findViewById(R.id.likePieceCommentButton);
             reply_send_btn = view.findViewById(R.id.reply_send_btn);
+            delete_comment_btn = view.findViewById(R.id.delete_comment_btn);
         }
     }
 
@@ -165,6 +168,31 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
             @Override
             public void onClick(View v) {
                 activity.startReplyMode(comment);
+            }
+        });
+
+        if(comment.getYours()){
+            holder.delete_comment_btn.setVisibility(View.VISIBLE);
+        }else{
+            holder.delete_comment_btn.setVisibility(View.GONE);
+        }
+
+        holder.delete_comment_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
+                queryParam.add(Pair.create("commentId", String.valueOf(comment.getCommentId())));
+                HttpUtil.getRequestWithTokenAsyn(activity, "/works/pieces/comments/del", queryParam, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(activity, "删除失败，请检查网络连接");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        activity.refreshCommentData();
+                    }
+                });
             }
         });
 

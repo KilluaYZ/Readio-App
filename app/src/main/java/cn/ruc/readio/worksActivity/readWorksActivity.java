@@ -469,16 +469,26 @@ public class readWorksActivity extends AppCompatActivity {
     public void startReplyMode(PieceComments comment){
         User toUser = comment.getUser();
         replyCommentId = comment.getCommentId();
-        fragment_comment_bar_editText.setHint("@"+toUser.getUserName());
-        fragment_comment_cancel_reply_btn.setVisibility(View.VISIBLE);
         isReply = true;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fragment_comment_bar_editText.setHint("@"+toUser.getUserName());
+                fragment_comment_cancel_reply_btn.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     public void endReplyMode(){
-        fragment_comment_bar_editText.setHint("评论一下吧~");
-        fragment_comment_cancel_reply_btn.setVisibility(View.GONE);
         replyCommentId = -1;
         isReply = false;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fragment_comment_bar_editText.setHint("评论一下吧~");
+                fragment_comment_cancel_reply_btn.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void onCLickedCommentBtn() throws JSONException {

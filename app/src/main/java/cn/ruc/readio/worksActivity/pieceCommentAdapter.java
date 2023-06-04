@@ -89,6 +89,8 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
             User toUser = comment.getToUser();
             String toUserText = "  @"+toUser.getUserName();
             holder.replyToUser.setText(toUserText);
+        }else{
+            holder.replyToUser.setText("");
         }
 
         try {

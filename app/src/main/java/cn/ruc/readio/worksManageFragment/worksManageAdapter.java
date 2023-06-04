@@ -3,11 +3,10 @@ package cn.ruc.readio.worksManageFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.userPageActivity.ReEditActivity;
+import cn.ruc.readio.entity.userPageActivity.ReEditActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import cn.ruc.readio.worksActivity.readWorksActivity;
-import cn.ruc.readio.worksManageFragment.publishedManageFragment;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -26,8 +25,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import androidx.annotation.NonNull;
-
-import com.google.android.material.card.MaterialCardView;
 
 import java.io.IOException;
 import java.util.ArrayList;

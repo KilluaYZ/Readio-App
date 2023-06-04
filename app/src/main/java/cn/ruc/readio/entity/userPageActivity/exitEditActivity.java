@@ -1,14 +1,11 @@
-package cn.ruc.readio.userPageActivity;
-
-import androidx.appcompat.app.AppCompatActivity;
+package cn.ruc.readio.entity.userPageActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.w3c.dom.Text;
+
 import cn.ruc.readio.R;
 
 public class exitEditActivity extends Activity {

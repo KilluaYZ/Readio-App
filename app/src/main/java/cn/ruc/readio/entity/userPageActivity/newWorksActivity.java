@@ -1,13 +1,7 @@
-package cn.ruc.readio.userPageActivity;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
+package cn.ruc.readio.entity.userPageActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,9 +11,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -30,9 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.ruc.readio.databinding.ActivityMainBinding;
-import cn.ruc.readio.databinding.ActivityNewWorksBinding;
-import cn.ruc.readio.ui.works.Works;
 import cn.ruc.readio.util.HttpUtil;
 
 import java.io.IOException;

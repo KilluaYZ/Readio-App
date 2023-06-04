@@ -1,7 +1,4 @@
-package cn.ruc.readio.userPageActivity;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.datastore.preferences.core.Preferences;
+package cn.ruc.readio.entity.userPageActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.R;
-import cn.ruc.readio.ui.userpage.serialNameAdapter;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import okhttp3.Call;

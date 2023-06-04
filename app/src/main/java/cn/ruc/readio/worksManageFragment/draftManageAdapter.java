@@ -3,7 +3,7 @@ package cn.ruc.readio.worksManageFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.userPageActivity.ReEditActivity;
+import cn.ruc.readio.entity.userPageActivity.ReEditActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 

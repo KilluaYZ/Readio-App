@@ -5,11 +5,8 @@ import static cn.ruc.readio.util.HttpUtil.postRequestJsonAsyn;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -18,9 +15,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
-import cn.ruc.readio.userPageActivity.mySettingsActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;

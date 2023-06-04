@@ -1,15 +1,10 @@
-package cn.ruc.readio.userPageActivity;
+package cn.ruc.readio.entity.userPageActivity;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,14 +17,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.databinding.FragmentLikesBinding;
-import cn.ruc.readio.ui.userpage.User;
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.ui.works.tags;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import okhttp3.Call;

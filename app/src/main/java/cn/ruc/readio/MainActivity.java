@@ -1,8 +1,6 @@
 package cn.ruc.readio;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
-import cn.ruc.readio.userPageActivity.newWorksActivity;
 import cn.ruc.readio.util.HttpUtil;
 
 public class MainActivity extends AppCompatActivity {

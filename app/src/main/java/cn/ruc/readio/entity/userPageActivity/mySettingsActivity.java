@@ -1,36 +1,24 @@
-package cn.ruc.readio.userPageActivity;
+package cn.ruc.readio.entity.userPageActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowInsetsAnimationCompat;
-import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.util.Auth;

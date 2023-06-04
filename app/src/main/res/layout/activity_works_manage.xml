@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:fitsSystemWindows="true"
-    tools:context=".userPageActivity.worksManageActivity">
+    tools:context=".entity.userPageActivity.worksManageActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/manageTopBar"

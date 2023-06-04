@@ -1,60 +1,46 @@
-package cn.ruc.readio.userPageActivity;
+package cn.ruc.readio.entity.userPageActivity;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.ui.works.worksFragment;
-import cn.ruc.readio.util.HttpUtil;
-import cn.ruc.readio.MainActivity;
 import cn.ruc.readio.R;
-import cn.ruc.readio.util.Tools;
 import cn.ruc.readio.worksActivity.readWorksActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
-public class collectionAdapter extends RecyclerView.Adapter<collectionAdapter.ViewHolder>{
+
+public class likesAdapter extends RecyclerView.Adapter<likesAdapter.ViewHolder>{
     private List<Works> WorksList;
-    public collectionAdapter(Context context, List<Works> WorksList)
+    public likesAdapter(Context context, List<Works> WorksList)
     {
-
         this.WorksList = WorksList;
     }
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView collectWorkTitle;
-        private TextView collectWorkContent;
-        private TextView collectNum;
+        private TextView likedWorkTitle;
+        private TextView likedWorkContent;
+        private TextView likeNum;
         private TextView withdraw;
 
         public ViewHolder(View view)
         {
             super(view);
             Log.d("RECD","ViewHolder");
-            collectWorkTitle = view.findViewById(R.id.collectionWorkTitle);
-            collectWorkContent = view.findViewById(R.id.collectionWorkContent);
-            collectNum = view.findViewById(R.id.collectionWorkcollectNum);
-            withdraw = view.findViewById(R.id.collectionWorkButton);
+            likedWorkTitle = view.findViewById(R.id.likeWorkTitle);
+            likedWorkContent = view.findViewById(R.id.likeWorkContent);
+            likeNum = view.findViewById(R.id.likesWorkLikeNum);
+            withdraw = view.findViewById(R.id.likesWorkButton);
         }
     }
 
@@ -62,9 +48,9 @@ public class collectionAdapter extends RecyclerView.Adapter<collectionAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d("RECD","onCreateViewHolder");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_collection, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R .layout.item_likes, parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.collectWorkContent.setOnClickListener(new View.OnClickListener() {
+        viewHolder.likedWorkContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int position = viewHolder.getAdapterPosition();
@@ -80,18 +66,7 @@ public class collectionAdapter extends RecyclerView.Adapter<collectionAdapter.Vi
             @Override
             public void onClick(View view) {
                 int position = viewHolder.getAdapterPosition();
-                ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
-                pieceid.add(Pair.create("piecesId",toString().valueOf(WorksList.get(position).getWorkID())));
-                HttpUtil.getRequestWithTokenAsyn(collectionFragment.collectionFrag.getActivity(), "/works/pieces/collect/del", pieceid, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(collectionFragment.collectionFrag.getActivity(),"取消点赞失败，请检查网络");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                    }
-                });
+                WorksList.get(position).subLike(likesFragment.likesFrag.getActivity(),toString().valueOf(WorksList.get(position).getWorkID()));
                 viewHolder.withdraw.setText("已取消");
             }
         });
@@ -102,9 +77,10 @@ public class collectionAdapter extends RecyclerView.Adapter<collectionAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d("RECD","onBindViewHolder");
         Works works = WorksList.get(position);
-        holder.collectWorkTitle.setText(works.getPieceTitle());
-        holder.collectWorkContent.setText(works.getContent());
-        holder.collectNum.setText("收藏数："+toString().valueOf(works.getLikesNum()));
+        holder.likedWorkTitle.setText(works.getPieceTitle());
+        holder.likedWorkContent.setText(works.getContent());
+        holder.likeNum.setText("点赞数："+toString().valueOf(works.getLikesNum()));
+//        holder.author.setText(works.getWorkUser());
     }
 
     @Override

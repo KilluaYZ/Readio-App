@@ -105,6 +105,7 @@ public class worksFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if(binding.edittext.getText().length()==0)
                 {
+                    works.clear();
                     refreshData();
                 }
             }
@@ -157,7 +158,6 @@ public class worksFragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray data = jsonObject.getJSONArray("data");
-                    works.clear();
                     for(int i = 0; i < data.length(); i++){
                         JSONObject datai = data.getJSONObject(i);
                         JSONObject useri = datai.getJSONObject("user");

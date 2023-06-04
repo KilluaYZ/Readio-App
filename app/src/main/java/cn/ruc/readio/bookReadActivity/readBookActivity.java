@@ -197,12 +197,12 @@ public class readBookActivity extends Activity {
         HttpUtil.postRequestWithTokenJsonAsyn(readBookActivity.this, "/app/books/update", json, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Tools.my_toast(readBookActivity.this,"进度上传失败");
+//                Tools.my_toast(readBookActivity.this,"进度上传失败");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Tools.my_toast(readBookActivity.this,"进度保存成功~");
+//                Tools.my_toast(readBookActivity.this,"进度保存成功~");
             }
         });
     }

@@ -97,6 +97,13 @@ public class shelfFragment extends Fragment {
 
         return root;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        search_edit.setText("");
+    }
+
     private List<BookItem> getData()
     {
         List<BookItem> data = new ArrayList<>();
@@ -122,6 +129,7 @@ public class shelfFragment extends Fragment {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 try {
+                    lists.clear();
                     assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject data = jsonObject.getJSONObject("data");

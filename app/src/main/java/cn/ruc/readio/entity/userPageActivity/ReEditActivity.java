@@ -45,6 +45,7 @@ public class ReEditActivity extends AppCompatActivity {
         TextView saveDraft_button = (TextView) findViewById(R.id.saveDraftButton);
         TextView addTag_button = (TextView) findViewById(R.id.addTagButton);
         EditText editContent = (EditText) findViewById(R.id.editPiece);
+        editContent.setText(piecesContent);
         if(status.equals("0")) {
             publish_button.setText("存回草稿箱");
         }else{

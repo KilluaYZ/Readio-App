@@ -137,12 +137,13 @@ public class shelfFragment extends Fragment {
                             book.setBookID(mybook.getString("id"));
                             lists.add(book);
                         }
-
+                        if(getActivity()!=null)
+                        {
                         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                             Log.d("bookadpter", "正在更新");
                             bookAdapter myAdapter = new bookAdapter(getContext(), lists);
                             binding.bookGridview.setAdapter(myAdapter);
-                        });
+                        });}
                     }
                 } catch (JSONException e) {
                     Tools.my_toast(Objects.requireNonNull(getActivity()),"书架加载失败");

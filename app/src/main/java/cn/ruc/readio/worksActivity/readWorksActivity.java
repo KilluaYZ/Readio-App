@@ -496,54 +496,63 @@ public class readWorksActivity extends AppCompatActivity {
             //回复模式
             int commentId = replyCommentId;
             String content = fragment_comment_bar_editText.getText().toString();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("commentId", commentId);
-            jsonObject.put("content", content);
-            HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/reply", jsonObject.toString(), new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
-                }
+            if(content.length()!=0) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("commentId", commentId);
+                jsonObject.put("content", content);
+                HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/reply", jsonObject.toString(), new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                    }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Tools.my_toast(readWorksActivity.this, "发送成功");
-                    refreshCommentData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment_comment_bar_editText.setText("");
-                        }
-                    });
-                    endReplyMode();
-                }
-            });
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Tools.my_toast(readWorksActivity.this, "发送成功");
+                        refreshCommentData();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fragment_comment_bar_editText.setText("");
+                            }
+                        });
+                        endReplyMode();
+                    }
+                });
+            }else{
+                Tools.my_toast(readWorksActivity.this,"您还没有输入内容");
+            }
 
         }else{
             //正常发送模式
             String content = fragment_comment_bar_editText.getText().toString();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("piecesId", workId);
-            jsonObject.put("content", content);
-            HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
-                }
+            if(content.length() != 0) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("piecesId", workId);
+                jsonObject.put("content", content);
+                HttpUtil.postRequestWithTokenJsonAsyn(readWorksActivity.this, "/works/pieces/comments/add", jsonObject.toString(), new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Tools.my_toast(readWorksActivity.this, "发送失败，请检查网络连接");
+                    }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Tools.my_toast(readWorksActivity.this, "发送成功");
-                    refreshCommentData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment_comment_bar_editText.setText("");
-                        }
-                    });
-                    endReplyMode();
-                }
-            });
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Tools.my_toast(readWorksActivity.this, "发送成功");
+                        refreshCommentData();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fragment_comment_bar_editText.setText("");
+                            }
+                        });
+                        endReplyMode();
+                    }
+                });
+            }
+            else{
+                Tools.my_toast(readWorksActivity.this,"您还没有输入内容");
+            }
         }
     }
 

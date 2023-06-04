@@ -6,10 +6,12 @@ import cn.ruc.readio.ui.works.Works;
 import cn.ruc.readio.userPageActivity.ReEditActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
+import cn.ruc.readio.worksActivity.readWorksActivity;
 import cn.ruc.readio.worksManageFragment.publishedManageFragment;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
 import android.util.Pair;
@@ -24,6 +26,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import androidx.annotation.NonNull;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +56,7 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
         public ViewHolder(View view){
             super(view);
             workTitle = view.findViewById(R.id.manageWorkTitle);
-//            workContent = view.findViewById(R.id.manageWorkContent);
+//            workContent = view.findViewById(R.id.);
             withdrawButton = view.findViewById(R.id.withdrawWorkButton);
             seriesName = view.findViewById(R.id.manageSeriesTitle);
             likesNum = view.findViewById(R.id.manageLikeNumText);
@@ -128,13 +132,21 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
 
             }
         });
+//        viewHolder.workContent.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(publishedManageFragment.worksManageFrag.getActivity(), readWorksActivity.class);
+//                intent.putExtra("extra_data",WorksList.get(viewHolder.getAdapterPosition()).getWorkID());
+//                publishedManageFragment.worksManageFrag.getActivity().startActivity(intent);
+//            }
+//        });
 
         return viewHolder;
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Works works = WorksList.get(position);
         holder.workTitle.setText(works.getPieceTitle());
 //        holder.workContent.setText(works.getContent());
@@ -143,6 +155,14 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
         holder.likesNum.setText(toString().valueOf(works.getLikesNum()));
         holder.collectsNum.setText(toString().valueOf(works.getCollectsNum()));
         holder.collectsNum.setText(toString().valueOf(works.getCollectsNum()));
+        holder.workTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(publishedManageFragment.worksManageFrag.getActivity(), readWorksActivity.class);
+                intent.putExtra("extra_data",toString().valueOf(WorksList.get(position).getWorkID()));
+                publishedManageFragment.worksManageFrag.getActivity().startActivity(intent);
+            }
+        });
     }
 
     @Override

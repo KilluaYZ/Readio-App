@@ -39,6 +39,7 @@ public class book {
         progress = page;
     }
     public String getBookName(){return bookName;}
+    public String getAuthorName(){return authorName;}
     public int getProgress()
     {
         return progress;

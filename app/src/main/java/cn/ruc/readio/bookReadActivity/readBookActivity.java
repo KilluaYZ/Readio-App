@@ -58,12 +58,11 @@ public class readBookActivity extends Activity {
         contentList = null;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_book);
-
-        /*调整状态栏为透明色*/
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-
+        if (Build.VERSION.SDK_INT >= 21){
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }  //用于调整状态栏为透明色
         readPage = findViewById(R.id.pageBar);
         BookInfo = findViewById(R.id.book_nameBar);
         ifLoad = new ArrayList<>();
@@ -77,6 +76,7 @@ public class readBookActivity extends Activity {
         BookID = intent.getStringExtra("BookID");
 
         getBook();
+
 
         pager = (ViewPager) this.findViewById(R.id.viewpager);
         view1 = LayoutInflater.from(this).inflate(R.layout.item_bookview,null);
@@ -95,6 +95,7 @@ public class readBookActivity extends Activity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
+
             @Override
             public void onPageSelected(int position) {
                 nPosition = position;
@@ -104,7 +105,9 @@ public class readBookActivity extends Activity {
                 if(nPosition < lastPosition){
                     Page--;
                 }
-                readPage.setText(String.valueOf(Page+1));
+                String wholePage = toString().valueOf(contentList.size());
+                String nowPage = toString().valueOf(Page+1);
+                readPage.setText(nowPage+"/"+wholePage);
                 if (nPosition == viewContainer.size() - 1) {
                     if(contentList == null)
                     {
@@ -122,6 +125,7 @@ public class readBookActivity extends Activity {
                         }
 
                     }
+//                    pager.setCurrentItem(nPosition, false);
                 }
 
                 if (nPosition == 0) {
@@ -185,26 +189,26 @@ public class readBookActivity extends Activity {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("bookId",my_book.getBookId());
-            jsonObject.put("progress",String.valueOf(getProgress()));
+            jsonObject.put("progress",toString().valueOf(getProgress()));
         } catch (JSONException e) {
             Tools.my_toast(readBookActivity.this,"进度上传失败");
         }
         String json = jsonObject.toString();
         HttpUtil.postRequestWithTokenJsonAsyn(readBookActivity.this, "/app/books/update", json, new Callback() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            public void onFailure(Call call, IOException e) {
                 Tools.my_toast(readBookActivity.this,"进度上传失败");
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 Tools.my_toast(readBookActivity.this,"进度保存成功~");
             }
         });
     }
 
     void getBook(){
-        HttpUtil.getRequestWithTokenAsyn(readBookActivity.this,"/app/books/reading/"+3, new ArrayList<>() ,new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(readBookActivity.this,"/app/books/reading/"+Integer.parseInt(BookID), new ArrayList<>() ,new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Tools.my_toast(readBookActivity.this,"请求异常，加载不出来");
@@ -213,7 +217,6 @@ public class readBookActivity extends Activity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    assert response.body() != null;
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONObject bookinfo = jsonObject.getJSONObject("data");
 
@@ -236,15 +239,19 @@ public class readBookActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            BookInfo.setText(my_book.getBookName());
+                            BookInfo.setText(my_book.getBookName()+" "+my_book.getAuthorName());
                             TextView view1_content = view1.findViewById(R.id.content);
                             TextView view2_content = view2.findViewById(R.id.content);
                             Page = my_book.getProgress()/300;
-                            readPage.setText(String.valueOf(Page+1));
+                            String wholePage = toString().valueOf(contentList.size());
+                            String nowPage = toString().valueOf(Page+1);
+                            readPage.setText(nowPage+"/"+wholePage);
                             view1_content.setText(contentList.get(Page));
                             Loaded(Page);
-                            view2_content.setText(contentList.get(Page+1));
-                            Loaded(Page+1);
+                            if(Page < contentList.size()-1) {
+                                view2_content.setText(contentList.get(Page + 1));
+                                Loaded(Page + 1);
+                            }
                             if(Page>=1)
                             {
                                 if(ifLoad.get(Page-1) == 0) {
@@ -254,7 +261,7 @@ public class readBookActivity extends Activity {
                                     content.setText(contentList.get(Page-1));
                                     viewContainer.add(0,view);
                                     Loaded(Page-1);
-                                    Objects.requireNonNull(pager.getAdapter()).notifyDataSetChanged();
+                                    pager.getAdapter().notifyDataSetChanged();
                                     pager.setCurrentItem(nPosition+1, false);
                                     Page--;
                                 }

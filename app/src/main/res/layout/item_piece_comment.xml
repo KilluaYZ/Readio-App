@@ -77,23 +77,27 @@
                 android:layout_alignParentRight="true">
 
                 <TextView
+                    android:layout_marginRight="5dp"
                     android:id="@+id/likePieceCommentNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="162"/>
 
                 <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:textAlignment="viewEnd"
                     android:id="@+id/likePieceCommentButton"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/likecomment"/>
                 <ImageView
+                    android:layout_marginLeft="5dp"
                     android:textAlignment="viewEnd"
                     android:id="@+id/reply_send_btn"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/thepinglun"/>
+                    android:src="@drawable/another_comment"/>
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,12 +3,16 @@ package cn.ruc.readio.ui.works;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +40,7 @@ import okhttp3.Response;
 public class worksFragment extends Fragment {
 
     static public Fragment workFrag;
+    public int refreshTimes = -1;
 
     private FragmentWorksBinding binding;
     User user = new User("zyy","123456","123456");
@@ -86,6 +91,24 @@ public class worksFragment extends Fragment {
                 }
             }
         });
+        binding.edittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(binding.edittext.getText().length()==0)
+                {
+                    refreshData();
+                }
+            }
+        });
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,12 +136,17 @@ public class worksFragment extends Fragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
+        refreshTimes = -1;
     }
 
     public void refreshData(){
-
-        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", new ArrayList<>(), new Callback() {
+        refreshTimes++;
+        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
+        queryParam.add(Pair.create("mode","recommend"));
+        queryParam.add(Pair.create("queryTimes",toString().valueOf(refreshTimes)));
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Tools.my_toast(getActivity(),"请求异常，加载不出来");
@@ -129,6 +157,7 @@ public class worksFragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray data = jsonObject.getJSONArray("data");
+                    works.clear();
                     for(int i = 0; i < data.length(); i++){
                         JSONObject datai = data.getJSONObject(i);
                         JSONObject useri = datai.getJSONObject("user");
@@ -183,7 +212,6 @@ public class worksFragment extends Fragment {
 
                     }
 
-
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -233,8 +261,6 @@ public class worksFragment extends Fragment {
             }
         });
     }
-
-
 
     public void refreshSearchData(){
 

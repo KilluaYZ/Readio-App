@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shelf_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".ui.shelf.shelfFragment">
     <LinearLayout
-        android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/book_gridview">
+        android:layout_marginTop="5dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/searchColumn"
             android:layout_width="match_parent"
@@ -96,12 +94,10 @@
         android:verticalSpacing="15dp"
         android:numColumns="auto_fit"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/head"
-        app:layout_constraintBottom_toTopOf="parent"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp">
     </cn.ruc.readio.ui.shelf.myGridView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
 
 

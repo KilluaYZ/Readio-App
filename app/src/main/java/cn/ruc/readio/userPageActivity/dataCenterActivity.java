@@ -1,4 +1,4 @@
-package cn.ruc.readio.entity.userPageActivity;
+package cn.ruc.readio.userPageActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

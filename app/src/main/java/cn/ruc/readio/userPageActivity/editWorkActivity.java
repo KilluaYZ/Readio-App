@@ -1,4 +1,4 @@
-package cn.ruc.readio.entity.userPageActivity;
+package cn.ruc.readio.userPageActivity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

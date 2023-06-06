@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".entity.userPageActivity.myLikesActivity"
+    tools:context=".userPageActivity.myLikesActivity"
     android:fitsSystemWindows="true"
     android:background="@color/surface">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@id/likeTitleBar"
         app:layout_constraintBottom_toBottomOf="parent">
         <fragment
-            android:name="cn.ruc.readio.entity.userPageActivity.likesFragment"
+            android:name="cn.ruc.readio.userPageActivity.likesFragment"
             android:id="@+id/myLikesFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

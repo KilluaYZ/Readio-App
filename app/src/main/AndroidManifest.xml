@@ -19,7 +19,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".entity.userPageActivity.ReEditActivity"
+            android:name=".userPageActivity.ReEditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.userpage.follower.FollowerActivity"
@@ -32,7 +32,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name=".entity.userPageActivity.ReadioActivity"
+            android:name=".userPageActivity.ReadioActivity"
             android:exported="false" />
         <activity
             android:name=".bookReadActivity.allCommentActivity"
@@ -50,11 +50,11 @@
             android:name=".worksActivity.readWorksActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.addTagActivity"
+            android:name=".userPageActivity.addTagActivity"
             android:exported="false"
             android:theme="@style/myDialog" />
         <activity
-            android:name=".entity.userPageActivity.exitEditActivity"
+            android:name=".userPageActivity.exitEditActivity"
             android:exported="false"
             android:theme="@style/myDialog" />
         <activity
@@ -64,26 +64,26 @@
             android:name=".ui.userpage.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.editWorkActivity"
+            android:name=".userPageActivity.editWorkActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.dataCenterActivity"
+            android:name=".userPageActivity.dataCenterActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.worksManageActivity"
+            android:name=".userPageActivity.worksManageActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.newWorksActivity"
+            android:name=".userPageActivity.newWorksActivity"
             android:exported="false"
             android:theme="@style/myDialog" />
         <activity
-            android:name=".entity.userPageActivity.mySettingsActivity"
+            android:name=".userPageActivity.mySettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.myLikesActivity"
+            android:name=".userPageActivity.myLikesActivity"
             android:exported="false" />
         <activity
-            android:name=".entity.userPageActivity.myCollectionActivity"
+            android:name=".userPageActivity.myCollectionActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

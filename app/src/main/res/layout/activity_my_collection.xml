@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".entity.userPageActivity.myCollectionActivity"
+    tools:context=".userPageActivity.myCollectionActivity"
     android:fitsSystemWindows="true"
     android:background="@color/surface">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@id/collectTitleBar"
         app:layout_constraintBottom_toBottomOf="parent">
         <fragment
-            android:name="cn.ruc.readio.entity.userPageActivity.collectionFragment"
+            android:name="cn.ruc.readio.userPageActivity.collectionFragment"
             android:id="@+id/myCollectionFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

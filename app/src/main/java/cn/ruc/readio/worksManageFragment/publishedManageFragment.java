@@ -69,18 +69,20 @@ public class publishedManageFragment extends Fragment {
                             work.setLikesNum(datai.getInt("likes"));
                             Log.d("data__", datai.getString("title"));
                             work.setCollectsNum(datai.getInt("collect"));
-                            work.setCommentsNum(datai.getInt("comment"));
+//                            work.setCommentsNum(datai.getInt("comment"));
                             work.setSerialTitle(datai.getJSONObject("series").getString("seriesName"));
                             work.setPublishedTime(datai.getString("updateTime").substring(0, 10));
                             works.add(work);
                         }
                     }
+                    if(getActivity()!=null)
+                    {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             binding.publishedManageBar.getAdapter().notifyDataSetChanged();
                         }
-                    });
+                    });}
                 }catch (JSONException e){
                     e.printStackTrace();
                 }

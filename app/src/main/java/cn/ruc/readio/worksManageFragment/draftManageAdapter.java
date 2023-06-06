@@ -3,7 +3,7 @@ package cn.ruc.readio.worksManageFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.entity.userPageActivity.ReEditActivity;
+import cn.ruc.readio.userPageActivity.ReEditActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 
@@ -85,13 +85,17 @@ public class draftManageAdapter extends RecyclerView.Adapter<draftManageAdapter.
                 HttpUtil.getRequestWithTokenAsyn(draftManageFragment.draftManageFrag.getActivity(), "/works/delPieces", queryParam, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(),"删除草稿失败，请检查网络");
+                        if(draftManageFragment.draftManageFrag.getActivity()!=null) {
+                            Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(), "删除草稿失败，请检查网络");
+                        }
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(),"删除草稿成功！");
+                        if(draftManageFragment.draftManageFrag.getActivity()!=null) {
+                            Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(), "删除草稿成功！");
 //                            mAdapter.notifyDataSetChanged();
-                        fragment.refreshData();
+                            fragment.refreshData();
+                        }
                     }
                 });
             }
@@ -106,14 +110,16 @@ public class draftManageAdapter extends RecyclerView.Adapter<draftManageAdapter.
                 HttpUtil.getRequestWithTokenAsyn(draftManageFragment.draftManageFrag.getActivity(),"/works/changePiecesStatus", queryParam, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(),"发布作品失败，请检查网络");
+                        if (draftManageFragment.draftManageFrag.getActivity() != null) {
+                            Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(), "发布作品失败，请检查网络");
+                        }
                     }
-
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(),"发布作品成功！");
-//                            mAdapter.notifyDataSetChanged();
-                        fragment.refreshData();
+                        if (draftManageFragment.draftManageFrag.getActivity() != null) {
+                            Tools.my_toast(draftManageFragment.draftManageFrag.getActivity(), "发布作品成功");
+                            fragment.refreshData();
+                        }
                     }
                 });
             }

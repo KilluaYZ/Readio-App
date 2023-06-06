@@ -3,7 +3,7 @@ package cn.ruc.readio.worksManageFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.ruc.readio.ui.works.Works;
-import cn.ruc.readio.entity.userPageActivity.ReEditActivity;
+import cn.ruc.readio.userPageActivity.ReEditActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import cn.ruc.readio.worksActivity.readWorksActivity;
@@ -93,14 +93,20 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
                 HttpUtil.getRequestWithTokenAsyn(publishedManageFragment.worksManageFrag.getActivity(), "/works/changePiecesStatus", queryParam, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(),"撤回作品失败，请检查网络");
+                        if(publishedManageFragment.worksManageFrag.getActivity()!=null)
+                        {
+                            Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(),"撤回作品失败，请检查网络");
+                        }
                     }
+
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(),"删除作品成功！");
+                        if(publishedManageFragment.worksManageFrag.getActivity()!=null) {
+                            Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(), "删除作品成功！");
 //                            mAdapter.notifyDataSetChanged();
-                        fragment.refreshData();
+                            fragment.refreshData();
+                        }
                     }
                 });
             }
@@ -116,13 +122,17 @@ public class worksManageAdapter extends RecyclerView.Adapter<worksManageAdapter.
                     HttpUtil.getRequestWithTokenAsyn(publishedManageFragment.worksManageFrag.getActivity(), "/works/delPieces", queryParam, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(),"删除作品失败，请检查网络");
-                        }
+                            if(publishedManageFragment.worksManageFrag.getActivity()!=null) {
+                                Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(), "删除作品失败，请检查网络");
+                            }
+                            }
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(),"删除作品成功！");
+                            if(publishedManageFragment.worksManageFrag.getActivity()!=null) {
+                                Tools.my_toast(publishedManageFragment.worksManageFrag.getActivity(), "删除作品成功！");
 //                            mAdapter.notifyDataSetChanged();
-                            fragment.refreshData();
+                                fragment.refreshData();
+                            }
                         }
                     });
 

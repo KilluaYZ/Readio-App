@@ -191,7 +191,7 @@ public class readBookActivity extends Activity {
             jsonObject.put("bookId",my_book.getBookId());
             jsonObject.put("progress",toString().valueOf(getProgress()));
         } catch (JSONException e) {
-            Tools.my_toast(readBookActivity.this,"进度上传失败");
+//            Tools.my_toast(readBookActivity.this,"进度上传失败");
         }
         String json = jsonObject.toString();
         HttpUtil.postRequestWithTokenJsonAsyn(readBookActivity.this, "/app/books/update", json, new Callback() {
@@ -269,7 +269,7 @@ public class readBookActivity extends Activity {
                         }
                     });
                 } catch (JSONException e) {
-                    Tools.my_toast(readBookActivity.this, "内容加载失败");
+                    Tools.my_toast(readBookActivity.this, "加载较慢，请重试");
                 }
             }
         });

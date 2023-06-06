@@ -1,4 +1,4 @@
-package cn.ruc.readio.entity.userPageActivity;
+package cn.ruc.readio.userPageActivity;
 
 
 import android.os.Bundle;
@@ -20,32 +20,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.ruc.readio.R;
-import cn.ruc.readio.databinding.FragmentLikesBinding;
+import cn.ruc.readio.databinding.FragmentCollectionBinding;
 import cn.ruc.readio.ui.works.Works;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-
-public class likesFragment extends Fragment {
-    private FragmentLikesBinding binding;
+public class collectionFragment extends Fragment {
+    private FragmentCollectionBinding binding;
     private ArrayList<Works> works = new ArrayList<Works>();
-    static public Fragment likesFrag;
+    static public Fragment collectionFrag;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentLikesBinding.inflate(getLayoutInflater());
+        binding = FragmentCollectionBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
-        likesFrag = this;
+        collectionFrag = this;
         setData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
-        RecyclerView recyclerView = binding.likeWorksBar;
+        RecyclerView recyclerView = binding.collectWorksBar;
         recyclerView.setLayoutManager(layoutManager);
-        likesAdapter likeAdapter = new likesAdapter(getContext(),works);
-        recyclerView.setAdapter(likeAdapter);
+        collectionAdapter collectAdapter = new collectionAdapter(getContext(),works);
+        recyclerView.setAdapter(collectAdapter);
         return root;
     }
 
@@ -57,7 +55,7 @@ public class likesFragment extends Fragment {
 
     public void setData()
     {
-        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/pieces/like/get", new ArrayList<>(), new Callback() {
+        HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/pieces/collect/get", new ArrayList<>(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Tools.my_toast(getActivity(),"请求异常，加载不出来");
@@ -74,21 +72,19 @@ public class likesFragment extends Fragment {
                         Works work = new Works();
                         work.setPieceTitle(datai.getString("title"));
                         work.setContent(datai.getString("content"));
-                        work.setLikesNum(datai.getInt("likes"));
+                        work.setCollectsNum(datai.getInt("collect"));
                         work.setWorkID(datai.getInt("piecesId"));
 //                        User user = new User(useri.getString("userName"),useri.getString("email"),useri.getString("phoneNumber"));
 //                        work.setUser(user);
                         works.add(work);
-
                     }
-
                     if(getActivity() != null)
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if(getActivity() != null) {
-                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.likeWorksBar);
+                                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.collectWorksBar);
                                     if (recyclerView != null) {
                                         recyclerView.getAdapter().notifyDataSetChanged();
                                     }
@@ -102,6 +98,5 @@ public class likesFragment extends Fragment {
             }
         });
     }
-
 
 }

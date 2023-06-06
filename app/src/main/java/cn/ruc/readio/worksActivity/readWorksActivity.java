@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -67,6 +70,8 @@ public class readWorksActivity extends AppCompatActivity {
 
     private String workId;
     private int replyCommentId = -1;
+    private ClipData mClipData;
+    private ClipboardManager mClipboardManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,7 +83,7 @@ public class readWorksActivity extends AppCompatActivity {
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-
+        mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         Intent intent = getIntent();
         workId = intent.getStringExtra("extra_data");
         TextView follow_button = (TextView) findViewById(R.id.followAuthorButton);
@@ -94,6 +99,16 @@ public class readWorksActivity extends AppCompatActivity {
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
         TextView updateTimeTextView = (TextView) findViewById(R.id.updateTimeTextView);
 
+        read_content.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String workContentDup = (String) read_content.getText();
+                mClipData = ClipData.newPlainText("Simple text",workContentDup);
+                mClipboardManager.setPrimaryClip(mClipData);
+                Toast.makeText(view.getContext(), "已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
         queryParam.add(new Pair<>("piecesId",workId));

@@ -78,7 +78,9 @@ public class RegisterFormFragment extends Fragment {
                 try {
                     onClickRegisterBtn();
                 } catch (JSONException e) {
-                    Tools.my_toast(getActivity(),"啊哦！出错啦");
+                    if(getActivity()!=null) {
+                        Tools.my_toast(getActivity(), "啊哦！出错啦");
+                    }
                 }
             }
         });
@@ -93,10 +95,14 @@ public class RegisterFormFragment extends Fragment {
         String password1 = passwordEditTextReg.getText().toString();
         String password2 = passwordRepeatEditTextReg.getText().toString();
         if(!password1.equals(password2)){
-            Tools.my_toast(getActivity(), "两次密码不一致");
+            if(getActivity()!=null) {
+                Tools.my_toast(getActivity(), "两次密码不一致");
+            }
             return;
         }
         Auth auth = new Auth();
-        auth.register((LoginActivity) getActivity(), phoneNumber, password1);
+        if(getActivity()!=null) {
+            auth.register((LoginActivity) getActivity(), phoneNumber, password1);
+        }
     }
 }

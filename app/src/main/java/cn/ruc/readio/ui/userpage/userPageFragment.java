@@ -30,11 +30,11 @@ import cn.ruc.readio.ui.userpage.follower.FollowerActivity;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.ui.userpage.subscribe.SubscriberActivity;
 import cn.ruc.readio.ui.userpage.changeAvatar.changeAvatorActivity;
-import cn.ruc.readio.entity.userPageActivity.myCollectionActivity;
-import cn.ruc.readio.entity.userPageActivity.myLikesActivity;
-import cn.ruc.readio.entity.userPageActivity.mySettingsActivity;
-import cn.ruc.readio.entity.userPageActivity.newWorksActivity;
-import cn.ruc.readio.entity.userPageActivity.worksManageActivity;
+import cn.ruc.readio.userPageActivity.myCollectionActivity;
+import cn.ruc.readio.userPageActivity.myLikesActivity;
+import cn.ruc.readio.userPageActivity.mySettingsActivity;
+import cn.ruc.readio.userPageActivity.newWorksActivity;
+import cn.ruc.readio.userPageActivity.worksManageActivity;
 import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
@@ -174,7 +174,7 @@ public class userPageFragment extends Fragment {
     @Override
     public void onResume() {
         Auth.Token token = new Auth.Token(getActivity());
-        if(token.isEmpty())
+        if(token.isEmpty() && getActivity()!=null)
         {
             ((TextView)getActivity().findViewById(R.id.userName)).setText("点击登录 / 注册");
             ((ImageView)getActivity().findViewById(R.id.my_avator)).setImageResource(R.drawable.unlogged);
@@ -247,11 +247,16 @@ public class userPageFragment extends Fragment {
                             Log.d(this.toString(), "拿到profile数据");
                         } catch (JSONException | ParseException e) {
                             e.printStackTrace();
-                            Tools.my_toast(getActivity(),"解析profile信息失败");
+                            if(getActivity()!=null) {
+                                Tools.my_toast(getActivity(), "解析profile信息失败");
+                            }
                         }
                     }else{
-                        Auth.Token token = new Auth.Token(getActivity());
-                        token.clear();
+                        if(getActivity()!=null)
+                        {
+                            Auth.Token token = new Auth.Token(getActivity());
+                            token.clear();
+                        }
                     }
                 }
             });

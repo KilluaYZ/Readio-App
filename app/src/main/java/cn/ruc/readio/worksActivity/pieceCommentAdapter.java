@@ -1,6 +1,10 @@
 package cn.ruc.readio.worksActivity;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
+
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -9,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +25,7 @@ import java.util.List;
 
 import cn.ruc.readio.R;
 import cn.ruc.readio.ui.userpage.User;
+import cn.ruc.readio.userPageActivity.ReadioActivity;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -31,6 +37,8 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
     private final List<PieceComments> CommentsList;
     private int like_comment_times = 0;
     private readWorksActivity activity;
+    private ClipData mClipData;
+    private ClipboardManager mClipboardManager;
 
     public pieceCommentAdapter(readWorksActivity activity, List<PieceComments> CommentsList){
         this.CommentsList = CommentsList;
@@ -68,6 +76,7 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_piece_comment,parent,false);
         pieceCommentAdapter.ViewHolder viewHolder = new ViewHolder(view);
         ImageView likePieceComment_button = view.findViewById(R.id.likePieceCommentButton);
+        mClipboardManager = (ClipboardManager) mBottomSheetDialog.bottomSheetDialog.getContext().getSystemService(CLIPBOARD_SERVICE);
         likePieceComment_button.setOnClickListener(view1 -> {
 //                like_comment_times++;
 //                if(like_comment_times%2==0){
@@ -77,6 +86,16 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
 //                }
             likePieceComment_button.setImageResource(R.drawable.likecomment);
 
+        });
+        viewHolder.commentContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String aComment = (String) viewHolder.commentContent.getText();
+                mClipData = ClipData.newPlainText("Simple text",aComment);
+                mClipboardManager.setPrimaryClip(mClipData);
+                Toast.makeText(view.getContext(), "已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         });
         return viewHolder;
     }
@@ -163,7 +182,7 @@ public class pieceCommentAdapter extends RecyclerView.Adapter<pieceCommentAdapte
                 }
             }
         });
-
+        
         holder.reply_send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -52,7 +52,6 @@ public class worksFragment extends Fragment {
         workFrag = this;
         ImageView searchButton = binding.searchButton;
         View root = binding.getRoot();
-        refreshData();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         RecyclerView recyclerView = binding.worksColumn;
         recyclerView.setLayoutManager(layoutManager);
@@ -140,6 +139,7 @@ public class worksFragment extends Fragment {
 
         super.onResume();
         refreshTimes = -1;
+        refreshData();
     }
 
     public void refreshData(){
@@ -150,7 +150,11 @@ public class worksFragment extends Fragment {
         HttpUtil.getRequestWithTokenAsyn(getActivity(),"/works/getPiecesBrief", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Tools.my_toast(getActivity(),"请求异常，加载不出来");
+                if(getActivity()!=null)
+                {
+                    Tools.my_toast(getActivity(),"请求异常，加载不出来");
+                }
+
             }
 
             @Override
@@ -223,7 +227,9 @@ public class worksFragment extends Fragment {
                                         pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
                                     }
                                     } catch (IOException | JSONException | ParseException e) {
-                                    Tools.my_toast(getActivity(),"图片加载出错啦！");
+                                    if(getActivity()!=null) {
+                                        Tools.my_toast(getActivity(), "图片加载出错啦！");
+                                    }
                                 }
                                 works.get(i).getUser().setAvator(pic);
                                 Log.d("workadpter","需要更新");
@@ -272,7 +278,9 @@ public class worksFragment extends Fragment {
         HttpUtil.getRequestAsyn("/works/getPiecesBrief", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Tools.my_toast(getActivity(),"api启用失败");
+                if(getActivity()!=null) {
+                    Tools.my_toast(getActivity(), "api启用失败");
+                }
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -344,7 +352,9 @@ public class worksFragment extends Fragment {
                                         pic = Tools.getImageBitmapSyn(getActivity(), works.get(i).getUser().getAvaID());
                                     }
                                 } catch (IOException | JSONException | ParseException e) {
-                                    Tools.my_toast(getActivity(),"图片加载出错啦！");
+                                    if(getActivity()!=null) {
+                                        Tools.my_toast(getActivity(), "图片加载出错啦！");
+                                    }
                                 }
                                 works.get(i).getUser().setAvator(pic);
                                 Log.d("workadpter","需要更新");
@@ -377,7 +387,9 @@ public class worksFragment extends Fragment {
                         });
                     }
                 } catch (JSONException e) {
-                    Tools.my_toast(getActivity(),"搜索失败，请检查网络");
+                    if(getActivity()!=null) {
+                        Tools.my_toast(getActivity(), "搜索失败，请检查网络");
+                    }
 
                 }
             }

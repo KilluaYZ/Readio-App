@@ -1,4 +1,4 @@
-package cn.ruc.readio.entity.userPageActivity;
+package cn.ruc.readio.userPageActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

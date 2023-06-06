@@ -75,12 +75,15 @@ public class draftManageFragment extends Fragment {
                             works.add(work);
                         }
                     }
+                    if(getActivity()!=null)
+                    {
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             binding.draftManageBar.getAdapter().notifyDataSetChanged();
                         }
-                    });
+                    });}
                 }catch (JSONException e){
                     e.printStackTrace();
                 }

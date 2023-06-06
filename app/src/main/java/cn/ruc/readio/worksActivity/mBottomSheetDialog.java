@@ -17,11 +17,12 @@ public class mBottomSheetDialog extends BottomSheetDialog {
     public mBottomSheetDialog(@NonNull Context context, int theme) {
         super(context);
     }
-
+    public static BottomSheetDialog bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        bottomSheetDialog = this;
 //        ImageView likePieceComment_button = (ImageView) findViewById(R.id.likePieceCommentButton);
 //        likePieceComment_button.setOnClickListener(new View.OnClickListener() {
 //            @Override

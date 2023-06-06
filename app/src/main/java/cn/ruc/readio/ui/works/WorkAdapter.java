@@ -79,7 +79,10 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
                 int position = viewHolder.getAdapterPosition();
                 if (WorksList.get(position).getMylike() == 0) {
                     viewHolder.likeButton.setImageResource(R.drawable.msaik_like);
-                    WorksList.get(position).addLike(worksFragment.workFrag.getActivity(), toString().valueOf(WorksList.get(position).getWorkID()));
+                    if (worksFragment.workFrag.getActivity()!=null)
+                    {
+                        WorksList.get(position).addLike(worksFragment.workFrag.getActivity(), toString().valueOf(WorksList.get(position).getWorkID()));
+                    }
                     if (WorksList.get(position).getLikesNum() >= 1000) {
                         String num = String.valueOf(WorksList.get(position).getLikesNum());
                         String num1 = num.substring(0, 1);
@@ -90,7 +93,10 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
                     }   //基于实际情况，点赞过万的情况就不写了
                 } else {
                     viewHolder.likeButton.setImageResource(R.drawable.heart_plus_48);
-                    WorksList.get(position).subLike(worksFragment.workFrag.getActivity(), toString().valueOf(WorksList.get(position).getWorkID()));
+                    if(worksFragment.workFrag.getActivity()!=null)
+                    {
+                        WorksList.get(position).subLike(worksFragment.workFrag.getActivity(), toString().valueOf(WorksList.get(position).getWorkID()));
+                    }
                     if (WorksList.get(position).getLikesNum() >= 1000) {
                         String num = String.valueOf(WorksList.get(position).getLikesNum());
                         String num1 = num.substring(0, 1);

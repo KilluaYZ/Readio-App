@@ -80,7 +80,9 @@ public class LoginFormFragment extends Fragment {
                 try {
                     onClickLoginBtn();
                 } catch (JSONException e) {
-                    Tools.my_toast(getActivity(),"啊哦！出错啦！");
+                    if(getActivity()!=null) {
+                        Tools.my_toast(getActivity(), "啊哦！出错啦！");
+                    }
                 }
             }
         });
@@ -94,6 +96,9 @@ public class LoginFormFragment extends Fragment {
         String phoneNumber = phoneNumberEditText.getText().toString();
         String passWord = passwordEditText.getText().toString();
         Auth auth = new Auth();
-        auth.login((LoginActivity) getActivity(), phoneNumber, passWord);
+        if(getActivity()!=null)
+        {
+            auth.login((LoginActivity) getActivity(), phoneNumber, passWord);
+        }
     }
 }

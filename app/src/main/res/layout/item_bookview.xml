@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:fontFamily="@font/songti"
         android:autoSizeMaxTextSize="22sp"
-        android:autoSizeMinTextSize="18dp"
+        android:autoSizeMinTextSize="1sp"
         android:lineSpacingExtra="5dp"
         android:autoSizeTextType="uniform" />
 

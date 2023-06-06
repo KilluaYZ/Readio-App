@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +29,14 @@ import java.util.List;
 import java.util.Objects;
 
 
+import cn.ruc.readio.R;
+import cn.ruc.readio.bookReadActivity.readBookActivity;
 import cn.ruc.readio.databinding.FragmentShelfBinding;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.util.Auth;
 import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
@@ -46,6 +52,7 @@ public class shelfFragment extends Fragment {
     private EditText search_edit;
     private String search_content,select_content;
     private Spinner spinner;
+    private ImageButton refresh_button;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +96,11 @@ public class shelfFragment extends Fragment {
             intent.putExtra("search_content", search_content);
             intent.putExtra("select_content",select_content);
             Objects.requireNonNull(getContext()).startActivity(intent);
+        });
+
+        refresh_button=binding.refreshButton;
+        refresh_button.setOnClickListener(view -> {
+            refreshData();
         });
 
         grid_view = binding.bookGridview;
@@ -163,4 +175,6 @@ public class shelfFragment extends Fragment {
     private void  mtoast(){
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> Toast.makeText(getActivity(), "请求异常，加载不出来",Toast.LENGTH_LONG).show());
     }
+
+
 }

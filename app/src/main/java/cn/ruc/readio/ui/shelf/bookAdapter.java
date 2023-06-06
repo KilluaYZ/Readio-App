@@ -1,15 +1,22 @@
 package cn.ruc.readio.ui.shelf;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import org.json.JSONException;
@@ -20,8 +27,13 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.bookReadActivity.bookDetailActivity;
 import cn.ruc.readio.bookReadActivity.readBookActivity;
+import cn.ruc.readio.util.HttpUtil;
 import cn.ruc.readio.util.Tools;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class bookAdapter extends BaseAdapter {
 
@@ -91,6 +103,10 @@ public class bookAdapter extends BaseAdapter {
                 context.startActivity(read_intent);
             });
 
+            holder.jumpview.setOnLongClickListener(view->{
+                showPopMenu(view,bookList.get(position).getBookID());
+                return false;
+            });
         }
         return convertView;
     }
@@ -99,6 +115,44 @@ public class bookAdapter extends BaseAdapter {
         TextView text;
         ImageView cover;
         CardView jumpview;
+    }
+
+    public void showPopMenu(View view,String bookID){
+        PopupMenu menu = new PopupMenu(context,view);
+        menu.getMenuInflater().inflate(R.menu.shelf_select_menu,menu.getMenu());
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.yes_item:
+                        delete_book_from_shelf(bookID);
+                        break;
+
+                    case R.id.no_item:
+                        break;
+                }
+                return true;
+            }
+        });
+        menu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+            }
+        });
+        menu.show();
+    }
+    private void delete_book_from_shelf(String bookId){
+        String json = "{\"bookId\"" +":"+ bookId+"}";
+        HttpUtil.postRequestWithTokenJsonAsyn((Activity) context,"/app/books/delete", json, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                Objects.requireNonNull((Activity)context).runOnUiThread(() -> {
+                    Toast.makeText(context,"已删除,刷新页面后它就不见啦~",Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 }
 

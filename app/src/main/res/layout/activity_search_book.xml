@@ -7,94 +7,87 @@
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     tools:context=".ui.shelf.shelfFragment">
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/head"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints"
+        android:layout_height="110dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/my_shelf"
-        android:layout_marginTop="5dp">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/searchColumn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:background="@color/paler_grey">
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:entries="@array/spinner_data1"
-                    android:spinnerMode="dropdown"/>
-
-                <EditText
-                    android:id="@+id/edittext"
-                    android:layout_width="0dp"
-                    android:layout_weight="11"
-                    android:layout_height="match_parent"
-                    android:background="@color/paler_grey"
-                    android:hint="搜你想看~"
-                    android:maxLength="10"
-                    android:paddingLeft="15dp"
-                    android:singleLine="true"
-                    android:textSize="15sp" />
-                <TextView
-                    android:id="@+id/search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="搜索"
-                    android:textSize="15sp"
-                    android:textColor="#D31A97EA"
-                    android:background="@color/paler_grey"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
+        app:layout_constraintBottom_toTopOf="@id/search_recyclerView">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/searchColumn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:background="@color/paler_grey">
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:entries="@array/spinner_data1"
+                        android:spinnerMode="dropdown"/>
+
+                    <EditText
+                        android:id="@+id/edittext"
+                        android:layout_width="0dp"
+                        android:layout_weight="11"
+                        android:layout_height="match_parent"
+                        android:background="@color/paler_grey"
+                        android:hint="搜你想看~"
+                        android:maxLength="10"
+                        android:paddingLeft="15dp"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="搜索"
+                        android:textSize="15sp"
+                        android:textColor="#D31A97EA"
+                        android:background="@color/paler_grey"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="搜索结果"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"/>
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <ScrollView
-        android:id="@+id/my_shelf"
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintVertical_weight="11"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_recyclerView"
         app:layout_constraintTop_toBottomOf="@id/head"
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:isScrollContainer="true"
         android:scrollbars="none">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/search_recyclerView">
+    </androidx.recyclerview.widget.RecyclerView>
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

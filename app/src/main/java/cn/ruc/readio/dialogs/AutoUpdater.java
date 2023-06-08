@@ -1,10 +1,12 @@
 package cn.ruc.readio.dialogs;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -66,7 +68,7 @@ public class AutoUpdater {
 
 
         builder.setTitle("软件版本更新");
-        builder.setMessage("有最新的软件包，请下载并安装!");
+        builder.setMessage("\n有最新的软件包，请下载并安装!\n");
         builder.setPositiveButton("立即下载", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -79,26 +81,29 @@ public class AutoUpdater {
                 dialog.dismiss();
             }
         });
-
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(0xD41B85EF);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(0xFF5F5F5F);
     }
 
     private void ShowDownloadDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("软件版本更新");
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("软件版本更新");
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View v = inflater.inflate(R.layout.progress, null);
         mProgress = (ProgressBar) v.findViewById(R.id.progress);
         txtStatus = v.findViewById(R.id.txtStatus);
-        dialog.setView(v);
-        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setView(v);
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 intercept = true;
             }
         });
-
+        AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(0xFF5F5F5F);
         DownloadApk();
     }
 

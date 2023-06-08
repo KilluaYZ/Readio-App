@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -36,6 +37,11 @@ public class ReadioActivity extends AppCompatActivity {
         ConstraintLayout Tele = (ConstraintLayout) findViewById(R.id.Tele);
         ConstraintLayout Mail = (ConstraintLayout) findViewById(R.id.Mail);
         TextView mailText = (TextView) findViewById(R.id.myMail);
+        TextView version = (TextView) findViewById(R.id.Version);
+        try {
+            version.setText(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+        }
         exitReadioInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

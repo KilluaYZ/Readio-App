@@ -58,6 +58,7 @@ public class readWorksActivity extends AppCompatActivity {
     private String pieceId;
 
     public RecyclerView recyclerView;
+    public pieceCommentAdapter mainAdapter;
 
     public EditText fragment_comment_bar_editText;
 
@@ -229,13 +230,6 @@ public class readWorksActivity extends AppCompatActivity {
             if(TextUtils.isEmpty(writeComment_button.getText())){
                 Toast.makeText(readWorksActivity.this, "还没有编写评论哦", Toast.LENGTH_SHORT).show();
             }else{
-                /*
-                发送评论给数据库
-                 */
-
-                /*
-                刷新评论区页面？
-                 */
                 //正常发送模式
                 String content = writeComment_button.getText().toString();
                 if(content.length()==0){
@@ -257,9 +251,11 @@ public class readWorksActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
+                            refreshCommentData();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Tools.my_toast(readWorksActivity.this,"评论发送成功！");
                                     writeComment_button.setText("");
                                 }
                             });
@@ -368,7 +364,7 @@ public class readWorksActivity extends AppCompatActivity {
                 bottomSheetDialog = new mBottomSheetDialog(this, R.style.work_comment_bottomsheet);
                 recyclerView = view.findViewById(R.id.dialog_recycleView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                pieceCommentAdapter mainAdapter = new pieceCommentAdapter(readWorksActivity.this, comment_list);
+                mainAdapter = new pieceCommentAdapter(readWorksActivity.this, comment_list);
                 recyclerView.setAdapter(mainAdapter);
 
                 fragment_comment_bar_editText = (EditText) view.findViewById(R.id.fragment_comment_bar_editText);

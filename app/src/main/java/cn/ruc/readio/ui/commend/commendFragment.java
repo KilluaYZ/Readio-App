@@ -41,6 +41,8 @@ public class commendFragment extends Fragment {
     private FragmentCommendBinding binding;
     private List<Recommendation> recommendation_lists;
 
+    Activity thisAct = null;
+
     public commendFragment() {
         // Required empty public constructor
     }
@@ -55,6 +57,7 @@ public class commendFragment extends Fragment {
         View root = binding.getRoot();
 
         //commend_pic=binding.picture;
+        thisAct = getActivity();
 
         recommendation_lists =new ArrayList<>();
         recycler_view= binding.commendCard;
@@ -156,21 +159,25 @@ public class commendFragment extends Fragment {
                             }
                             recommendation.setPic(pic);
                             Log.d("commendCardAdapter","需要更新");
-                            Objects.requireNonNull(getActivity()).runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
+                            Activity tempActivity = getActivity();
+                            if(tempActivity != null){
+                                tempActivity.runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
+                            }
                         }
 
                     }).start();
-
-                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                        if(getActivity() != null)
-                        {
-                        RecyclerView recyclerView = getActivity().findViewById(R.id.commend_card);
-                            if(recyclerView != null)
+                    if(thisAct != null){
+                        thisAct.runOnUiThread(() -> {
+                            if(getActivity() != null)
                             {
-                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                RecyclerView recyclerView = getActivity().findViewById(R.id.commend_card);
+                                if(recyclerView != null)
+                                {
+                                    Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

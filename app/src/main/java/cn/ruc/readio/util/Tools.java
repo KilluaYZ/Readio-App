@@ -90,7 +90,7 @@ public class Tools {
     public static Bitmap getImageBitmapFromLocal(Activity activity,String fileId) throws IOException, ParseException {
         FileReader fileReader = new FileReader(activity);
         FileInfo fileInfo = fileReader.getFileInfoByFileId(fileId);
-        if(fileInfo != null){
+        if(fileInfo != null && fileInfo.getContent() != null){
             Bitmap pic = BitmapFactory.decodeByteArray(fileInfo.getContent(), 0, fileInfo.getContent().length);
             return pic;
         }

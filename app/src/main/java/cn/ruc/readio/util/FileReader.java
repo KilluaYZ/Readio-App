@@ -152,6 +152,9 @@ public class FileReader {
     }
 
     private void writeFileContent(Activity activity,FileInfo fileInfo) throws IOException {
+        if(activity == null){
+            return ;
+        }
         String dirPath = activity.getFilesDir().getPath()+"/"+fileInfo.getFilePath();
         String filePath = activity.getFilesDir().getPath()+"/"+fileInfo.getFilePath() + "/" +fileInfo.getFileId()+"."+fileInfo.getFileType();
         File dir = new File(dirPath);
@@ -169,6 +172,9 @@ public class FileReader {
     }
 
     private byte[] readFileContent(Activity activity, FileInfo fileInfo) throws IOException {
+        if(activity == null){
+            return null;
+        }
         String dataPath = activity.getFilesDir().getPath()+ "/" + fileInfo.getFilePath()+"/"+fileInfo.getFileId()+"."+fileInfo.getFileType();
 //        FileInputStream fileInputStream = activity.openFileInput(dataPath);
         File inputFile = new File(dataPath);

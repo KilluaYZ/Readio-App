@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
+import cn.ruc.readio.dialogs.AutoUpdater;
 import cn.ruc.readio.util.HttpUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,5 +49,10 @@ public class MainActivity extends AppCompatActivity {
         }else{
             HttpUtil.setBaseUrl_Tencent(this);
         }
+
+        AutoUpdater autoUpdater = new AutoUpdater(this);
+        autoUpdater.CheckUpdate();
+
+
     }
 }

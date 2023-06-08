@@ -66,10 +66,12 @@ public class WorkAdapter extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
             public void onClick(View view) {
                 int position = viewHolder.getAdapterPosition();
                 // 实际上点进每一个item都要传输作品的id
-                Intent intent = new Intent(view.getContext(), readWorksActivity.class);
-                intent.putExtra("extra_data", String.valueOf(WorksList.get(position).getWorkID()));
-                Log.d("pieceid", String.valueOf(WorksList.get(position).getWorkID()));
-                startActivity(view.getContext(), intent, null);
+                if(position >= 0) {
+                    Intent intent = new Intent(view.getContext(), readWorksActivity.class);
+                    intent.putExtra("extra_data", String.valueOf(WorksList.get(position).getWorkID()));
+                    Log.d("pieceid", String.valueOf(WorksList.get(position).getWorkID()));
+                    startActivity(view.getContext(), intent, null);
+                }
             }
         });
 

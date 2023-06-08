@@ -98,7 +98,7 @@ public class collectionAdapter extends RecyclerView.Adapter<collectionAdapter.Vi
         Works works = WorksList.get(position);
         holder.collectWorkTitle.setText(works.getPieceTitle());
         holder.collectWorkContent.setText(works.getContent());
-        holder.collectNum.setText("收藏数："+toString().valueOf(works.getLikesNum()));
+        holder.collectNum.setText("收藏数："+toString().valueOf(works.getCollectsNum()));
     }
 
     @Override

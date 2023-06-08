@@ -232,7 +232,7 @@ public class userPageFragment extends Fragment {
                             if(getActivity() != null && binding.myAvator != null)
                             {
                                 Tools.getImageBitmapAsyn(responseJsonObject.getString("avator"), binding.myAvator, getActivity());}
-                            if(getActivity() != null) {
+                            if(getActivity() != null && binding != null) {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

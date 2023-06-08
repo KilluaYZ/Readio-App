@@ -47,7 +47,12 @@ public class bookReadAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return newViewList.size();
+        if (newViewList.size() > 2) {
+//            return Integer.MAX_VALUE;
+            return 10000;
+        } else {
+            return newViewList.size();
+        }
     }
 
     @Override

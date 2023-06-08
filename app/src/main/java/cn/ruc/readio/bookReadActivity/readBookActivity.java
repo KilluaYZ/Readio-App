@@ -16,8 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -41,6 +43,7 @@ public class readBookActivity extends Activity {
     PagerTabStrip tabStrip = null;
     ArrayList<View> viewContainer = new ArrayList<View>();
     ArrayList<String> contentList = new ArrayList<String>();
+    private int firstPosition_Page = 0;
     private int nPosition;
     private book my_book=new book();
     private TextView content;
@@ -48,9 +51,11 @@ public class readBookActivity extends Activity {
     private TextView BookInfo;
     private View view1;
     private View view2;
+    private EditText jumpPage;
     int Page = 0;
     private ArrayList<Integer> ifLoad;
     private int lastPosition = 0;
+    private int flag = 0;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -65,6 +70,7 @@ public class readBookActivity extends Activity {
         }  //用于调整状态栏为透明色
         readPage = findViewById(R.id.pageBar);
         BookInfo = findViewById(R.id.book_nameBar);
+        jumpPage = findViewById(R.id.jumpPageButton);
         ifLoad = new ArrayList<>();
         InitifLoad();
         /*接受传递的消息*/
@@ -79,6 +85,7 @@ public class readBookActivity extends Activity {
 
 
         pager = (ViewPager) this.findViewById(R.id.viewpager);
+
         view1 = LayoutInflater.from(this).inflate(R.layout.item_bookview,null);
         view2 = LayoutInflater.from(this).inflate(R.layout.item_bookview,null);
         content = view1.findViewById(R.id.content);
@@ -88,6 +95,7 @@ public class readBookActivity extends Activity {
         bookReadAdapter myAdapter = new bookReadAdapter();
         pager.setAdapter(myAdapter);
         pager.setCurrentItem(1,false);
+        pager.getAdapter().notifyDataSetChanged();
         myAdapter.setNewViewList(viewContainer);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -99,15 +107,31 @@ public class readBookActivity extends Activity {
             @Override
             public void onPageSelected(int position) {
                 nPosition = position;
-                if(nPosition > lastPosition){
+                jumpPage.setText("");
+                if (nPosition > lastPosition) {
                     Page++;
+                    if (contentList != null)
+                    {
+                        String wholePage = toString().valueOf(contentList.size());
+                        String nowPage = toString().valueOf(Page+1);
+                        readPage.setText(nowPage+"/"+wholePage);
+                    }
                 }
-                if(nPosition < lastPosition){
+                if (nPosition < lastPosition) {
                     Page--;
+                    if (contentList != null)
+                    {
+                        String wholePage = toString().valueOf(contentList.size());
+                        String nowPage;
+                        if(flag == 0) {
+                            nowPage = toString().valueOf(Page + 1);
+                        }
+                        else{
+                            nowPage = toString().valueOf(Page + 2);
+                        }
+                        readPage.setText(nowPage+"/"+wholePage);
+                    }
                 }
-                String wholePage = toString().valueOf(contentList.size());
-                String nowPage = toString().valueOf(Page+1);
-                readPage.setText(nowPage+"/"+wholePage);
                 if (nPosition == viewContainer.size() - 1) {
                     if(contentList == null)
                     {
@@ -116,7 +140,7 @@ public class readBookActivity extends Activity {
                     else{
                         if(Page < contentList.size()-1) {
                             if(ifLoad.get(Page+1) == 0) {
-                                addPage(contentList.get(Page+1));
+                                addPage(myAdapter,contentList.get(Page+1));
                                 Loaded(Page+1);
                             }
                         }
@@ -136,9 +160,12 @@ public class readBookActivity extends Activity {
                     else {
                         if(Page>=1) {
                             if(ifLoad.get(Page-1) == 0) {
-                                addPageFront(contentList.get(Page-1));
+                                firstPosition_Page = Page-1;
+                                addPageFront(myAdapter,contentList.get(Page-1));
                                 pager.setCurrentItem(nPosition+1, false);
+                                pager.getAdapter().notifyDataSetChanged();
                                 Loaded(Page-1);
+
                             }
                         }
                         else{
@@ -147,38 +174,72 @@ public class readBookActivity extends Activity {
                     }
                 }
                 lastPosition = nPosition;
+                flag = 0;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state != pager.SCROLL_STATE_IDLE) return;
                 pager.setCurrentItem(nPosition, false);
+                pager.getAdapter().notifyDataSetChanged();
             }
 
-            public void addPage(String text) {
-                LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);
-                View view = inflater.inflate(R.layout.item_bookview, null);
-                TextView content = (TextView) view.findViewById(R.id.content);
-                content.setText(text);
-                viewContainer.add(view);
-                myAdapter.notifyDataSetChanged();
+        });
 
-            }
+        jumpPage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(String.valueOf(jumpPage.getText()).equals("")) {
+                    return false;
+                }
+                int jump_page = Integer.parseInt(String.valueOf(jumpPage.getText())) - 1;
+                if(ifLoad.get(jump_page)==1)
+                {
+                    int toPosition = jump_page - firstPosition_Page;
+                    if(Page < jump_page)
+                    {
+                        Page = jump_page-1;
+                    }
+                    if(Page > jump_page)
+                    {
+                        Page = jump_page + 1;
+                    }
+                    pager.setCurrentItem(toPosition,false);
+                    pager.getAdapter().notifyDataSetChanged();
+                }
+                else {
+                    if (jump_page > Page) {
+                        for (int k = Page + 1; k <= jump_page + 1; k++) {
+                            if (ifLoad.get(k) == 0 && k <= contentList.size() - 1) {
+                                addPage(myAdapter, contentList.get(k));
+                                Loaded(k);
+                            }
+                        }
 
-            public void addPageFront(String text){
-                LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);
-                View view = inflater.inflate(R.layout.item_bookview, null);
-                TextView content = (TextView) view.findViewById(R.id.content);
-                content.setText(text);
-                viewContainer.add(0,view);
-                myAdapter.notifyDataSetChanged();
-            }
-
-            public void delFirstPage() {
-                viewContainer.remove(0);
-                myAdapter.notifyDataSetChanged();
+                        Page = jump_page - 1;
+                    } else {
+                        for (int k = Page - 1; k >= jump_page; k--) {
+                            if (ifLoad.get(k) == 0 && k >= 0) {
+                                addPageFront(myAdapter, contentList.get(k));
+                                Loaded(k);
+                                flag = 1;
+                            }
+                        }
+                        if (jump_page - 1 < 0) {
+                            jump_page = 0;
+                        } else {
+                            firstPosition_Page = jump_page;
+                        }
+                        Page = jump_page + 1;
+                    }
+                    int toPosition = jump_page - firstPosition_Page;
+                    pager.setCurrentItem(toPosition, false);
+                    pager.getAdapter().notifyDataSetChanged();
+                }
+                return false;
             }
         });
+
     }
 
     @Override
@@ -235,7 +296,6 @@ public class readBookActivity extends Activity {
                     }
                     my_book.setContent(bookcontent);
                     contentList = new BookPageDivider(my_book,300).getPagesList();
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -243,6 +303,7 @@ public class readBookActivity extends Activity {
                             TextView view1_content = view1.findViewById(R.id.content);
                             TextView view2_content = view2.findViewById(R.id.content);
                             Page = my_book.getProgress()/300;
+                            firstPosition_Page = Page;
                             String wholePage = toString().valueOf(contentList.size());
                             String nowPage = toString().valueOf(Page+1);
                             readPage.setText(nowPage+"/"+wholePage);
@@ -255,6 +316,7 @@ public class readBookActivity extends Activity {
                             if(Page>=1)
                             {
                                 if(ifLoad.get(Page-1) == 0) {
+                                    firstPosition_Page = Page -1 ;
                                     LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);
                                     View view = inflater.inflate(R.layout.item_bookview, null);
                                     TextView content = (TextView) view.findViewById(R.id.content);
@@ -262,8 +324,9 @@ public class readBookActivity extends Activity {
                                     viewContainer.add(0,view);
                                     Loaded(Page-1);
                                     pager.getAdapter().notifyDataSetChanged();
-                                    pager.setCurrentItem(nPosition+1, false);
                                     Page--;
+                                    pager.setCurrentItem(nPosition+1, false);
+                                    pager.getAdapter().notifyDataSetChanged();
                                 }
                             }
                         }
@@ -286,5 +349,23 @@ public class readBookActivity extends Activity {
     void Loaded(int Position)
     {
         ifLoad.set(Position, 1);
+    }
+    public void addPage(bookReadAdapter myAdapter, String text) {
+        LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);
+        View view = inflater.inflate(R.layout.item_bookview, null);
+        TextView content = (TextView) view.findViewById(R.id.content);
+        content.setText(text);
+        viewContainer.add(view);
+        myAdapter.notifyDataSetChanged();
+
+    }
+
+    public void addPageFront(bookReadAdapter myAdapter,String text){
+        LayoutInflater inflater = LayoutInflater.from(readBookActivity.this);
+        View view = inflater.inflate(R.layout.item_bookview, null);
+        TextView content = (TextView) view.findViewById(R.id.content);
+        content.setText(text);
+        viewContainer.add(0,view);
+        myAdapter.notifyDataSetChanged();
     }
 }

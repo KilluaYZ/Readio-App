@@ -148,24 +148,48 @@ public class commendFragment extends Fragment {
                         recommendation_lists.add(recommendation);
                     }
                     /*随机获取图片（待完善）*/
-                    new Thread(() -> {
-                        for(int i = 0;i < recommendation_lists.size(); ++i){
-                            Bitmap pic = null;
-                            Recommendation recommendation = recommendation_lists.get(i);
-                            try {
-                                pic = Tools.randomGetImgSyn(getActivity());
-                            } catch (IOException | JSONException | ParseException e) {
-                                Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
-                            }
-                            recommendation.setPic(pic);
-                            Log.d("commendCardAdapter","需要更新");
-                            Activity tempActivity = getActivity();
-                            if(tempActivity != null){
-                                tempActivity.runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
-                            }
-                        }
+//                    new Thread(() -> {
+//                        for(int i = 0;i < recommendation_lists.size(); ++i){
+//                            Bitmap pic = null;
+//                            Recommendation recommendation = recommendation_lists.get(i);
+//                            try {
+//                                pic = Tools.randomGetImgSyn(getActivity());
+//                            } catch (IOException | JSONException | ParseException e) {
+//                                Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
+//                            }
+//                            recommendation.setPic(pic);
+//                            Log.d("commendCardAdapter","需要更新");
+//                            Activity tempActivity = getActivity();
+//                            if(tempActivity != null){
+//                                tempActivity.runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
+//                            }
+//                        }
+//                    }).start();
 
-                    }).start();
+                    /* 随机获取图片更快的方法——每次都开一个新的线程去做 */
+                    for(int i = 0;i < recommendation_lists.size(); ++i){
+                        int finalI = i;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Bitmap pic = null;
+                                Recommendation recommendation = recommendation_lists.get(finalI);
+                                try {
+                                    pic = Tools.randomGetImgSyn(getActivity());
+                                } catch (IOException | JSONException | ParseException e) {
+                                    Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
+                                }
+                                recommendation.setPic(pic);
+                                Log.d("commendCardAdapter","需要更新");
+                                Activity tempActivity = getActivity();
+                                var tmpAdapter = binding.commendCard.getAdapter();
+                                if(tempActivity != null && tmpAdapter != null){
+                                    tempActivity.runOnUiThread(() -> tmpAdapter.notifyDataSetChanged());
+                                }
+                            }
+                        }).start();
+                    }
+
                     if(thisAct != null){
                         thisAct.runOnUiThread(() -> {
                             if(getActivity() != null)

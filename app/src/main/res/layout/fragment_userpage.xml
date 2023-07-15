@@ -534,7 +534,7 @@
                         android:layout_height="50dp"
                         android:backgroundTint="#0000"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/drug3" />
+                        android:src="@drawable/drug" />
 
                     <LinearLayout
                         android:id="@+id/crazy_linear_button"

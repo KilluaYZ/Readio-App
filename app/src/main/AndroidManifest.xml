@@ -17,12 +17,20 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReadIO"
-
         tools:targetApi="31">
+        <activity
+            android:name=".userPageActivity.CrazyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.SatireActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userPageActivity.FaithActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.shelf.searchBookActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".userPageActivity.ReEditActivity"
             android:exported="false" />
@@ -97,15 +105,16 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="${applicationId}.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

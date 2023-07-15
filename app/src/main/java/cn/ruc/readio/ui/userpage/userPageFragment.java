@@ -30,6 +30,7 @@ import cn.ruc.readio.ui.userpage.follower.FollowerActivity;
 import cn.ruc.readio.ui.userpage.login.LoginActivity;
 import cn.ruc.readio.ui.userpage.subscribe.SubscriberActivity;
 import cn.ruc.readio.ui.userpage.changeAvatar.changeAvatorActivity;
+import cn.ruc.readio.userPageActivity.FaithActivity;
 import cn.ruc.readio.userPageActivity.myCollectionActivity;
 import cn.ruc.readio.userPageActivity.myLikesActivity;
 import cn.ruc.readio.userPageActivity.mySettingsActivity;
@@ -76,7 +77,6 @@ public class userPageFragment extends Fragment {
         View root = binding.getRoot();
 
         ImageButton settingsButton = binding.mySettingsButton;
-
         ImageButton manage_button = binding.workManageButton;
         TextView userName = binding.userName;
         if(getActivity() != null) {
@@ -167,7 +167,13 @@ public class userPageFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        binding.knockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), FaithActivity.class);
+                startActivity(intent);
+            }
+        });
         return root;
     }
 

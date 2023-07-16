@@ -192,7 +192,17 @@ public class readBookActivity extends Activity {
                 if(String.valueOf(jumpPage.getText()).equals("")) {
                     return false;
                 }
-                int jump_page = Integer.parseInt(String.valueOf(jumpPage.getText())) - 1;
+                int jump_page;
+                try{
+                    jump_page = Integer.parseInt(String.valueOf(jumpPage.getText())) - 1;}
+                catch (Exception e){
+                    Tools.my_toast(readBookActivity.this,"请输入正确的页码");
+                    return false;
+                }
+                if(jump_page<2 || jump_page > contentList.size()){
+                    Tools.my_toast(readBookActivity.this,"请输入正确的页码");
+                    return false;
+                }
                 if(ifLoad.get(jump_page)==1)
                 {
                     int toPosition = jump_page - firstPosition_Page;
@@ -322,8 +332,8 @@ public class readBookActivity extends Activity {
                                     TextView content = (TextView) view.findViewById(R.id.content);
                                     content.setText(contentList.get(Page-1));
                                     viewContainer.add(0,view);
-                                    Loaded(Page-1);
                                     pager.getAdapter().notifyDataSetChanged();
+                                    Loaded(Page-1);
                                     Page--;
                                     pager.setCurrentItem(nPosition+1, false);
                                     pager.getAdapter().notifyDataSetChanged();

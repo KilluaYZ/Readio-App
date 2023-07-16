@@ -41,6 +41,8 @@ public class commendFragment extends Fragment {
     private FragmentCommendBinding binding;
     private List<Recommendation> recommendation_lists;
 
+    Activity thisAct = null;
+
     public commendFragment() {
         // Required empty public constructor
     }
@@ -55,6 +57,7 @@ public class commendFragment extends Fragment {
         View root = binding.getRoot();
 
         //commend_pic=binding.picture;
+        thisAct = getActivity();
 
         recommendation_lists =new ArrayList<>();
         recycler_view= binding.commendCard;
@@ -145,32 +148,60 @@ public class commendFragment extends Fragment {
                         recommendation_lists.add(recommendation);
                     }
                     /*随机获取图片（待完善）*/
-                    new Thread(() -> {
-                        for(int i = 0;i < recommendation_lists.size(); ++i){
-                            Bitmap pic = null;
-                            Recommendation recommendation = recommendation_lists.get(i);
-                            try {
-                                pic = Tools.randomGetImgSyn(getActivity());
-                            } catch (IOException | JSONException | ParseException e) {
-                                Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
+//                    new Thread(() -> {
+//                        for(int i = 0;i < recommendation_lists.size(); ++i){
+//                            Bitmap pic = null;
+//                            Recommendation recommendation = recommendation_lists.get(i);
+//                            try {
+//                                pic = Tools.randomGetImgSyn(getActivity());
+//                            } catch (IOException | JSONException | ParseException e) {
+//                                Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
+//                            }
+//                            recommendation.setPic(pic);
+//                            Log.d("commendCardAdapter","需要更新");
+//                            Activity tempActivity = getActivity();
+//                            if(tempActivity != null){
+//                                tempActivity.runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
+//                            }
+//                        }
+//                    }).start();
+
+                    /* 随机获取图片更快的方法——每次都开一个新的线程去做 */
+                    for(int i = 0;i < recommendation_lists.size(); ++i){
+                        int finalI = i;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Bitmap pic = null;
+                                Recommendation recommendation = recommendation_lists.get(finalI);
+                                try {
+                                    pic = Tools.randomGetImgSyn(getActivity());
+                                } catch (IOException | JSONException | ParseException e) {
+                                    Tools.my_toast(Objects.requireNonNull(getActivity()),"图片加载出错啦！");
+                                }
+                                recommendation.setPic(pic);
+                                Log.d("commendCardAdapter","需要更新");
+                                Activity tempActivity = getActivity();
+                                var tmpAdapter = binding.commendCard.getAdapter();
+                                if(tempActivity != null && tmpAdapter != null){
+                                    tempActivity.runOnUiThread(() -> tmpAdapter.notifyDataSetChanged());
+                                }
                             }
-                            recommendation.setPic(pic);
-                            Log.d("commendCardAdapter","需要更新");
-                            Objects.requireNonNull(getActivity()).runOnUiThread(() -> Objects.requireNonNull(binding.commendCard.getAdapter()).notifyDataSetChanged());
-                        }
+                        }).start();
+                    }
 
-                    }).start();
-
-                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                        if(getActivity() != null)
-                        {
-                        RecyclerView recyclerView = getActivity().findViewById(R.id.commend_card);
-                            if(recyclerView != null)
+                    if(thisAct != null){
+                        thisAct.runOnUiThread(() -> {
+                            if(getActivity() != null)
                             {
-                                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                RecyclerView recyclerView = getActivity().findViewById(R.id.commend_card);
+                                if(recyclerView != null)
+                                {
+                                    Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

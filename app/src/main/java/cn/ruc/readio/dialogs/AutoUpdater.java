@@ -32,14 +32,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.ruc.readio.R;
+import cn.ruc.readio.util.HttpUtil;
 
 public class AutoUpdater {
     // 下载安装包的网络路径
-    private String apkUrl = "http://server.killuayz.top:9000/readio-apk/";
-    protected String checkUrl = apkUrl + "output-metadata.json";
+    private String apkUrl = "";
+//    protected String checkUrl = apkUrl + "output-metadata.json";
 
     // 保存APK的文件名
     private static final String saveFileName = "readio.apk";
+
+    private String getApkUrl(){
+        return "http://"+ HttpUtil.BASE_URL+":9000/readio-apk/";
+    }
+
+    private String getCheckUrl(){
+        return getApkUrl()+"output-metadata.json";
+    }
+
+
     private static File apkFile;
 
     // 下载线程
@@ -122,7 +133,7 @@ public class AutoUpdater {
                 }
                 String versionName = "1";
                 String outputFile = "";
-                String config = doGet(checkUrl);
+                String config = doGet(getCheckUrl());
                 if (config != null && config.length() > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         Matcher m = Pattern.compile("\"outputFile\":\\s*\"(?<m>[^\"]*?)\"").matcher(config);
@@ -144,7 +155,7 @@ public class AutoUpdater {
 //                    return;
 //                }
                 if (localVersion.compareTo(versionName) < 0) {
-                    apkUrl = apkUrl + outputFile;
+                    apkUrl = getApkUrl() + outputFile;
                     mHandler.sendEmptyMessage(SHOWDOWN);
                 } else {
                     return;

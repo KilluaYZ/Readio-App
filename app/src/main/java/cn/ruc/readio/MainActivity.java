@@ -1,6 +1,8 @@
 package cn.ruc.readio;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.ruc.readio.databinding.ActivityMainBinding;
 import cn.ruc.readio.dialogs.AutoUpdater;
+import cn.ruc.readio.services.PingService;
 import cn.ruc.readio.util.HttpUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,20 +42,23 @@ public class MainActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         //初始化HttpUtil
-        String tmpUrl = HttpUtil.readHttpHost(this);
-        if(tmpUrl != null && !tmpUrl.isEmpty()){
-            if(tmpUrl.equals("killuayz.top")){
-                HttpUtil.setBaseUrl_Tencent(this);
-            }else{
-                HttpUtil.setBaseUrl_550w(this);
-            }
-        }else{
-            HttpUtil.setBaseUrl_Tencent(this);
-        }
+//        String tmpUrl = HttpUtil.readHttpHost(this);
+//        if(tmpUrl != null && !tmpUrl.isEmpty()){
+//            if(tmpUrl.equals("killuayz.top")){
+//                HttpUtil.setBaseUrl_Tencent(this);
+//            }else{
+//                HttpUtil.setBaseUrl_550w(this);
+//            }
+//        }else{
+//            HttpUtil.setBaseUrl_Tencent(this);
+//        }
+
+        //开启PingService
+        Intent pingServiceIntent = new Intent(this, PingService.class);
+        startService(pingServiceIntent);
 
         AutoUpdater autoUpdater = new AutoUpdater(this);
         autoUpdater.CheckUpdate();
-
 
     }
 }

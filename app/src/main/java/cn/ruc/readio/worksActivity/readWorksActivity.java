@@ -120,7 +120,7 @@ public class readWorksActivity extends Activity implements ViewSwitcher.ViewFact
         photoOrder = (TextView) findViewById(R.id.photo_order);
 
         //图片切换器
-        imgIDs = new int[]{R.drawable.edg, R.drawable.xiaoyang, R.drawable.laugh2, R.drawable.laugh1, R.drawable.addedinshelf};
+        imgIDs = new int[]{R.drawable.blackcat1, R.drawable.blackcat3, R.drawable.flower1, R.drawable.flower2};
         mImageSwitcher = (ImageSwitcher) findViewById(R.id.my_imageSwitcher);
 //        mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 //                                      public View makeView() {

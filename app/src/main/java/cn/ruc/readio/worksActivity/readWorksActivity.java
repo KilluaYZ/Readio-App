@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageSwitcher;
@@ -51,7 +53,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class readWorksActivity extends AppCompatActivity implements ViewSwitcher.ViewFactory, View.OnTouchListener {
+public class readWorksActivity extends Activity implements ViewSwitcher.ViewFactory, View.OnTouchListener {
     ImageView ava = null;
     int like_clicked_times = 0;
     int is_liked = 0;
@@ -83,6 +85,10 @@ public class readWorksActivity extends AppCompatActivity implements ViewSwitcher
     private int currentPosition;
     private float downX;
     private int[] imgIDs;
+    private TextView photoOrder;
+
+//    WindowManager wm = this.getWindowManager();
+    private int width = 0 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +96,7 @@ public class readWorksActivity extends AppCompatActivity implements ViewSwitcher
         super.onCreate(savedInstanceState);
         binding = ActivityReadWorksBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        //图片切换器
-        mImageSwitcher = (ImageSwitcher) findViewById(R.id.my_imageSwitcher);
-        mImageSwitcher.setFactory(this);
-        mImageSwitcher.setOnTouchListener(this);
-        currentPosition = 0;
-        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
-        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
-                android.R.anim.fade_in));
-        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,
-                android.R.anim.fade_out));
-
-        imgIDs = new int[]{R.drawable.laugh1, R.drawable.laugh2, R.drawable.xiaoyang};
-
+        width = this.getWindowManager().getDefaultDisplay().getWidth();
         if (Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -124,6 +117,33 @@ public class readWorksActivity extends AppCompatActivity implements ViewSwitcher
         TextView userName = (TextView) findViewById(R.id.readUserNameText);
         ImageView exitRead_button = (ImageView) findViewById(R.id.exitRead);
         TextView updateTimeTextView = (TextView) findViewById(R.id.updateTimeTextView);
+        photoOrder = (TextView) findViewById(R.id.photo_order);
+
+        //图片切换器
+        imgIDs = new int[]{R.drawable.edg, R.drawable.xiaoyang, R.drawable.laugh2, R.drawable.laugh1, R.drawable.addedinshelf};
+        mImageSwitcher = (ImageSwitcher) findViewById(R.id.my_imageSwitcher);
+//        mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+//                                      public View makeView() {
+////                                          ImageView myView = new ImageView(getApplicationContext());
+////                                          return myView;
+//                                          ImageView i = new ImageView(getApplicationContext());
+//                                          i.setBackgroundColor(0xff000000);
+//                                          i.setScaleType(ImageView.ScaleType.CENTER_CROP);
+////                                          i.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+//                                          return i;
+//                                      }
+//                                  });
+        mImageSwitcher.setFactory(this);
+//
+        mImageSwitcher.setOnTouchListener(this);
+        currentPosition = 0;
+        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+        photoOrder.setText(toString().valueOf(currentPosition+1)+" / "+toString().valueOf(imgIDs.length));
+        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_in));
+        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_out));
+
 
         read_content.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -589,32 +609,33 @@ public class readWorksActivity extends AppCompatActivity implements ViewSwitcher
 
     @Override
     public View makeView() {
-        final ImageView i = new ImageView(this);
-        i.setBackgroundColor(0xff000000);
-        i.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        i.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        final ImageView i = new ImageView(getApplicationContext());
+//        i.setBackgroundColor(0xff000000);
+        i.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//        i.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+
         return i;
     }
+
+//    private boolean isDowned = false;
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 downX = motionEvent.getX();
-                break;
-            }
-            case MotionEvent.ACTION_UP: {
-                float lastX = motionEvent.getX();
-                if (lastX > downX) {
+                Log.d("Touching test", "摁下了，当前的x为"+downX);
+//                isDowned = true;
+                float mid_width = width / 2;
+                if(downX < mid_width){
                     if (currentPosition > 0) {
                         currentPosition--;
                         mImageSwitcher.setImageResource(imgIDs[currentPosition]);
                     } else {
                         Toast.makeText(this, "已经是第一张", Toast.LENGTH_SHORT).show();
                     }
-
                 }
-                if (lastX < downX) {
+                if(downX > mid_width){
                     if (currentPosition < imgIDs.length - 1) {
                         currentPosition++;
                         mImageSwitcher.setImageResource(imgIDs[currentPosition]);
@@ -623,7 +644,59 @@ public class readWorksActivity extends AppCompatActivity implements ViewSwitcher
                         Toast.makeText(this, "到了最后一张", Toast.LENGTH_SHORT).show();
                     }
                 }
+                photoOrder.setText(toString().valueOf(currentPosition+1)+" / "+toString().valueOf(imgIDs.length));
+                break;
             }
+//            case MotionEvent.ACTION_UP: {
+//                isDowned = false;
+//                float lastX = motionEvent.getX();
+//                Log.d("Touching test", "抬起了，当前的x为"+lastX);
+//                if (lastX > downX) {
+//                    if (currentPosition > 0) {
+//                        currentPosition--;
+//                        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+//                    } else {
+//                        Toast.makeText(this, "已经是第一张", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
+//                if (lastX < downX) {
+//                    if (currentPosition < imgIDs.length - 1) {
+//                        currentPosition++;
+//                        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+//
+//                    } else {
+//                        Toast.makeText(this, "到了最后一张", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                break;
+//            }
+//            default:{
+//                if(isDowned == true){
+//                    //已经摁下了
+//                    float lastX = motionEvent.getX();
+//                    Log.d("Touching test", "默认抬起了，当前的x为"+lastX);
+//                    if (lastX > downX) {
+//                        if (currentPosition > 0) {
+//                            currentPosition--;
+//                            mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+//                        } else {
+//                            Toast.makeText(this, "已经是第一张", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//                    if (lastX < downX) {
+//                        if (currentPosition < imgIDs.length - 1) {
+//                            currentPosition++;
+//                            mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+//
+//                        } else {
+//                            Toast.makeText(this, "到了最后一张", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }
+//                isDowned = false;
+//            }
         }
         return true;
     }

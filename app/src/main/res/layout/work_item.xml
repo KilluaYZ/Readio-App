@@ -40,6 +40,7 @@
                     android:backgroundTint="@color/pale_grey"
                     android:maxHeight="100dp"
                     android:padding="5dp"
+                    android:textColor="@color/grey"
                     android:text="Title"
                     android:textSize="12sp"/>
             </LinearLayout>

@@ -18,11 +18,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -45,7 +51,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class readWorksActivity extends AppCompatActivity {
+public class readWorksActivity extends AppCompatActivity implements ViewSwitcher.ViewFactory, View.OnTouchListener {
     ImageView ava = null;
     int like_clicked_times = 0;
     int is_liked = 0;
@@ -73,13 +79,32 @@ public class readWorksActivity extends AppCompatActivity {
     private int replyCommentId = -1;
     private ClipData mClipData;
     private ClipboardManager mClipboardManager;
+    private ImageSwitcher mImageSwitcher;
+    private int currentPosition;
+    private float downX;
+    private int[] imgIDs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         binding = ActivityReadWorksBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        if (Build.VERSION.SDK_INT >= 21){
+
+        //图片切换器
+        mImageSwitcher = (ImageSwitcher) findViewById(R.id.my_imageSwitcher);
+        mImageSwitcher.setFactory(this);
+        mImageSwitcher.setOnTouchListener(this);
+        currentPosition = 0;
+        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+        mImageSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_in));
+        mImageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_out));
+
+        imgIDs = new int[]{R.drawable.laugh1, R.drawable.laugh2, R.drawable.xiaoyang};
+
+        if (Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -104,16 +129,16 @@ public class readWorksActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
                 String workContentDup = (String) read_content.getText();
-                mClipData = ClipData.newPlainText("Simple text",workContentDup);
+                mClipData = ClipData.newPlainText("Simple text", workContentDup);
                 mClipboardManager.setPrimaryClip(mClipData);
                 Toast.makeText(view.getContext(), "已复制到剪贴板", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
 
-        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
-        queryParam.add(new Pair<>("piecesId",workId));
-        HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/works/getPiecesDetail", queryParam, new Callback() {
+        ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
+        queryParam.add(new Pair<>("piecesId", workId));
+        HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/getPiecesDetail", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mtoast("请求异常，加载不出来");
@@ -122,7 +147,7 @@ public class readWorksActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    if (response.code() == 200){
+                    if (response.code() == 200) {
                         String s = response.body().string();
                         JSONObject jsonObject = new JSONObject(s);
                         JSONObject data = jsonObject.getJSONObject("data");
@@ -130,38 +155,34 @@ public class readWorksActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 try {
-                                    pieceId =  data.getString("piecesId");
-                                    read_content.setText("\n"+data.getString("content"));
-                                    read_title.setText("\n"+data.getString("title"));
-                                    readSerialName.setText("合集："+data.getJSONObject("series").getString("seriesName")+" ");
+                                    pieceId = data.getString("piecesId");
+                                    read_content.setText("\n" + data.getString("content"));
+                                    read_title.setText("\n" + data.getString("title"));
+                                    readSerialName.setText("合集：" + data.getJSONObject("series").getString("seriesName") + " ");
                                     user = new User();
                                     JSONObject userObj = data.getJSONObject("user");
                                     user.fromJSONObject(userObj);
                                     userName.setText(user.getUserName());
                                     String avaId = user.getAvaID();
                                     updateTimeTextView.setText(data.getString("updateTime"));
-                                    if(data.getInt("isLiked")==1)
-                                    {
+                                    if (data.getInt("isLiked") == 1) {
                                         like_button.setImageResource(R.drawable.liked);
                                         is_liked = 1;
-                                    }
-                                    else {
+                                    } else {
                                         like_button.setImageResource(R.drawable.like);
                                     }
-                                    if(data.getInt("isCollected")==1)
-                                    {
+                                    if (data.getInt("isCollected") == 1) {
                                         collect_button.setImageResource(R.drawable.collected);
-                                    }
-                                    else {
+                                    } else {
                                         collect_button.setImageResource(R.drawable.collect);
                                     }
-                                    Tools.getImageBitmapAsyn(avaId,binding.authorAvator,readWorksActivity.this);
-                                    if(user.getSubscribed()){
+                                    Tools.getImageBitmapAsyn(avaId, binding.authorAvator, readWorksActivity.this);
+                                    if (user.getSubscribed()) {
                                         follow_button.setVisibility(View.GONE);
                                     }
                                     //从server获取评论
                                     JSONArray commentArray = data.getJSONArray("comments");
-                                    for(int i = 0;i < commentArray.length();++i){
+                                    for (int i = 0; i < commentArray.length(); ++i) {
                                         JSONObject commentObj = commentArray.getJSONObject(i);
                                         PieceComments pieceComments = new PieceComments();
                                         pieceComments.fromJsonObj(commentObj);
@@ -174,7 +195,7 @@ public class readWorksActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                    }else{
+                    } else {
                         mtoast("请求出错");
                     }
                 } catch (JSONException e) {
@@ -194,8 +215,8 @@ public class readWorksActivity extends AppCompatActivity {
              */
             ArrayList<Pair<String, String>> userSubscribeAddQueryParam = new ArrayList<>();
             userSubscribeAddQueryParam.add(Pair.create("userId", user.getUserId()));
-            Log.d("hahaha", "userId = "+user.getUserId());
-            HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this,"/user/subscribe/add", userSubscribeAddQueryParam, new Callback() {
+            Log.d("hahaha", "userId = " + user.getUserId());
+            HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/user/subscribe/add", userSubscribeAddQueryParam, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Tools.my_toast(readWorksActivity.this, "关注失败，请检查网络连接");
@@ -203,7 +224,7 @@ public class readWorksActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         Tools.my_toast(readWorksActivity.this, "成功关注太太！");
                         readWorksActivity.this.runOnUiThread(new Runnable() {
                             @Override
@@ -212,7 +233,7 @@ public class readWorksActivity extends AppCompatActivity {
                                 follow_button.setVisibility(View.GONE);
                             }
                         });
-                    }else{
+                    } else {
                         try {
                             String msg = new JSONObject(response.body().string()).getString("msg");
                             Tools.my_toast(readWorksActivity.this, msg);
@@ -227,14 +248,14 @@ public class readWorksActivity extends AppCompatActivity {
         });
 
         sendComment_button.setOnClickListener(view -> {
-            if(TextUtils.isEmpty(writeComment_button.getText())){
+            if (TextUtils.isEmpty(writeComment_button.getText())) {
                 Toast.makeText(readWorksActivity.this, "还没有编写评论哦", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 //正常发送模式
                 String content = writeComment_button.getText().toString();
-                if(content.length()==0){
+                if (content.length() == 0) {
                     mtoast("请输入点什么再发送吧！");
-                }else{
+                } else {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("piecesId", workId);
@@ -255,7 +276,7 @@ public class readWorksActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Tools.my_toast(readWorksActivity.this,"评论发送成功！");
+                                    Tools.my_toast(readWorksActivity.this, "评论发送成功！");
                                     writeComment_button.setText("");
                                 }
                             });
@@ -267,32 +288,32 @@ public class readWorksActivity extends AppCompatActivity {
 
         like_button.setOnClickListener(view -> {
             like_clicked_times++;
-            if(is_liked == 1){
+            if (is_liked == 1) {
                 is_liked = 0;
                 like_button.setImageResource(R.drawable.like);
                 ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
-                pieceid.add(Pair.create("piecesId",pieceId));
+                pieceid.add(Pair.create("piecesId", pieceId));
                 HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/like/del", pieceid, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                        Tools.my_toast(readWorksActivity.this, "取消点赞失败，请检查网络");
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                     }
                 });
-            }
-            else{
+            } else {
                 is_liked = 1;
                 like_button.setImageResource(R.drawable.liked);
                 ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
-                pieceid.add(Pair.create("piecesId",pieceId));
+                pieceid.add(Pair.create("piecesId", pieceId));
                 HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/like/add", pieceid, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                        Tools.my_toast(readWorksActivity.this, "取消点赞失败，请检查网络");
                     }
+
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                     }
@@ -302,9 +323,9 @@ public class readWorksActivity extends AppCompatActivity {
 
         collect_button.setOnClickListener(view -> {
             collect_clicked_times++;
-            if(collect_clicked_times % 2 == 0){
-                collect_button.setImageResource(R.drawable.collect);}
-            else{
+            if (collect_clicked_times % 2 == 0) {
+                collect_button.setImageResource(R.drawable.collect);
+            } else {
                 collect_button.setImageResource(R.drawable.collected);
             }
         });
@@ -321,28 +342,27 @@ public class readWorksActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<Pair<String, String>> pieceid = new ArrayList<>();
-                pieceid.add(Pair.create("piecesId",pieceId));
-                if(is_collect==1)
-                {
-                    is_collect=0;
+                pieceid.add(Pair.create("piecesId", pieceId));
+                if (is_collect == 1) {
+                    is_collect = 0;
                     collect_button.setImageResource(R.drawable.collect);
-                HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/collect/del", pieceid, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
-                    }
+                    HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/collect/del", pieceid, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Tools.my_toast(readWorksActivity.this, "取消点赞失败，请检查网络");
+                        }
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                    }
-                });}
-                else{
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                        }
+                    });
+                } else {
                     is_collect = 1;
                     collect_button.setImageResource(R.drawable.collected);
                     HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/pieces/collect/add", pieceid, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            Tools.my_toast(readWorksActivity.this,"取消点赞失败，请检查网络");
+                            Tools.my_toast(readWorksActivity.this, "取消点赞失败，请检查网络");
                         }
 
                         @Override
@@ -357,69 +377,70 @@ public class readWorksActivity extends AppCompatActivity {
 
     }
 
-    private void bottomsheet(){
-            if (bottomSheetDialog == null) {
-                //创建布局
-                View view = LayoutInflater.from(this).inflate(R.layout.work_comment_bottomsheet, null, false);
-                bottomSheetDialog = new mBottomSheetDialog(this, R.style.work_comment_bottomsheet);
-                recyclerView = view.findViewById(R.id.dialog_recycleView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                mainAdapter = new pieceCommentAdapter(readWorksActivity.this, comment_list);
-                recyclerView.setAdapter(mainAdapter);
+    private void bottomsheet() {
+        if (bottomSheetDialog == null) {
+            //创建布局
+            View view = LayoutInflater.from(this).inflate(R.layout.work_comment_bottomsheet, null, false);
+            bottomSheetDialog = new mBottomSheetDialog(this, R.style.work_comment_bottomsheet);
+            recyclerView = view.findViewById(R.id.dialog_recycleView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mainAdapter = new pieceCommentAdapter(readWorksActivity.this, comment_list);
+            recyclerView.setAdapter(mainAdapter);
 
-                fragment_comment_bar_editText = (EditText) view.findViewById(R.id.fragment_comment_bar_editText);
-                fragment_comment_reply_bar_btn = (ImageView) view.findViewById(R.id.fragment_comment_reply_bar_btn);
-                fragment_comment_cancel_reply_btn = (ImageView) view.findViewById(R.id.fragment_comment_cancel_reply_btn);
-                fragment_comment_reply_bar_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            onCLickedCommentBtn();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-
-                fragment_comment_cancel_reply_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        endReplyMode();
-                    }
-                });
-
-                //设置点击dialog外部不消失
-                bottomSheetDialog.setCanceledOnTouchOutside(true);
-                //核心代码 解决了无法去除遮罩问题
-                bottomSheetDialog.getWindow().setDimAmount(0f);
-                //设置布局
-                bottomSheetDialog.setContentView(view);
-                //用户行为
-                bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
-                //dialog的高度
-                bottomSheetBehavior.setPeekHeight(getWindowHeight());
-            }
-            //展示
-            bottomSheetDialog.show();
-
-            //重新用户的滑动状态
-                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            fragment_comment_bar_editText = (EditText) view.findViewById(R.id.fragment_comment_bar_editText);
+            fragment_comment_reply_bar_btn = (ImageView) view.findViewById(R.id.fragment_comment_reply_bar_btn);
+            fragment_comment_cancel_reply_btn = (ImageView) view.findViewById(R.id.fragment_comment_cancel_reply_btn);
+            fragment_comment_reply_bar_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onStateChanged(@NonNull View view, int newState) {
-                    //监听BottomSheet状态的改变
-                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        bottomSheetDialog.dismiss();
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                public void onClick(View v) {
+                    try {
+                        onCLickedCommentBtn();
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
                     }
-                }
-
-                @Override
-                public void onSlide(@NonNull View view, float v) {
-                    //监听拖拽中的回调，根据slideOffset可以做一些动画
                 }
             });
 
+            fragment_comment_cancel_reply_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    endReplyMode();
+                }
+            });
+
+            //设置点击dialog外部不消失
+            bottomSheetDialog.setCanceledOnTouchOutside(true);
+            //核心代码 解决了无法去除遮罩问题
+            bottomSheetDialog.getWindow().setDimAmount(0f);
+            //设置布局
+            bottomSheetDialog.setContentView(view);
+            //用户行为
+            bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
+            //dialog的高度
+            bottomSheetBehavior.setPeekHeight(getWindowHeight());
         }
+        //展示
+        bottomSheetDialog.show();
+
+        //重新用户的滑动状态
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int newState) {
+                //监听BottomSheet状态的改变
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetDialog.dismiss();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+                //监听拖拽中的回调，根据slideOffset可以做一些动画
+            }
+        });
+
+    }
+
     private int getWindowHeight() {
         Resources res = this.getResources();
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
@@ -428,9 +449,9 @@ public class readWorksActivity extends AppCompatActivity {
         return heightPixels - heightPixels / 4;
     }
 
-    public void refreshCommentData(){
-        ArrayList<Pair<String,String>> queryParam = new ArrayList<>();
-        queryParam.add(new Pair<>("piecesId",workId));
+    public void refreshCommentData() {
+        ArrayList<Pair<String, String>> queryParam = new ArrayList<>();
+        queryParam.add(new Pair<>("piecesId", workId));
         HttpUtil.getRequestWithTokenAsyn(readWorksActivity.this, "/works/getPiecesDetail", queryParam, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -439,13 +460,13 @@ public class readWorksActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     try {
                         comment_list.clear();
                         JSONObject jsonObject = new JSONObject(response.body().string()).getJSONObject("data");
                         //从server获取评论
                         JSONArray commentArray = jsonObject.getJSONArray("comments");
-                        for(int i = 0;i < commentArray.length();++i){
+                        for (int i = 0; i < commentArray.length(); ++i) {
                             JSONObject commentObj = commentArray.getJSONObject(i);
                             PieceComments pieceComments = new PieceComments();
                             pieceComments.fromJsonObj(commentObj);
@@ -461,36 +482,36 @@ public class readWorksActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
 
-                }else{
+                } else {
 
                 }
             }
         });
     }
 
-    private void mtoast(String msg){
+    private void mtoast(String msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(readWorksActivity.this,msg,Toast.LENGTH_LONG).show();
+                Toast.makeText(readWorksActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void startReplyMode(PieceComments comment){
+    public void startReplyMode(PieceComments comment) {
         User toUser = comment.getUser();
         replyCommentId = comment.getCommentId();
         isReply = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                fragment_comment_bar_editText.setHint("@"+toUser.getUserName());
+                fragment_comment_bar_editText.setHint("@" + toUser.getUserName());
                 fragment_comment_cancel_reply_btn.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    public void endReplyMode(){
+    public void endReplyMode() {
         replyCommentId = -1;
         isReply = false;
         runOnUiThread(new Runnable() {
@@ -503,11 +524,11 @@ public class readWorksActivity extends AppCompatActivity {
     }
 
     public void onCLickedCommentBtn() throws JSONException {
-        if(isReply && replyCommentId != -1){
+        if (isReply && replyCommentId != -1) {
             //回复模式
             int commentId = replyCommentId;
             String content = fragment_comment_bar_editText.getText().toString();
-            if(content.length()!=0) {
+            if (content.length() != 0) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("commentId", commentId);
                 jsonObject.put("content", content);
@@ -530,14 +551,14 @@ public class readWorksActivity extends AppCompatActivity {
                         endReplyMode();
                     }
                 });
-            }else{
-                Tools.my_toast(readWorksActivity.this,"您还没有输入内容");
+            } else {
+                Tools.my_toast(readWorksActivity.this, "您还没有输入内容");
             }
 
-        }else{
+        } else {
             //正常发送模式
             String content = fragment_comment_bar_editText.getText().toString();
-            if(content.length() != 0) {
+            if (content.length() != 0) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("piecesId", workId);
                 jsonObject.put("content", content);
@@ -560,12 +581,51 @@ public class readWorksActivity extends AppCompatActivity {
                         endReplyMode();
                     }
                 });
-            }
-            else{
-                Tools.my_toast(readWorksActivity.this,"您还没有输入内容");
+            } else {
+                Tools.my_toast(readWorksActivity.this, "您还没有输入内容");
             }
         }
     }
 
+    @Override
+    public View makeView() {
+        final ImageView i = new ImageView(this);
+        i.setBackgroundColor(0xff000000);
+        i.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        i.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        return i;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                downX = motionEvent.getX();
+                break;
+            }
+            case MotionEvent.ACTION_UP: {
+                float lastX = motionEvent.getX();
+                if (lastX > downX) {
+                    if (currentPosition > 0) {
+                        currentPosition--;
+                        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+                    } else {
+                        Toast.makeText(this, "已经是第一张", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                if (lastX < downX) {
+                    if (currentPosition < imgIDs.length - 1) {
+                        currentPosition++;
+                        mImageSwitcher.setImageResource(imgIDs[currentPosition]);
+
+                    } else {
+                        Toast.makeText(this, "到了最后一张", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
 

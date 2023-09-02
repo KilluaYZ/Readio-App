@@ -80,5 +80,6 @@ dependencies {
     implementation "androidx.datastore:datastore-rxjava2:1.0.0"
     // optional - RxJava3 support
     implementation "androidx.datastore:datastore-rxjava3:1.0.0"
+    implementation 'com.qmuiteam:qmui:2.0.1'
 }
 
